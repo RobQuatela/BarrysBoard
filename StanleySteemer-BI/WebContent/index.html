@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Stanely Steemer BI Configuration</title>
+</head>
+<body>
+<form name="inputForm" method="POST" action="insertServlet">
+	<h3>Company:</h3>
+		<p><select name="company">
+			<option value="Atlanta">Atlanta</option>
+			<option value="Houston">Houston</option>
+			<option value="Toms River">Toms River</option>
+			<option value="Savannah">Savannah</option>
+		</select>
+		</p>
+	<h3>Year:</h3> 
+		<p><select name="year">
+			<option value="2016">2016</option>
+			<option value="2017" selected>2017</option>
+		</select>
+		</p>
+	<h3>Month:</h3>
+		<p><select name="month">
+			<option value="January">January</option>
+			<option value="February">February</option>
+			<option value="March">March</option>
+			<option value="April">April</option>
+			<option value="May">May</option>
+			<option value="June">June</option>
+			<option value="July">July</option>
+			<option value="August" selected>August</option>
+			<option value="September">September</option>
+			<option value="October">October</option>
+			<option value="November">November</option>
+			<option value="December">December</option>
+		</select>
+		</p>
+	<h3>Week:</h3>
+		<p>
+			<input type="radio" name="week" value="1">1 &nbsp
+			<input type="radio" name="week" value="2">2 &nbsp
+			<input type="radio" name="week" value="3">3 &nbsp
+			<input type="radio" name="week" value="4">4 &nbsp
+			<input type="radio" name="week" value="5">5
+		</p>
+	<h3>Sales:</h3>
+	<table>
+		<tr>
+			<td><h4>Day</h4></td>
+			<td><h4>Core</h4></td>
+			<td><h4>Airduct</h4></td>
+		</tr>
+		<tr>
+			<td>Monday</td>
+			<td><input type="text" name="core:Monday"/></td>
+			<td><input type="text" name="duct:Monday"/></td>
+		</tr>
+		<tr>
+			<td>Tuesday</td>
+			<td><input type="text" name="core:Tuesday"/></td>
+			<td><input type="text" name="duct:Tuesday"/></td>
+		</tr>
+		<tr>
+			<td>Wednesday</td>
+			<td><input type="text" name="core:Wednesday"/></td>
+			<td><input type="text" name="duct:Wednesday"/></td>
+		</tr>
+		<tr>
+			<td>Thursday</td>
+			<td><input type="text" name="core:Thursday"/></td>
+			<td><input type="text" name="duct:Thursday"/></td>
+		</tr>
+		<tr>
+			<td>Friday</td>
+			<td><input type="text" name="core:Friday"/></td>
+			<td><input type="text" name="duct:Friday"/></td>
+		</tr>
+		<tr>
+			<td>Saturday</td>
+			<td><input type="text" name="core:Saturday"/></td>
+			<td><input type="text" name="duct:Saturday"/></td>
+		</tr>
+		<tr>
+			<td>Sunday</td>
+			<td><input type="text" name="core:Sunday"/></td>
+			<td><input type="text" name="duct:Sunday"/></td>
+		</tr>
+			
+	</table>
+	
+	<h3>Calls</h3>
+		<table>
+		<tr>
+			<td><h4>Day</h4></td>
+			<td><h4>Call Orders</h4></td>
+			<td><h4>Web Orders</h4></td>
+			<td><h4>Booked Orders</h4></td>
+			<td><h4>Lost Orders</h4></td>
+			<td><h4>Estimated Orders</h4></td>
+		</tr>
+		<tr>
+			<td>Monday</td>
+			<td><input type="text" name="call orders:Monday"/></td>
+			<td><input type="text" name="web orders:Monday"/></td>
+			<td><input type="text" name="booked orders:Monday"/></td>
+			<td><input type="text" name="loss orders:Monday"/></td>
+			<td><input type="text" name="estimate orders:Monday"/></td>
+		</tr>
+
+	</table>
+	<p>Monday: <input type="text" name="1:Monday"/></p>
+	<p>Tuesday: <input type="text" name="2:Tuesday"/></p>
+	<p>Wednesday: <input type="text" name="3:Wednesday"/></p>
+	<p>Thursday: <input type="text" name="4:Thursday"/></p>
+	<p>Friday: <input type="text" name="5:Friday"/></p>
+	<p>Saturday: <input type="text" name="6:Saturday"/></p>
+	<p>Sunday: <input type="text" name="7:Sunday"/></p>
+	<br />
+	<p>
+		<input type="submit" value="Submit" name="btnSubmit" /> &nbsp
+		<input type="reset" value="Clear" name="btnClear" />
+	</p>
+</form>
+</body>
+</html>
