@@ -53,14 +53,16 @@ public class insertServlet extends HttpServlet {
 		String connString = "jdbc:mysql://localhost:3306/dbsteemerbi?autoReconnect=true&useSSL=false";
 		String driver = "com.mysql.jdbc.Driver";
 		PreparedStatement ps = null;
+		String accessDriver = "net.ucanaccess.jdbc.UcanaccessDriver";
+		String accessConString = "jdbc:ucanaccess://C:/Users/rquatela/SharePoint/Quatela Group - Documents/Quatela Group/Data-BI-Quatela.accdb";
 		
-		try { monday = Double.parseDouble(request.getParameter("1:Monday")); } catch(NumberFormatException e) { monday = 0; }
-		try { tuesday = Double.parseDouble(request.getParameter("2:Tuesday")); } catch(NumberFormatException e) { tuesday = 0; }
-		try { wednesday = Double.parseDouble(request.getParameter("3:Wednesday")); } catch(NumberFormatException e) { wednesday = 0; }
-		try { thursday = Double.parseDouble(request.getParameter("4:Thursday")); } catch(NumberFormatException e) { thursday = 0; }
-		try { friday = Double.parseDouble(request.getParameter("5:Friday")); } catch(NumberFormatException e) { friday = 0; }
-		try { saturday = Double.parseDouble(request.getParameter("6:Saturday")); } catch(NumberFormatException e) { saturday = 0; }
-		try { sunday = Double.parseDouble(request.getParameter("7:Sunday")); } catch(NumberFormatException e) { sunday = 0; }
+		try { monday = Double.parseDouble(request.getParameter("core:Monday")); } catch(NumberFormatException e) { monday = 0; }
+		try { tuesday = Double.parseDouble(request.getParameter("core:Tuesday")); } catch(NumberFormatException e) { tuesday = 0; }
+		try { wednesday = Double.parseDouble(request.getParameter("core:Wednesday")); } catch(NumberFormatException e) { wednesday = 0; }
+		try { thursday = Double.parseDouble(request.getParameter("core:Thursday")); } catch(NumberFormatException e) { thursday = 0; }
+		try { friday = Double.parseDouble(request.getParameter("core:Friday")); } catch(NumberFormatException e) { friday = 0; }
+		try { saturday = Double.parseDouble(request.getParameter("core:Saturday")); } catch(NumberFormatException e) { saturday = 0; }
+		try { sunday = Double.parseDouble(request.getParameter("core:Sunday")); } catch(NumberFormatException e) { sunday = 0; }
 		
 		HashMap<String, Double> days = new HashMap<>();
 		days.put("1:Monday", monday);
@@ -73,10 +75,12 @@ public class insertServlet extends HttpServlet {
 		
 
 		try {
-			Class.forName(driver).newInstance();
-			con = DriverManager.getConnection(connString, "root", "P@ssG0!");
-			ps = con.prepareStatement("INSERT INTO tbsales (company, year, month, week, day, core_sales, airduct_sales, total_sales) " +
-					"VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+			//Class.forName(driver).newInstance();
+			//con = DriverManager.getConnection(connString, "root", "P@ssG0!");
+			Class.forName(accessDriver);
+			con = DriverManager.getConnection(accessConString);
+			ps = con.prepareStatement("INSERT INTO tbsales (company, sales_year, sales_month, sales_week, sales_day, sales_core, sales_airduct) " +
+					"VALUES (?, ?, ?, ?, ?, ?, ?)");
 			for(Map.Entry<String, Double> entry : days.entrySet()) {
 				if(entry.getValue() != 0) {
 					ps.setString(1, company);
@@ -86,19 +90,12 @@ public class insertServlet extends HttpServlet {
 					ps.setString(5, entry.getKey());
 					ps.setDouble(6, entry.getValue());
 					ps.setDouble(7, 0);
-					ps.setDouble(8, entry.getValue());
 					ps.executeUpdate();
 				}
 				
 			}
 			//response.getWriter().println("<h3>You did it!!</h3>");
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (InstantiationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (ClassNotFoundException e) {
