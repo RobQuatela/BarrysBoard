@@ -51,36 +51,50 @@ public class insertServlet extends HttpServlet {
 		ArrayList<Jobs> jobsList = new ArrayList<>();
 
 		for(int i = 0; i < dayOfWeek.length; i++) {
+			String dataDay = "" + String.valueOf(i+1) + ":" + dayOfWeek[i].toString() + "";
+			
 			try {
-				String dataDay = "" + String.valueOf(i+1) + ":" + dayOfWeek[i].toString() + "";
 				callList.add(new Calls(company, year, month, week, dataDay,
 						Integer.parseInt(request.getParameter("call orders:" + dayOfWeek[i])),
 						Integer.parseInt(request.getParameter("web orders:" + dayOfWeek[i])),
 						Integer.parseInt(request.getParameter("booked orders:" + dayOfWeek[i])),
 						Integer.parseInt(request.getParameter("loss orders:" + dayOfWeek[i])),
 						Integer.parseInt(request.getParameter("estimate orders:" + dayOfWeek[i]))));
+			} catch(NumberFormatException e) {
+				
+			}
+			
+			try {
 				salesList.add(new Sales(company, year, month, week, dataDay,
 						Integer.parseInt(request.getParameter("core:" + dayOfWeek[i])),
-						Integer.parseInt(request.getParameter("duct:" + dayOfWeek[i]))));
+						Integer.parseInt(request.getParameter("duct:" + dayOfWeek[i]))));	
+			} catch(NumberFormatException e) {
+				
+			}
+			
+			try {
 				jobsList.add(new Jobs(company, year, month, week, dataDay,
 						Integer.parseInt(request.getParameter("corejobs:" + dayOfWeek[i])),
 						Integer.parseInt(request.getParameter("ductjobs:" + dayOfWeek[i]))));
-			}
-			catch(NumberFormatException e) {
+			} catch(NumberFormatException e) {
 				
 			}
 		}
 		
-		for(Calls call : callList)
-			call.insert();
+		if(!callList.isEmpty())
+			for(Calls call : callList)
+				call.insert();
 		
-		for(Sales sales : salesList)
-			sales.insert();
+		if(!salesList.isEmpty())
+			for(Sales sales : salesList)
+				sales.insert();
 		
-		for(Jobs jobs : jobsList)
-			jobs.insert();
+		if(!jobsList.isEmpty())
+			for(Jobs jobs : jobsList)
+				jobs.insert();
 
-		response.sendRedirect("http://localhost:8080/StanleySteemer-BI/index.html");
+		
+		response.sendRedirect("http://ZEUS:8080/StanleySteemer-BI/index.html");
 
 	}
 	
