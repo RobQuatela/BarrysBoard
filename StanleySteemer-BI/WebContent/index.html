@@ -44,47 +44,64 @@
 			<input type="radio" name="week" value="4">4 &nbsp
 			<input type="radio" name="week" value="5">5
 		</p>
-	<h3>Sales:</h3>
+
+	<h3>Data:</h3>
 	<table>
 		<tr>
 			<td><h4>Day</h4></td>
-			<td><h4>Core</h4></td>
-			<td><h4>Airduct</h4></td>
+			<td><h4>Core Sales</h4></td>
+			<td><h4>Airduct Sales</h4></td>
+			<td><h4>Core Jobs</h4></td>
+			<td><h4>Airduct Jobs</h4></td>
 		</tr>
 		<tr>
 			<td>Monday</td>
 			<td><input type="text" name="core:Monday"/></td>
 			<td><input type="text" name="duct:Monday"/></td>
+			<td><input type="text" name="corejobs:Monday"/></td>
+			<td><input type="text" name="ductjobs:Monday"/></td>
 		</tr>
 		<tr>
 			<td>Tuesday</td>
 			<td><input type="text" name="core:Tuesday"/></td>
 			<td><input type="text" name="duct:Tuesday"/></td>
+			<td><input type="text" name="corejobs:Tuesday"/></td>
+			<td><input type="text" name="ductjobs:Tuesday"/></td>
 		</tr>
 		<tr>
 			<td>Wednesday</td>
 			<td><input type="text" name="core:Wednesday"/></td>
 			<td><input type="text" name="duct:Wednesday"/></td>
+			<td><input type="text" name="corejobs:Wednesday"/></td>
+			<td><input type="text" name="ductjobs:Wednesday"/></td>
 		</tr>
 		<tr>
 			<td>Thursday</td>
 			<td><input type="text" name="core:Thursday"/></td>
 			<td><input type="text" name="duct:Thursday"/></td>
+			<td><input type="text" name="corejobs:Thursday"/></td>
+			<td><input type="text" name="ductjobs:Thursday"/></td>
 		</tr>
 		<tr>
 			<td>Friday</td>
 			<td><input type="text" name="core:Friday"/></td>
 			<td><input type="text" name="duct:Friday"/></td>
+			<td><input type="text" name="corejobs:Friday"/></td>
+			<td><input type="text" name="ductjobs:Friday"/></td>
 		</tr>
 		<tr>
 			<td>Saturday</td>
 			<td><input type="text" name="core:Saturday"/></td>
 			<td><input type="text" name="duct:Saturday"/></td>
+			<td><input type="text" name="corejobs:Saturday"/></td>
+			<td><input type="text" name="ductjobs:Saturday"/></td>
 		</tr>
 		<tr>
 			<td>Sunday</td>
 			<td><input type="text" name="core:Sunday"/></td>
 			<td><input type="text" name="duct:Sunday"/></td>
+			<td><input type="text" name="corejobs:Sunday"/></td>
+			<td><input type="text" name="ductjobs:Sunday"/></td>
 		</tr>
 			
 	</table>
@@ -107,16 +124,57 @@
 			<td><input type="text" name="loss orders:Monday"/></td>
 			<td><input type="text" name="estimate orders:Monday"/></td>
 		</tr>
+		<tr>
+			<td>Tuesday</td>
+			<td><input type="text" name="call orders:Tuesday"/></td>
+			<td><input type="text" name="web orders:Tuesday"/></td>
+			<td><input type="text" name="booked orders:Tuesday"/></td>
+			<td><input type="text" name="loss orders:Tuesday"/></td>
+			<td><input type="text" name="estimate orders:Tuesday"/></td>
+		</tr>
+		<tr>
+			<td>Wednesday</td>
+			<td><input type="text" name="call orders:Wednesday"/></td>
+			<td><input type="text" name="web orders:Wednesday"/></td>
+			<td><input type="text" name="booked orders:Wednesday"/></td>
+			<td><input type="text" name="loss orders:Wednesday"/></td>
+			<td><input type="text" name="estimate orders:Wednesday"/></td>
+		</tr>
+		<tr>
+			<td>Thursday</td>
+			<td><input type="text" name="call orders:Thursday"/></td>
+			<td><input type="text" name="web orders:Thursday"/></td>
+			<td><input type="text" name="booked orders:Thursday"/></td>
+			<td><input type="text" name="loss orders:Thursday"/></td>
+			<td><input type="text" name="estimate orders:Thursday"/></td>
+		</tr>
+		<tr>
+			<td>Friday</td>
+			<td><input type="text" name="call orders:Friday"/></td>
+			<td><input type="text" name="web orders:Friday"/></td>
+			<td><input type="text" name="booked orders:Friday"/></td>
+			<td><input type="text" name="loss orders:Friday"/></td>
+			<td><input type="text" name="estimate orders:Friday"/></td>
+		</tr>
+		<tr>
+			<td>Saturday</td>
+			<td><input type="text" name="call orders:Saturday"/></td>
+			<td><input type="text" name="web orders:Saturday"/></td>
+			<td><input type="text" name="booked orders:Saturday"/></td>
+			<td><input type="text" name="loss orders:Saturday"/></td>
+			<td><input type="text" name="estimate orders:Saturday"/></td>
+		</tr>
+		<tr>
+			<td>Sunday</td>
+			<td><input type="text" name="call orders:Sunday"/></td>
+			<td><input type="text" name="web orders:Sunday"/></td>
+			<td><input type="text" name="booked orders:Sunday"/></td>
+			<td><input type="text" name="loss orders:Sunday"/></td>
+			<td><input type="text" name="estimate orders:Sunday"/></td>
+		</tr>
 
 	</table>
-	<p>Monday: <input type="text" name="1:Monday"/></p>
-	<p>Tuesday: <input type="text" name="2:Tuesday"/></p>
-	<p>Wednesday: <input type="text" name="3:Wednesday"/></p>
-	<p>Thursday: <input type="text" name="4:Thursday"/></p>
-	<p>Friday: <input type="text" name="5:Friday"/></p>
-	<p>Saturday: <input type="text" name="6:Saturday"/></p>
-	<p>Sunday: <input type="text" name="7:Sunday"/></p>
-	<br />
+
 	<p>
 		<input type="submit" value="Submit" name="btnSubmit" /> &nbsp
 		<input type="reset" value="Clear" name="btnClear" />
