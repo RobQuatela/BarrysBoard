@@ -7,7 +7,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Insert title here</title>
+<title>Barry's Board - Update Records</title>
 </head>
 <body>
 <%
@@ -16,13 +16,56 @@
 	ArrayList<Month> months = Month.getMonths();
 	ArrayList<Week> weeks = Week.getWeeks();
 	ArrayList<Day> days = Day.getDays();
+	
+	int companyAtt = 1, yearAtt = 2017, monthAtt = 8, weekAtt = 1, dayAtt = 1;
+	try {		
+ 		companyAtt = Integer.parseInt(request.getParameter("company"));
+		yearAtt = Integer.parseInt(request.getParameter("year"));
+		monthAtt = Integer.parseInt(request.getParameter("month"));
+		weekAtt = Integer.parseInt(request.getParameter("week"));
+		dayAtt = Integer.parseInt(request.getParameter("day"));
+/* 		companyAtt = (int)request.getAttribute("company");
+		yearAtt = (int)request.getAttribute("year");
+		monthAtt = (int)request.getAttribute("month");
+		weekAtt = (int)request.getAttribute("week");
+		dayAtt = (int)request.getAttribute("day"); */
+	} catch (Exception e) {
+
+	}
+
+	Sales sale = new Sales(companyAtt, yearAtt, monthAtt, weekAtt, dayAtt);
+	Jobs job = new Jobs(companyAtt, yearAtt, monthAtt, weekAtt, dayAtt);
+	Calls call = new Calls(companyAtt, yearAtt, monthAtt, weekAtt, dayAtt);
+	Sales updateSales = null;
+	Jobs updateJobs = null;
+	Calls updateCalls = null;
+	
+	try {
+		updateSales = sale.getSales();
+		updateJobs = job.getJob();
+		updateCalls = call.getCall();
+	} catch(Exception e) {
+		
+	}
+	
+	request.setAttribute("company", companyAtt);
+	request.setAttribute("year", yearAtt);
+	request.setAttribute("month", monthAtt);
+	request.setAttribute("week", weekAtt);
+	request.setAttribute("day", dayAtt);
 %>
 
-<form name="inputForm" method="POST" action="insertServlet">
+
+<ul>
+	<li><a href="Insert.jsp">Insert Records</a></li>
+	<li><a href="Update.jsp">Update Records</a></li>
+</ul>
+
+<form name="updatePage" method="GET">
 	<h3>Company:</h3>
-		<p><select name="company">
+		<p><select name="company" id="company" >
 			<% for(Company company : companies) { %>
-				<% if(company.getCompanyID() == 1) { %>
+				<% if(company.getCompanyID() == (int)request.getAttribute("company")) { %>
 					<option value=<%= company.getCompanyID() %> selected ><%= company.getCompanyName() %></option>
 				<% } else { %>
 					<option value=<%= company.getCompanyID() %> ><%= company.getCompanyName() %></option>
@@ -33,7 +76,7 @@
 	<h3>Year:</h3> 
 		<p><select name="year">
 			<% for(Year year : years) { %>
-				<% if(year.getYearID() == 2017) { %>
+				<% if(year.getYearID() == (int)request.getAttribute("year")) { %>
 					<option value=<%= year.getYearID() %> selected ><%= year.getYearID() %></option>
 				<% } else { %>
 					<option value=<%= year.getYearID() %> ><%= year.getYearID() %></option>
@@ -44,7 +87,7 @@
 	<h3>Month:</h3>
 		<p><select name="month">
 			<% for(Month month : months) { %>
-				<% if(month.getMonthID() == 8) { %>
+				<% if(month.getMonthID() == (int)request.getAttribute("month")) { %>
 					<option value=<%= month.getMonthID() %> selected ><%= month.getMonthName() %></option>
 				<% } else { %>
 					<option value=<%= month.getMonthID() %> ><%= month.getMonthName() %></option>
@@ -55,37 +98,39 @@
 	<h3>Week:</h3>
 		<p>
 		<% for(Week week : weeks) { %>
-			<input type="radio" name="week" value=<%= week.getWeekID() %>><%= week.getWeekID() %> &nbsp
+			<% if(week.getWeekID() == (int)request.getAttribute("week")) { %>
+				<input type="radio" name="week" value=<%= week.getWeekID() %> checked="checked"><%= week.getWeekID() %> &nbsp
+			<% } else { %>
+				<input type="radio" name="week" value=<%= week.getWeekID() %>><%= week.getWeekID() %> &nbsp
+			<% } %>
 		<% } %>
 		</p>
 
 	<h3>Data:</h3>
 	<table>
 		<tr>
+			<td><input type="submit" value="Refresh" name="btnSubmit" /></td>
+		</tr>
+		<tr>
 			<td>
-				<select name="day" multiple="multiple" size="7" onClick="window.location.reload()">
+				<select name="day" multiple="multiple" size="7">
 				<% for (Day day : days) { %>
-					<option value=<%= day.getDayID() %>><%= day.getDayName() %></option>
+					<% if(day.getDayID() == (int)request.getAttribute("day")) { %>
+						<option value=<%= day.getDayID() %> selected ><%= day.getDayName() %></option>
+					<% } else { %>
+						<option value=<%= day.getDayID() %> ><%= day.getDayName() %></option>
+					<% } %>
 				<% } %>
 				</select>
 			</td>
 			<td>
-			<% 
-				int company = 1, year = 2017, month = 8, week = 3, day = 1;
-				if(request.getParameter("company") != null)
-					company = Integer.parseInt(request.getParameter("company")); 
-				if(request.getParameter("year") != null)
-					year = Integer.parseInt(request.getParameter("year"));
-				if(request.getParameter("month") != null)
-					month = Integer.parseInt(request.getParameter("month"));
-				if(request.getParameter("week") != null)
-					week = Integer.parseInt(request.getParameter("week"));
-				if(request.getParameter("day") != null)
-					day = Integer.parseInt(request.getParameter("day"));
-				
-				Sales sale = new Sales(company, year, month, week, day);
-				Sales updateSales = sale.getSales();
-			%>
+</form>
+<form name="updateForm" method="POST" action="UpdateServlet">
+	<input type="hidden" name="hiddenCompany" value=<%= request.getParameter("company") %>>
+	<input type="hidden" name="hiddenYear" value=<%= request.getParameter("year") %>>
+	<input type="hidden" name="hiddenMonth" value=<%= request.getParameter("month") %>>
+	<input type="hidden" name="hiddenWeek" value=<%= request.getParameter("week") %>>
+	<input type="hidden" name="hiddenDay" value=<%= request.getParameter("day") %>>
 				<table>
 					<tr>
 						<td><h4>Date</h4></td>
@@ -95,11 +140,11 @@
 						<td><h4>Airduct Jobs</h4></td>
 					</tr>
 					<tr>
-						<td><input type="date" name="salesdate:1:Monday" value=<%= updateSales.getDate() %>></td>
-						<td><input type="text" name="total:1:Monday" value=<%= updateSales.getTotalSales() %>></td>
-						<td><input type="text" name="duct:1:Monday" value=<%= updateSales.getSalesAirduct() %>></td>
-						<td><input type="text" name="totaljobs:1:Monday"></td>
-						<td><input type="text" name="ductjobs:1:Monday"></td>
+						<td><input type="date" name="sales date" value=<%= updateSales.getDate() %>></td>
+						<td><input type="text" name="total sales" value=<%= updateSales.getTotalSales() %>></td>
+						<td><input type="text" name="duct sales" value=<%= updateSales.getSalesAirduct() %>></td>
+						<td><input type="text" name="total jobs" value=<%= updateJobs.getJobsTotal() %>></td>
+						<td><input type="text" name="duct jobs" value=<%= updateJobs.getJobsAirduct() %>></td>
 					</tr>
 					<tr>
 						<td><h4>Call Orders</h4></td>
@@ -109,164 +154,19 @@
 						<td><h4>Estimated Orders</h4></td>
 					</tr>
 					<tr>
-						<td><input type="text" name="call orders:1:Monday"/></td>
-						<td><input type="text" name="web orders:1:Monday"/></td>
-						<td><input type="text" name="booked orders:1:Monday"/></td>
-						<td><input type="text" name="loss orders:1:Monday"/></td>
-						<td><input type="text" name="estimate orders:1:Monday"/></td>
+						<td><input type="text" name="call orders" value=<%= updateCalls.getCallOrders() %>></td>
+						<td><input type="text" name="web orders" value=<%= updateCalls.getOnlineOrders() %>></td>
+						<td><input type="text" name="booked orders" value=<%= updateCalls.getBookedOrders() %>></td>
+						<td><input type="text" name="loss orders" value=<%= updateCalls.getLossOrders() %>></td>
+						<td><input type="text" name="estimate orders" value=<%= updateCalls.getEstimateOrders() %>></td>
 					</tr>
 				</table>
 			</td>
 		</tr>
 	</table>
-	<table>
-		<tr>
-			<td><h4>Day</h4></td>
-			<td><h4>Date</h4></td>
-			<td><h4>Total Sales</h4></td>
-			<td><h4>Airduct Sales</h4></td>
-			<td><h4>Total Jobs</h4></td>
-			<td><h4>Airduct Jobs</h4></td>
-		</tr>
-		<tr>
-			<td>Monday</td>
-			<td><input type="date" name="salesdate:1:Monday"></td>
-			<td><input type="text" name="total:1:Monday"/></td>
-			<td><input type="text" name="duct:1:Monday"/></td>
-			<td><input type="text" name="totaljobs:1:Monday"/></td>
-			<td><input type="text" name="ductjobs:1:Monday"/></td>
-		</tr>
-		<tr>
-			<td>Tuesday</td>
-			<td><input type="date" name="salesdate:2:Tuesday"></td>
-			<td><input type="text" name="total:2:Tuesday"/></td>
-			<td><input type="text" name="duct:2:Tuesday"/></td>
-			<td><input type="text" name="totaljobs:2:Tuesday"/></td>
-			<td><input type="text" name="ductjobs:2:Tuesday"/></td>
-		</tr>
-		<tr>
-			<td>Wednesday</td>
-			<td><input type="date" name="salesdate:3:Wednesday"></td>
-			<td><input type="text" name="total:3:Wednesday"/></td>
-			<td><input type="text" name="duct:3:Wednesday"/></td>
-			<td><input type="text" name="totaljobs:3:Wednesday"/></td>
-			<td><input type="text" name="ductjobs:3:Wednesday"/></td>
-		</tr>
-		<tr>
-			<td>Thursday</td>
-			<td><input type="date" name="salesdate:4:Thursday"></td>
-			<td><input type="text" name="total:4:Thursday"/></td>
-			<td><input type="text" name="duct:4:Thursday"/></td>
-			<td><input type="text" name="totaljobs:4:Thursday"/></td>
-			<td><input type="text" name="ductjobs:4:Thursday"/></td>
-		</tr>
-		<tr>
-			<td>Friday</td>
-			<td><input type="date" name="salesdate:5:Friday"></td>
-			<td><input type="text" name="total:5:Friday"/></td>
-			<td><input type="text" name="duct:5:Friday"/></td>
-			<td><input type="text" name="totaljobs:5:Friday"/></td>
-			<td><input type="text" name="ductjobs:5:Friday"/></td>
-		</tr>
-		<tr>
-			<td>Saturday</td>
-			<td><input type="date" name="salesdate:6:Saturday"></td>
-			<td><input type="text" name="total:6:Saturday"/></td>
-			<td><input type="text" name="duct:6:Saturday"/></td>
-			<td><input type="text" name="totaljobs:6:Saturday"/></td>
-			<td><input type="text" name="ductjobs:6:Saturday"/></td>
-		</tr>
-		<tr>
-			<td>Sunday</td>
-			<td><input type="date" name="salesdate:7:Sunday"></td>
-			<td><input type="text" name="total:7:Sunday"/></td>
-			<td><input type="text" name="duct:7:Sunday"/></td>
-			<td><input type="text" name="totaljobs:7:Sunday"/></td>
-			<td><input type="text" name="ductjobs:7:Sunday"/></td>
-		</tr>
-			
-	</table>
 	
-	<h3>Calls</h3>
-		<table>
-		<tr>
-			<td><h4>Day</h4></td>
-			<td><h4>Date</h4></td>
-			<td><h4>Call Orders</h4></td>
-			<td><h4>Web Orders</h4></td>
-			<td><h4>Booked Orders</h4></td>
-			<td><h4>Lost Orders</h4></td>
-			<td><h4>Estimated Orders</h4></td>
-		</tr>
-		<tr>
-			<td>Monday</td>
-			<td><input type="date" name="ordersdate:1:Monday"></td>
-			<td><input type="text" name="call orders:1:Monday"/></td>
-			<td><input type="text" name="web orders:1:Monday"/></td>
-			<td><input type="text" name="booked orders:1:Monday"/></td>
-			<td><input type="text" name="loss orders:1:Monday"/></td>
-			<td><input type="text" name="estimate orders:1:Monday"/></td>
-		</tr>
-		<tr>
-			<td>Tuesday</td>
-			<td><input type="date" name="ordersdate:2:Tuesday"></td>
-			<td><input type="text" name="call orders:2:Tuesday"/></td>
-			<td><input type="text" name="web orders:2:Tuesday"/></td>
-			<td><input type="text" name="booked orders:2:Tuesday"/></td>
-			<td><input type="text" name="loss orders:2:Tuesday"/></td>
-			<td><input type="text" name="estimate orders:2:Tuesday"/></td>
-		</tr>
-		<tr>
-			<td>Wednesday</td>
-			<td><input type="date" name="ordersdate:3:Wednesday"></td>
-			<td><input type="text" name="call orders:3:Wednesday"/></td>
-			<td><input type="text" name="web orders:3:Wednesday"/></td>
-			<td><input type="text" name="booked orders:3:Wednesday"/></td>
-			<td><input type="text" name="loss orders:3:Wednesday"/></td>
-			<td><input type="text" name="estimate orders:3:Wednesday"/></td>
-		</tr>
-		<tr>
-			<td>Thursday</td>
-			<td><input type="date" name="ordersdate:4:Thursday"></td>
-			<td><input type="text" name="call orders:4:Thursday"/></td>
-			<td><input type="text" name="web orders:4:Thursday"/></td>
-			<td><input type="text" name="booked orders:4:Thursday"/></td>
-			<td><input type="text" name="loss orders:4:Thursday"/></td>
-			<td><input type="text" name="estimate orders:4:Thursday"/></td>
-		</tr>
-		<tr>
-			<td>Friday</td>
-			<td><input type="date" name="ordersdate:5:Friday"></td>
-			<td><input type="text" name="call orders:5:Friday"/></td>
-			<td><input type="text" name="web orders:5:Friday"/></td>
-			<td><input type="text" name="booked orders:5:Friday"/></td>
-			<td><input type="text" name="loss orders:5:Friday"/></td>
-			<td><input type="text" name="estimate orders:5:Friday"/></td>
-		</tr>
-		<tr>
-			<td>Saturday</td>
-			<td><input type="date" name="ordersdate:6:Saturday"></td>
-			<td><input type="text" name="call orders:6:Saturday"/></td>
-			<td><input type="text" name="web orders:6:Saturday"/></td>
-			<td><input type="text" name="booked orders:6:Saturday"/></td>
-			<td><input type="text" name="loss orders:6:Saturday"/></td>
-			<td><input type="text" name="estimate orders:6:Saturday"/></td>
-		</tr>
-		<tr>
-			<td>Sunday</td>
-			<td><input type="date" name="ordersdate:7:Sunday"></td>
-			<td><input type="text" name="call orders:7:Sunday"/></td>
-			<td><input type="text" name="web orders:7:Sunday"/></td>
-			<td><input type="text" name="booked orders:7:Sunday"/></td>
-			<td><input type="text" name="loss orders:7:Sunday"/></td>
-			<td><input type="text" name="estimate orders:7:Sunday"/></td>
-		</tr>
-
-	</table>
-
 	<p>
-		<input type="submit" value="Submit" name="btnSubmit" /> &nbsp
-		<input type="reset" value="Clear" name="btnClear" />
+		<input type="submit" value="Submit" name="btnSubmit" />
 	</p>
 </form>
 </body>

@@ -91,7 +91,7 @@ public class insertServlet extends HttpServlet {
 				jobs.insert();
 
 		
-		response.sendRedirect("http://localhost:8080/StanleySteemer-BI/Insert.jsp");
+		response.sendRedirect("Insert.jsp");
 
 	}
 	

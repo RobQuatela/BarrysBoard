@@ -10,7 +10,7 @@ public class ConnectDB {
 	private static String conString = "jdbc:mysql://localhost:3306/dbsteemerbi?autoReconnect=true&useSSL=false";
 	private static Connection con;
 	private static String user = "root";
-	private static String password = "P@ssG0!";
+	private static String password = "tturtles";
 	
 	public static Connection connect() throws SQLException {
 		

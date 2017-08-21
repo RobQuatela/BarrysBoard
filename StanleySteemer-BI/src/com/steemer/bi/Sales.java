@@ -138,7 +138,7 @@ public class Sales {
 			ps.setInt(4, this.getWeek());
 			ps.setInt(5, this.getDay());
 			ps.setDate(6, this.getDate());
-			ps.setInt(7, this.getSalesCore());
+			ps.setInt(7, this.getTotalSales());
 			ps.setInt(8, this.getSalesAirduct());
 			ps.executeUpdate();
 		} catch (SQLException e) {
@@ -187,5 +187,35 @@ public class Sales {
 		}
 		
 		return sale;
+	}
+	
+	public void updateSales() {
+		Connection con = null;
+		PreparedStatement ps = null;
+		
+		try {
+			con = ConnectDB.connect();
+			ps = con.prepareStatement("UPDATE tbsales SET sales_date = ?, sales_total = ?, sales_airduct = ? WHERE " +
+					"company_id = ? AND year_id = ? AND month_id = ? AND week_id = ? AND day_id = ?");
+			ps.setDate(1, this.getDate());
+			ps.setInt(2, this.getTotalSales());
+			ps.setInt(3, this.getSalesAirduct());
+			ps.setInt(4, this.getCompany());
+			ps.setInt(5, this.getYear());
+			ps.setInt(6, this.getMonth());
+			ps.setInt(7, this.getWeek());
+			ps.setInt(8, this.getDay());
+			ps.executeUpdate();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				ConnectDB.close();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 	}
 }

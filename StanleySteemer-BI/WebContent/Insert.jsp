@@ -6,7 +6,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Insert title here</title>
+<title>Barry's Board - Insert Records</title>
 </head>
 <body>
 <%
@@ -16,6 +16,10 @@
 	ArrayList<Week> weeks = Week.getWeeks();
 	ArrayList<Day> days = Day.getDays();
 %>
+<ul>
+	<li><a href="Insert.jsp">Insert Records</a></li>
+	<li><a href="Update.jsp">Update Records</a></li>
+</ul>
 <form name="inputForm" method="POST" action="insertServlet">
 	<h3>Company:</h3>
 		<p><select name="company">
