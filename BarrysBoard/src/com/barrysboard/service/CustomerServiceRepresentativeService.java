@@ -10,8 +10,6 @@ import java.util.ArrayList;
 import com.barrysboard.model.CustomerServiceRepresentative;
 import com.opencsv.CSVReader;
 
-import javafx.stage.FileChooser;
-
 public class CustomerServiceRepresentativeService {
 
 	public static ArrayList<CustomerServiceRepresentative> getCSRList() throws IOException {
@@ -29,8 +27,9 @@ public class CustomerServiceRepresentativeService {
 			reader.readNext();
 			
 			while((nextLine = reader.readNext()) != null) {
+				//String co_id = nextLine[9].substring(0, 3);
 				CustomerServiceRepresentative newCSR = new CustomerServiceRepresentative(
-						nextLine[1], nextLine[2] + ", " + nextLine[3], nextLine[0]);
+						nextLine[1], nextLine[2] + ", " + nextLine[3]);
 				csrs.add(newCSR);
 			}
 		}

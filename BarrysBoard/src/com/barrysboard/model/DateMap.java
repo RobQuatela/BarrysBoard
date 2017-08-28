@@ -6,12 +6,14 @@ public class DateMap {
 
 	private LocalDate date;
 	private String day;
+	private int week;
 	private String month;
-	private String year;
+	private int year;
 	
-	public DateMap(LocalDate date, String day, String month, String year) {
+	public DateMap(LocalDate date, String day, int week, String month, int year) {
 		this.date = date;
 		this.day = day;
+		this.week = week;
 		this.month = month;
 		this.year = year;
 	}
@@ -31,6 +33,14 @@ public class DateMap {
 	public void setDay(String day) {
 		this.day = day;
 	}
+	
+	public int getWeek() {
+		return week;
+	}
+
+	public void setWeek(int week) {
+		this.week = week;
+	}
 
 	public String getMonth() {
 		return month;
@@ -40,11 +50,11 @@ public class DateMap {
 		this.month = month;
 	}
 
-	public String getYear() {
+	public int getYear() {
 		return year;
 	}
 
-	public void setYear(String year) {
+	public void setYear(int year) {
 		this.year = year;
 	}
 	
