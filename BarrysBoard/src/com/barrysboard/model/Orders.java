@@ -1,5 +1,10 @@
 package com.barrysboard.model;
 
+import java.sql.Connection;
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.LocalDate;
 
 public class Orders {
@@ -119,6 +124,149 @@ public class Orders {
 
 	public void setCsrName(String csrName) {
 		this.csrName = csrName;
+	}
+	
+	private void insert() {
+		Connection con = null;
+		PreparedStatement ps = null;
+		
+		try {
+			con = DBConnect.connect();
+			ps = con.prepareStatement("INSERT INTO tborders (csr_id, co_id, date_id, orders_booked, orders_loss, orders_estimate, orders_cancel, orders_complete) " +
+					"VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+			ps.setString(1, this.getCsrID());
+			ps.setString(2, this.getCompanyID());
+			ps.setDate(3, Date.valueOf(this.getDate()));
+			ps.setInt(4, this.getBooked());
+			ps.setInt(5, this.getLoss());
+			ps.setInt(6, this.getEstimate());
+			ps.setInt(7, this.getCancel());
+			ps.setInt(8, this.getComplete());
+			ps.executeUpdate();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				DBConnect.close();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	private void update() {
+		Connection con = null;
+		PreparedStatement ps = null;
+		
+		try {
+			con = DBConnect.connect();
+			ps = con.prepareStatement("UPDATE tborders SET orders_booked = ?, orders_loss = ?, orders_estimate = ?, orders_cancel = ?, orders_complete = ? " +
+					"WHERE csr_id = ? AND co_id = ? AND date_id = ?");
+			ps.setInt(1, this.getBooked());
+			ps.setInt(2, this.getLoss());
+			ps.setInt(3, this.getEstimate());
+			ps.setInt(4, this.getCancel());
+			ps.setInt(5, this.getComplete());
+			ps.setString(6, this.getCsrID());
+			ps.setString(7, this.getCompanyID());
+			ps.setDate(8, Date.valueOf(this.getDate()));
+			ps.executeUpdate();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				DBConnect.close();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	private boolean checkForDup() {
+		Connection con = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		boolean isDup = false;
+		
+		try {
+			con = DBConnect.connect();
+			ps = con.prepareStatement("SELECT * FROM tborders WHERE csr_id = ? AND co_id = ? AND date_id = ? AND orders_booked = ? AND orders_loss = ? " +
+					"AND orders_estimate = ? AND orders_cancel = ? AND orders_complete = ?");
+			ps.setString(1, this.getCsrID());
+			ps.setString(2, this.getCompanyID());
+			ps.setDate(3, Date.valueOf(this.getDate()));
+			ps.setInt(4, this.getBooked());
+			ps.setInt(5, this.getLoss());
+			ps.setInt(6, this.getEstimate());
+			ps.setInt(7, this.getCancel());
+			ps.setInt(8, this.getComplete());
+			rs = ps.executeQuery();
+			if(rs.next())
+				isDup = true;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				DBConnect.close();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		return isDup;
+	}
+	
+	private boolean checkForUpdate() {
+		Connection con = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		boolean isUpdate = false;
+		
+		try {
+			con = DBConnect.connect();
+			ps = con.prepareStatement("SELECT * FROM tborders WHERE csr_id = ? AND co_id = ? AND date_id = ? AND (orders_booked != ? OR orders_loss != ? " +
+					"OR orders_estimate != ? OR orders_cancel != ? OR orders_complete != ?)");
+			ps.setString(1, this.getCsrID());
+			ps.setString(2, this.getCompanyID());
+			ps.setDate(3, Date.valueOf(this.getDate()));
+			ps.setInt(4, this.getBooked());
+			ps.setInt(5, this.getLoss());
+			ps.setInt(6, this.getEstimate());
+			ps.setInt(7, this.getCancel());
+			ps.setInt(8, this.getComplete());
+			rs = ps.executeQuery();
+			if(rs.next())
+				isUpdate = true;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				DBConnect.close();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		return isUpdate;
+	}
+	
+	public void authenticate() {
+		boolean isDup = this.checkForDup();
+		boolean isUpdate = this.checkForUpdate();
+		
+		if(!isDup)
+			if(!isUpdate)
+				this.insert();
+			else
+				this.update();
 	}
 	
 	

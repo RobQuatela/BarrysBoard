@@ -43,10 +43,9 @@ public class SalesInsert extends HttpServlet {
 		// TODO Auto-generated method stub
 		ArrayList<Sales> sales = SalesService.getSalesList();
 		for(Sales sale : sales) {
-			CustomerServiceRepresentative csr = new CustomerServiceRepresentative(sale.getCsrID(), "Needs Name");
-			csr.insert();
+			CustomerServiceRepresentative csr = new CustomerServiceRepresentative(sale.getCsrID(), "Empty");
+			csr.authenticate();
 			sale.insert();
-			System.out.println(sale.getTotalAmount());
 		}
 	}
 

@@ -17,7 +17,7 @@ public class SalesService {
 
 	public static ArrayList<Sales> getSalesList() throws IOException {
 		ArrayList<Sales> sales = new ArrayList<>();
-		File file = new File("C:/Users/rquatela/Desktop/scheduledjobsall.csv");
+		File file = new File("C:/Users/rquatela/Desktop/sales8-24-17.csv");
 		
 		try(CSVReader reader = new CSVReader(new FileReader(file))) {
 			String[] nextLine;
@@ -26,8 +26,14 @@ public class SalesService {
 			while((nextLine = reader.readNext()) != null) {
 				DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 				String company = nextLine[9].substring(0, 3);
+				String csrID;
+				try {
+					csrID = nextLine[0].substring(nextLine[0].length() - 4);
+				} catch(StringIndexOutOfBoundsException e) {
+					csrID = nextLine[0];
+				}
 				if (nextLine[17].equalsIgnoreCase("H")) {
-					sales.add(new Sales(nextLine[1], nextLine[0], company, LocalDate.parse(nextLine[8], format),
+					sales.add(new Sales(nextLine[1], csrID, company, LocalDate.parse(nextLine[8], format),
 							nextLine[19], nextLine[21], Double.parseDouble(nextLine[5]),
 							Double.parseDouble(nextLine[4])));
 				}

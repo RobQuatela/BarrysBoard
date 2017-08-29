@@ -1,10 +1,8 @@
 package com.barrysboard.web;
 
+import java.io.File;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -18,18 +16,19 @@ import com.barrysboard.model.Orders;
 import com.barrysboard.service.BackLogService;
 import com.barrysboard.service.CustomerServiceRepresentativeService;
 import com.barrysboard.service.OrdersService;
+import com.barrysboard.service.PhoneActivityService;
 
 /**
- * Servlet implementation class OrdersRead
+ * Servlet implementation class OrdersInsert
  */
-@WebServlet("/OrdersRead")
-public class OrdersRead extends HttpServlet {
+@WebServlet("/OrdersInsert")
+public class OrdersInsert extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public OrdersRead() {
+    public OrdersInsert() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -38,24 +37,27 @@ public class OrdersRead extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		response.setContentType("text/html");
-		
-		ArrayList<Orders> csrs = OrdersService.getOrdersList();
-		ArrayList<BackLog> logs = BackLogService.getBackLogList();
-		/*request.setAttribute("csrs", csrs);
-		
-		RequestDispatcher dispatcher = request.getRequestDispatcher("CustomerServiceRepresentativeList.jsp");
-		dispatcher.forward(request, response);*/
-
+		doPost(request, response);
 	}
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		String filePath = request.getParameter("path");
+		String fileName = request.getParameter("filePath");
+		File file = new File(fileName);
+		ArrayList<Orders> orders = PhoneActivityService.getOrdersList(file);
+		ArrayList<BackLog> backLogs = PhoneActivityService.getBackLogList(file);
+		ArrayList<CustomerServiceRepresentative> csrs = PhoneActivityService.getCSRList(file);
 		
+		for(CustomerServiceRepresentative csr : csrs)
+			csr.authenticate();
+		
+		for(Orders order : orders)
+			order.authenticate();
+		
+		for(BackLog backLog : backLogs)
+			backLog.authenticate();
 	}
 
 }

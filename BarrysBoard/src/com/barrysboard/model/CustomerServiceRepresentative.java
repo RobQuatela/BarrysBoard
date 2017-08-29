@@ -14,6 +14,10 @@ public class CustomerServiceRepresentative {
 		csrID = id;
 		csrName = name;
 	}
+	
+	public CustomerServiceRepresentative(String id) {
+		this.csrID = id;
+	}
 
 	public String getCsrID() {
 		return csrID;
@@ -31,28 +35,48 @@ public class CustomerServiceRepresentative {
 		this.csrName = csrName;
 	}
 	
-	public void insert() {
+	private void insert() {
 		Connection con = null;
 		PreparedStatement ps = null;
-		boolean check = this.checkForDup();
-		
-		if(check == false) {
+
+		try {
+			con = DBConnect.connect();
+			ps = con.prepareStatement("INSERT INTO tbcsr (csr_id, csr_name) VALUES (?, ?)");
+			ps.setString(1, this.getCsrID());
+			ps.setString(2, this.getCsrName());
+			ps.executeUpdate();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
 			try {
-				con = DBConnect.connect();
-				ps = con.prepareStatement("INSERT INTO tbcsr (csr_id, csr_name) VALUES (?, ?)");
-				ps.setString(1, this.getCsrID());
-				ps.setString(2, this.getCsrName());
-				ps.executeUpdate();
-			} catch (SQLException e) {
+				DBConnect.close();
+			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			} finally {
-				try {
-					DBConnect.close();
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+			}
+		}
+	}
+	
+	private void update() {
+		Connection con = null;
+		PreparedStatement ps = null;
+		
+		try {
+			con = DBConnect.connect();
+			ps = con.prepareStatement("UPDATE tbcsr SET csr_name = ? WHERE csr_id = ?");
+			ps.setString(1, this.getCsrName());
+			ps.setString(2, this.getCsrID());
+			ps.executeUpdate();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				DBConnect.close();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 		}
 	}
@@ -84,5 +108,46 @@ public class CustomerServiceRepresentative {
 		}
 		
 		return check;
+	}
+	
+	private boolean checkForUpdate() {
+		Connection con = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		boolean isUpdate = false;
+		
+		try {
+			con = DBConnect.connect();
+			ps = con.prepareStatement("SELECT * FROM tbcsr WHERE csr_id = ? AND csr_name != ?");
+			ps.setString(1, this.getCsrID());
+			ps.setString(2, this.getCsrName());
+			rs = ps.executeQuery();
+			if(rs.next()) {
+				isUpdate = true;
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				DBConnect.close();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		return isUpdate;
+	}
+	
+	public void authenticate() {
+		boolean dup = this.checkForDup();
+		
+		if(dup) {
+			if(!this.getCsrName().equalsIgnoreCase("Empty"))
+				this.update();
+		} else {
+			this.insert();
+		}
 	}
 }
