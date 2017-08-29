@@ -104,15 +104,16 @@ public class Sales {
 			try {
 				con = DBConnect.connect();
 				ps = con.prepareStatement(
-						"INSERT INTO tbsales (sales_id, csr_id, date_id, sales_jobtype, sales_custtype, sales_amount_scheduled, sales_amount_total "
-								+ "VALUES (?, ?, ?, ?, ?, ?, ?)");
+						"INSERT INTO tbsales (sales_id, csr_id, co_id, date_id, sales_jobtype, sales_custtype, sales_amount_scheduled, sales_amount_total) "
+								+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
 				ps.setString(1, this.getOrderID());
 				ps.setString(2, this.getCsrID());
-				ps.setDate(3, this.getDate());
-				ps.setString(4, this.getJobType());
-				ps.setString(5, this.getCustType());
-				ps.setDouble(6, this.getScheduledAmount());
-				ps.setDouble(7, this.getTotalAmount());
+				ps.setString(3, this.getCompanyID());
+				ps.setDate(4, this.getDate());
+				ps.setString(5, this.getJobType());
+				ps.setString(6, this.getCustType());
+				ps.setDouble(7, this.getScheduledAmount());
+				ps.setDouble(8, this.getTotalAmount());
 				ps.executeUpdate();
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
