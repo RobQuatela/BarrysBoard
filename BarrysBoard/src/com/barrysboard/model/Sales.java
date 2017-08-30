@@ -13,7 +13,7 @@ public class Sales {
 	private String orderID;
 	private String csrID;
 	private String companyID;
-	private Date date;
+	private LocalDate date;
 	private String jobType;
 	private String custType;
 	private double scheduledAmount;
@@ -24,7 +24,7 @@ public class Sales {
 		this.orderID = orderID;
 		this.csrID = csrID;
 		this.companyID = companyID;
-		this.date = Date.valueOf(date);
+		this.date = date;
 		this.jobType = jobType;
 		this.custType = custType;
 		this.scheduledAmount = scheduledAmount;
@@ -55,11 +55,11 @@ public class Sales {
 		this.companyID = companyID;
 	}
 
-	public Date getDate() {
+	public LocalDate getDate() {
 		return date;
 	}
 
-	public void setDate(Date date) {
+	public void setDate(LocalDate date) {
 		this.date = date;
 	}
 
@@ -95,7 +95,7 @@ public class Sales {
 		this.totalAmount = totalAmount;
 	}
 	
-	public void insert() {
+	private void insert() {
 		Connection con = null;
 		PreparedStatement ps = null;
 		boolean check = this.checkForDup();
@@ -109,7 +109,7 @@ public class Sales {
 				ps.setString(1, this.getOrderID());
 				ps.setString(2, this.getCsrID());
 				ps.setString(3, this.getCompanyID());
-				ps.setDate(4, this.getDate());
+				ps.setDate(4, Date.valueOf(this.getDate()));
 				ps.setString(5, this.getJobType());
 				ps.setString(6, this.getCustType());
 				ps.setDouble(7, this.getScheduledAmount());
@@ -129,6 +129,33 @@ public class Sales {
 		}
 	}
 	
+	private void update() {
+		Connection con = null;
+		PreparedStatement ps = null;
+		
+		try {
+			con = DBConnect.connect();
+			ps = con.prepareStatement("UPDATE tbsales SET sales_amount_scheduled = ?, sales_amount_total = ? WHERE " +
+					"sales_id = ? AND co_id = ? AND date_id = ?");
+			ps.setDouble(1, this.getScheduledAmount());
+			ps.setDouble(2, this.getTotalAmount());
+			ps.setString(3, this.getOrderID());
+			ps.setString(4, this.getCompanyID());
+			ps.setDate(5, Date.valueOf(this.getDate()));
+			ps.executeUpdate();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				DBConnect.close();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
+	
 	private boolean checkForDup() {
 		Connection con = null;
 		PreparedStatement ps = null;
@@ -138,7 +165,7 @@ public class Sales {
 		try {
 			con = DBConnect.connect();
 			ps = con.prepareStatement("SELECT * FROM tbsales WHERE date_id = ? AND co_id = ? AND sales_id = ?");
-			ps.setDate(1, this.getDate());
+			ps.setDate(1, Date.valueOf(this.getDate()));
 			ps.setString(2, this.getCompanyID());
 			ps.setString(3, this.getOrderID());
 			rs = ps.executeQuery();
@@ -157,6 +184,51 @@ public class Sales {
 		}
 		
 		return check;
+	}
+	
+	private boolean checkForUpdate() {
+		Connection con = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		boolean isUpdate = false;
+		
+		try {
+			con = DBConnect.connect();
+			ps = con.prepareStatement("SELECT * FROM tbsales WHERE date_id = ? AND co_id = ? AND sales_id = ? " +
+					"AND (sales_amount_scheduled != ? OR sales_amount_total != ?)");
+			ps.setDate(1, Date.valueOf(this.getDate()));
+			ps.setString(2, this.getCompanyID());
+			ps.setString(3, this.getOrderID());
+			ps.setDouble(4, this.getScheduledAmount());
+			ps.setDouble(5, this.getTotalAmount());
+			rs = ps.executeQuery();
+			if(rs.next()) 
+				isUpdate = true;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				DBConnect.close();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		return isUpdate;
+	}
+	
+	public void authenticate() {
+		boolean isDup = this.checkForDup();
+		boolean isUpdate = this.checkForUpdate();
+		
+		if(isDup) {
+			if(isUpdate)
+				this.update();
+		} else {
+			this.insert();
+		}
 	}
 	
 }

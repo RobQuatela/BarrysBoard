@@ -41,12 +41,12 @@ public class SalesInsert extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		ArrayList<Sales> sales = SalesService.getSalesList();
+/*		ArrayList<Sales> sales = SalesService.getSalesList();
 		for(Sales sale : sales) {
 			CustomerServiceRepresentative csr = new CustomerServiceRepresentative(sale.getCsrID(), "Empty");
 			csr.authenticate();
-			sale.insert();
-		}
+			//sale.insert();
+		}*/
 	}
 
 }

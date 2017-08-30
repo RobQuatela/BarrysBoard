@@ -15,9 +15,8 @@ import com.opencsv.CSVReader;
 
 public class SalesService {
 
-	public static ArrayList<Sales> getSalesList() throws IOException {
+	public static ArrayList<Sales> getSalesList(File file) throws IOException {
 		ArrayList<Sales> sales = new ArrayList<>();
-		File file = new File("C:/Users/rquatela/Desktop/sales8-24-17.csv");
 		
 		try(CSVReader reader = new CSVReader(new FileReader(file))) {
 			String[] nextLine;
@@ -33,7 +32,7 @@ public class SalesService {
 					csrID = nextLine[0];
 				}
 				if (nextLine[17].equalsIgnoreCase("H")) {
-					sales.add(new Sales(nextLine[1], csrID, company, LocalDate.parse(nextLine[8], format),
+					sales.add(new Sales(nextLine[1], csrID, company, LocalDate.parse(nextLine[10], format),
 							nextLine[19], nextLine[21], Double.parseDouble(nextLine[5]),
 							Double.parseDouble(nextLine[4])));
 				}

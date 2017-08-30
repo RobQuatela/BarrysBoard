@@ -4,10 +4,17 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Insert title here</title>
+<title>Barry's Board</title>
 </head>
 <body onload="myFunction()">
-	<form name="insertOrders" method="POST" action="OrdersInsert">
+	<form name="insertOrders" method="POST" action="Insert">
+	<h3>Which report type would you like to upload?</h3>
+	<p>Report Type: 
+		<select name="reportType">
+			<option value="phone activity">Phone Activity Report</option>
+			<option value="scheduled jobs">Scheduled Jobs by Date</option>
+		</select>
+	</p>
 	<input type="file" id="myFile" name="phoneFile" multiple size="50" onchange="myFunction()">
 	<p id="demo"></p>
 	<script>
@@ -17,14 +24,13 @@
 			var path = "";
 			if('files' in x) {
 				if(x.files.length == 0) {
-					txt = "Select one or more files.";
+					txt = "Select a file.";
 				} else {
 					for (var i = 0; i < x.files.length; i++) {
 						//txt += "<br><strong>" + file.name + "</strong><br>";
 						var file = x.files[i];
 						if('name' in file) {
 							txt += "<br><strong>" + file.name + "</strong><br>";
-							txt += "Path: C:/Users/rquatela/Desktop/" + file.name + "<br>";
 							path += "C:/Users/rquatela/Desktop/" + file.name;
 						}				
 					}
@@ -41,7 +47,7 @@
 			document.getElementById("filePath").value = path;
 		}
 	</script>
-	<input type="text" name="filePath" id="filePath">
+	<p>File Path: <input type="text" name="filePath" id="filePath" style="width:400px;"></p>
 	<input type="submit" name="btnSubmit" value="Submit">
 	</form>
 </body>
