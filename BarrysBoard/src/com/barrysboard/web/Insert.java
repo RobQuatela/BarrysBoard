@@ -2,6 +2,7 @@ package com.barrysboard.web;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 
 import javax.servlet.ServletException;
@@ -69,6 +70,29 @@ public class Insert extends HttpServlet {
 				sale.authenticate();
 			}
 		}
+		
+		response.setContentType("text/html");
+		PrintWriter out = response.getWriter();
+		out.println("<!DOCTYPE html>");
+		out.println("<html>");
+		out.println("<head>");
+		out.println("<meta charset='ISO-8859-1'>");
+		out.println("<link rel='stylesheet' href='css/Main.css' />");
+		out.println("<title>Barry's Board</title>");
+		out.println("</head>");
+		out.println("<body>");
+		out.println("<div align='center'>");
+		out.println("<h1>Barry's Board</h1>");
+		out.println("<a href=\"Index.html\"><img src=\"images/dry-erase-eraser-cartoon-clipart-1.jpg\" align=\"middle\" alt=\"Barry's Board\"/></a>");
+		out.println("<ul>");
+		out.println("<li><a class=\"active\" href=\"Index.html\">Home</a></li>");
+		out.println("<li><a href=\"Upload.jsp\">Upload Files</a></li>");
+		out.println("<li><a href=\"ReadSales.jsp\">Read Sales</a></li>");
+		out.println("</ul>");
+		out.println("</div>");
+		out.println("<p>Thank you for submitting your file! It will be available shortly. Please use the menu links to navigate.");
+		out.println("</body>");
+		out.println("</html>");
 	}
 
 }

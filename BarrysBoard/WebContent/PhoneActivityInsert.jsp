@@ -4,9 +4,10 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Insert title here</title>
+<title>Barry's Board - Upload Files</title>
 </head>
 <body onload="myFunction()">
+	<img src="images/dry-erase-eraser-cartoon-clipart-1.jpg"/>
 	<form name="insertOrders" method="POST" action="OrdersInsert">
 	<input type="file" id="myFile" name="phoneFile" multiple size="50" onchange="myFunction()">
 	<p id="demo"></p>

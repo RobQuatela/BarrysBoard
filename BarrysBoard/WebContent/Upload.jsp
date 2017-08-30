@@ -3,10 +3,20 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
+	<link rel="stylesheet" href="css/Main.css">
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Barry's Board</title>
 </head>
 <body onload="myFunction()">
+	<div align="center">
+		<h1>Barry's Board</h1>
+		<a href="index.html"><img src="images/dry-erase-eraser-cartoon-clipart-1.jpg" align="middle" alt="Barry's Board"/></a>
+		<ul>
+			<li><a href="Index.html">Home</a></li>
+			<li><a class="active" href="Upload.jsp">Upload Files</a></li>
+			<li><a href="ReadSales.jsp">Read Sales</a></li>
+		</ul>
+	</div>
 	<form name="insertOrders" method="POST" action="Insert">
 	<h3>Which report type would you like to upload?</h3>
 	<p>Report Type: 
