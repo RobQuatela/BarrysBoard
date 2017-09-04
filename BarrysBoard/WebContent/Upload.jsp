@@ -10,7 +10,7 @@
 <body onload="myFunction()">
 	<div align="center">
 		<h1>Barry's Board</h1>
-		<a href="index.html"><img src="images/dry-erase-eraser-cartoon-clipart-1.jpg" align="middle" alt="Barry's Board"/></a>
+		<a href="Index.html"><img src="images/dry-erase-eraser-cartoon-clipart-1.jpg" align="middle" alt="Barry's Board"/></a>
 		<ul>
 			<li><a href="Index.html">Home</a></li>
 			<li><a class="active" href="Upload.jsp">Upload Files</a></li>
