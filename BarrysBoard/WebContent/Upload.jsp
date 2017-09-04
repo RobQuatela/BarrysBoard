@@ -14,7 +14,6 @@
 		<ul>
 			<li><a href="Index.html">Home</a></li>
 			<li><a class="active" href="Upload.jsp">Upload Files</a></li>
-			<li><a href="ReadSales.jsp">Read Sales</a></li>
 		</ul>
 	</div>
 	<form name="insertOrders" method="POST" action="Insert">

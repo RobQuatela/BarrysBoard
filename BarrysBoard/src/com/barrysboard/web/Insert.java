@@ -87,7 +87,6 @@ public class Insert extends HttpServlet {
 		out.println("<ul>");
 		out.println("<li><a class=\"active\" href=\"Index.html\">Home</a></li>");
 		out.println("<li><a href=\"Upload.jsp\">Upload Files</a></li>");
-		out.println("<li><a href=\"ReadSales.jsp\">Read Sales</a></li>");
 		out.println("</ul>");
 		out.println("</div>");
 		out.println("<p>Thank you for submitting your file! It will be available shortly. Please use the menu links to navigate.");
