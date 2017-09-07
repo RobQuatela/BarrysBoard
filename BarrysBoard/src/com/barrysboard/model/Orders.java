@@ -5,7 +5,9 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class Orders {
 
@@ -19,6 +21,8 @@ public class Orders {
 	private int estimate;
 	private int cancel;
 	private int complete;
+	private LocalDateTime dateCreated;
+	private LocalDateTime dateModified;
 	
 	public Orders(int orderID, String csrID, String companyID, LocalDate date, int booked, int loss, int estimate,
 			int cancel, int complete) {
@@ -44,6 +48,21 @@ public class Orders {
 		this.estimate = estimate;
 		this.cancel = cancel;
 		this.complete = complete;
+	}
+	
+	public Orders(int orderID, String csrID, String csrName, String companyID, LocalDate date, int booked, int loss, int estimate,
+			int cancel, int complete, LocalDateTime dateCreated, LocalDateTime dateModified) {
+		this.csrID = csrID;
+		this.csrName = csrName;
+		this.companyID = companyID;
+		this.date = date;
+		this.booked = booked;
+		this.loss = loss;
+		this.estimate = estimate;
+		this.cancel = cancel;
+		this.complete = complete;
+		this.dateCreated = dateCreated;
+		this.dateModified = dateModified;
 	}
 
 	public int getOrderID() {
@@ -126,14 +145,30 @@ public class Orders {
 		this.csrName = csrName;
 	}
 	
+	public LocalDateTime getDateCreated() {
+		return dateCreated;
+	}
+
+	public void setDateCreated(LocalDateTime dateCreated) {
+		this.dateCreated = dateCreated;
+	}
+
+	public LocalDateTime getDateModified() {
+		return dateModified;
+	}
+
+	public void setDateModified(LocalDateTime dateModified) {
+		this.dateModified = dateModified;
+	}
+	
 	private void insert() {
 		Connection con = null;
 		PreparedStatement ps = null;
 		
 		try {
 			con = DBConnect.connect();
-			ps = con.prepareStatement("INSERT INTO tborders (csr_id, co_id, date_id, orders_booked, orders_loss, orders_estimate, orders_cancel, orders_complete) " +
-					"VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+			ps = con.prepareStatement("INSERT INTO tborders (csr_id, co_id, date_id, orders_booked, orders_loss, orders_estimate, orders_cancel, orders_complete, orders_date_created, orders_date_modified) " +
+					"VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 			ps.setString(1, this.getCsrID());
 			ps.setString(2, this.getCompanyID());
 			ps.setDate(3, Date.valueOf(this.getDate()));
@@ -142,6 +177,8 @@ public class Orders {
 			ps.setInt(6, this.getEstimate());
 			ps.setInt(7, this.getCancel());
 			ps.setInt(8, this.getComplete());
+			ps.setTimestamp(9, Timestamp.valueOf(this.getDateCreated()));
+			ps.setTimestamp(10, Timestamp.valueOf(this.getDateModified()));
 			ps.executeUpdate();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -162,16 +199,17 @@ public class Orders {
 		
 		try {
 			con = DBConnect.connect();
-			ps = con.prepareStatement("UPDATE tborders SET orders_booked = ?, orders_loss = ?, orders_estimate = ?, orders_cancel = ?, orders_complete = ? " +
+			ps = con.prepareStatement("UPDATE tborders SET orders_booked = ?, orders_loss = ?, orders_estimate = ?, orders_cancel = ?, orders_complete = ?, orders_date_modified = ? " +
 					"WHERE csr_id = ? AND co_id = ? AND date_id = ?");
 			ps.setInt(1, this.getBooked());
 			ps.setInt(2, this.getLoss());
 			ps.setInt(3, this.getEstimate());
 			ps.setInt(4, this.getCancel());
 			ps.setInt(5, this.getComplete());
-			ps.setString(6, this.getCsrID());
-			ps.setString(7, this.getCompanyID());
-			ps.setDate(8, Date.valueOf(this.getDate()));
+			ps.setTimestamp(6, Timestamp.valueOf(this.getDateModified()));
+			ps.setString(7, this.getCsrID());
+			ps.setString(8, this.getCompanyID());
+			ps.setDate(9, Date.valueOf(this.getDate()));
 			ps.executeUpdate();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block

@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
@@ -59,7 +60,7 @@ public class PhoneActivityService {
 				orders.add(new Orders(
 						1, csrID, nextLine[2] + ", " + nextLine[3], nextLine[0], LocalDate.parse(nextLine[6], format),
 						Integer.parseInt(nextLine[8]), Integer.parseInt(nextLine[11]), Integer.parseInt(nextLine[9]),
-						Integer.parseInt(nextLine[10]), Integer.parseInt(nextLine[15])));
+						Integer.parseInt(nextLine[10]), Integer.parseInt(nextLine[15]), LocalDateTime.now(), LocalDateTime.now()));
 			}
 		}
 		
@@ -96,7 +97,7 @@ public class PhoneActivityService {
 				
 				backLog.add(new BackLog(
 						csrID, nextLine[0], LocalDate.parse(nextLine[5], format), 
-						actual, prior));
+						actual, prior, LocalDateTime.now(), LocalDateTime.now()));
 			}
 		}
 		

@@ -5,7 +5,9 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 
 public class Sales {
@@ -18,6 +20,8 @@ public class Sales {
 	private String custType;
 	private double scheduledAmount;
 	private double totalAmount;
+	private LocalDateTime dateCreated;
+	private LocalDateTime dateModified;
 	
 	public Sales(String orderID, String csrID, String companyID, LocalDate date, String jobType, String custType,
 			double scheduledAmount, double totalAmount) {
@@ -29,6 +33,20 @@ public class Sales {
 		this.custType = custType;
 		this.scheduledAmount = scheduledAmount;
 		this.totalAmount = totalAmount;
+	}
+	
+	public Sales(String orderID, String csrID, String companyID, LocalDate date, String jobType, String custType,
+			double scheduledAmount, double totalAmount, LocalDateTime dateCreated, LocalDateTime dateModified) {
+		this.orderID = orderID;
+		this.csrID = csrID;
+		this.companyID = companyID;
+		this.date = date;
+		this.jobType = jobType;
+		this.custType = custType;
+		this.scheduledAmount = scheduledAmount;
+		this.totalAmount = totalAmount;
+		this.dateCreated = dateCreated;
+		this.dateModified = dateModified;
 	}
 
 	public String getOrderID() {
@@ -95,6 +113,22 @@ public class Sales {
 		this.totalAmount = totalAmount;
 	}
 	
+	public LocalDateTime getDateCreated() {
+		return dateCreated;
+	}
+
+	public void setDateCreated(LocalDateTime dateCreated) {
+		this.dateCreated = dateCreated;
+	}
+
+	public LocalDateTime getDateModified() {
+		return dateModified;
+	}
+
+	public void setDateModified(LocalDateTime dateModified) {
+		this.dateModified = dateModified;
+	}
+
 	private void insert() {
 		Connection con = null;
 		PreparedStatement ps = null;
@@ -104,8 +138,8 @@ public class Sales {
 			try {
 				con = DBConnect.connect();
 				ps = con.prepareStatement(
-						"INSERT INTO tbsales (sales_id, csr_id, co_id, date_id, sales_jobtype, sales_custtype, sales_amount_scheduled, sales_amount_total) "
-								+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+						"INSERT INTO tbsales (sales_id, csr_id, co_id, date_id, sales_jobtype, sales_custtype, sales_amount_scheduled, sales_amount_total, sales_date_created, sales_date_modified) "
+								+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 				ps.setString(1, this.getOrderID());
 				ps.setString(2, this.getCsrID());
 				ps.setString(3, this.getCompanyID());
@@ -114,6 +148,8 @@ public class Sales {
 				ps.setString(6, this.getCustType());
 				ps.setDouble(7, this.getScheduledAmount());
 				ps.setDouble(8, this.getTotalAmount());
+				ps.setTimestamp(9, Timestamp.valueOf(this.getDateCreated()));
+				ps.setTimestamp(10, Timestamp.valueOf(this.getDateModified()));
 				ps.executeUpdate();
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
@@ -135,13 +171,15 @@ public class Sales {
 		
 		try {
 			con = DBConnect.connect();
-			ps = con.prepareStatement("UPDATE tbsales SET sales_amount_scheduled = ?, sales_amount_total = ? WHERE " +
+			ps = con.prepareStatement("UPDATE tbsales SET sales_amount_scheduled = ?, sales_amount_total = ?, sales_date_modified = ? WHERE " +
 					"sales_id = ? AND co_id = ? AND date_id = ?");
 			ps.setDouble(1, this.getScheduledAmount());
 			ps.setDouble(2, this.getTotalAmount());
-			ps.setString(3, this.getOrderID());
-			ps.setString(4, this.getCompanyID());
-			ps.setDate(5, Date.valueOf(this.getDate()));
+			ps.setTimestamp(3, Timestamp.valueOf(this.getDateModified()));
+			ps.setString(4, this.getOrderID());
+			ps.setString(5, this.getCompanyID());
+			ps.setDate(6, Date.valueOf(this.getDate()));
+			
 			ps.executeUpdate();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
