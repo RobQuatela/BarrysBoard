@@ -40,7 +40,8 @@
 						var file = x.files[i];
 						if('name' in file) {
 							txt += "<br><strong>" + file.name + "</strong><br>";
-							path += "W:/management/barrysboarduploads/" + file.name;
+							//path += "W:/management/barrysboarduploads/" + file.name;
+							path += "C:/Users/rquatela/Desktop/" + file.name;
 						}				
 					}
 				}
