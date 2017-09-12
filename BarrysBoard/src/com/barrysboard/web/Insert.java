@@ -13,8 +13,13 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.barrysboard.model.BackLog;
 import com.barrysboard.model.CustomerServiceRepresentative;
+import com.barrysboard.model.Loss;
 import com.barrysboard.model.Orders;
 import com.barrysboard.model.Sales;
+import com.barrysboard.service.BackLogService;
+import com.barrysboard.service.CustomerServiceRepresentativeService;
+import com.barrysboard.service.LossService;
+import com.barrysboard.service.OrdersService;
 import com.barrysboard.service.PhoneActivityService;
 import com.barrysboard.service.SalesService;
 
@@ -49,25 +54,38 @@ public class Insert extends HttpServlet {
 		String reportType = request.getParameter("reportType");
 		File file = new File(fileName);
 		
-		if(reportType.equalsIgnoreCase("phone activity")) {
-			ArrayList<Orders> orders = PhoneActivityService.getOrdersList(file);
-			ArrayList<BackLog> backLogs = PhoneActivityService.getBackLogList(file);
-			ArrayList<CustomerServiceRepresentative> csrs = PhoneActivityService.getCSRList(file);
-
-			for (CustomerServiceRepresentative csr : csrs)
+		if(reportType.equalsIgnoreCase("booked")) {
+			ArrayList<Orders> orders = OrdersService.getOrdersList(file);
+			for (Orders order : orders) {
+				CustomerServiceRepresentative csr = new CustomerServiceRepresentative(order.getCsrID(), "Empty");
 				csr.authenticate();
-
-			for (Orders order : orders)
 				order.authenticate();
-
-			for (BackLog backLog : backLogs)
-				backLog.authenticate();
-		} else if(reportType.equalsIgnoreCase("scheduled jobs")) {
+			}
+		} else if(reportType.equalsIgnoreCase("scheduled")) {
 			ArrayList<Sales> sales = SalesService.getSalesList(file);
 			for(Sales sale : sales) {
 				CustomerServiceRepresentative csr = new CustomerServiceRepresentative(sale.getCsrID(), "Empty");
 				csr.authenticate();
 				sale.authenticate();
+			}
+		} else if(reportType.equalsIgnoreCase("loss")) {
+			ArrayList<Loss> losses = LossService.getLossList(file);
+			for(Loss loss : losses) {
+				CustomerServiceRepresentative csr = new CustomerServiceRepresentative(loss.getCsrID(), "Empty");
+				csr.authenticate();
+				loss.authenticate();
+			}
+		} else if(reportType.equalsIgnoreCase("backlog")) {
+			ArrayList<BackLog> backlogs = BackLogService.getBackLogList(file);
+			for(BackLog backlog : backlogs) {
+				CustomerServiceRepresentative csr = new CustomerServiceRepresentative(backlog.getCsrID(), "Empty");
+				csr.authenticate();
+				backlog.authenticate();
+			}
+		} else if(reportType.equalsIgnoreCase("employee")) {
+			ArrayList<CustomerServiceRepresentative> csrs = CustomerServiceRepresentativeService.getCSRList(file);
+			for(CustomerServiceRepresentative csr : csrs) {
+				csr.authenticate();
 			}
 		}
 		

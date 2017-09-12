@@ -34,11 +34,11 @@ public class CustomerServiceRepresentativeRead extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.setContentType("text/html");
 		
-		ArrayList<CustomerServiceRepresentative> csrs = CustomerServiceRepresentativeService.getCSRList();
-		/*request.setAttribute("csrs", csrs);
+/*		ArrayList<CustomerServiceRepresentative> csrs = CustomerServiceRepresentativeService.getCSRList();
+		request.setAttribute("csrs", csrs);
 		
 		RequestDispatcher dispatcher = request.getRequestDispatcher("CustomerServiceRepresentativeList.jsp");
-		dispatcher.forward(request, response);*/
+		dispatcher.forward(request, response);
 		PrintWriter out = response.getWriter();
 		out.println("<body>");
 		out.println("<table>");
@@ -53,7 +53,7 @@ public class CustomerServiceRepresentativeRead extends HttpServlet {
 			out.println("</tr>");
 		}
 		out.println("</table>");
-		out.println("</body>");
+		out.println("</body>");*/
 	}
 
 	/**

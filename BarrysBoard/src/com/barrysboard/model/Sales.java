@@ -18,12 +18,13 @@ public class Sales {
 	private LocalDate date;
 	private String jobType;
 	private String custType;
+	private String status;
 	private double scheduledAmount;
 	private double totalAmount;
 	private LocalDateTime dateCreated;
 	private LocalDateTime dateModified;
 	
-	public Sales(String orderID, String csrID, String companyID, LocalDate date, String jobType, String custType,
+	public Sales(String orderID, String csrID, String companyID, LocalDate date, String jobType, String custType, String status,
 			double scheduledAmount, double totalAmount) {
 		this.orderID = orderID;
 		this.csrID = csrID;
@@ -31,11 +32,12 @@ public class Sales {
 		this.date = date;
 		this.jobType = jobType;
 		this.custType = custType;
+		this.status = status;
 		this.scheduledAmount = scheduledAmount;
 		this.totalAmount = totalAmount;
 	}
 	
-	public Sales(String orderID, String csrID, String companyID, LocalDate date, String jobType, String custType,
+	public Sales(String orderID, String csrID, String companyID, LocalDate date, String jobType, String custType, String status,
 			double scheduledAmount, double totalAmount, LocalDateTime dateCreated, LocalDateTime dateModified) {
 		this.orderID = orderID;
 		this.csrID = csrID;
@@ -43,6 +45,7 @@ public class Sales {
 		this.date = date;
 		this.jobType = jobType;
 		this.custType = custType;
+		this.status = status;
 		this.scheduledAmount = scheduledAmount;
 		this.totalAmount = totalAmount;
 		this.dateCreated = dateCreated;
@@ -97,6 +100,14 @@ public class Sales {
 		this.custType = custType;
 	}
 
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
 	public double getScheduledAmount() {
 		return scheduledAmount;
 	}
@@ -138,18 +149,19 @@ public class Sales {
 			try {
 				con = DBConnect.connect();
 				ps = con.prepareStatement(
-						"INSERT INTO tbsales (sales_id, csr_id, co_id, date_id, sales_jobtype, sales_custtype, sales_amount_scheduled, sales_amount_total, sales_date_created, sales_date_modified) "
-								+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+						"INSERT INTO tbsales (sales_id, csr_id, co_id, date_id, sales_jobtype, sales_custtype, sales_status, sales_amount_scheduled, sales_amount_total, sales_date_created, sales_date_modified) "
+								+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 				ps.setString(1, this.getOrderID());
 				ps.setString(2, this.getCsrID());
 				ps.setString(3, this.getCompanyID());
 				ps.setDate(4, Date.valueOf(this.getDate()));
 				ps.setString(5, this.getJobType());
 				ps.setString(6, this.getCustType());
-				ps.setDouble(7, this.getScheduledAmount());
-				ps.setDouble(8, this.getTotalAmount());
-				ps.setTimestamp(9, Timestamp.valueOf(this.getDateCreated()));
-				ps.setTimestamp(10, Timestamp.valueOf(this.getDateModified()));
+				ps.setString(7, this.getStatus());
+				ps.setDouble(8, this.getScheduledAmount());
+				ps.setDouble(9, this.getTotalAmount());
+				ps.setTimestamp(10, Timestamp.valueOf(this.getDateCreated()));
+				ps.setTimestamp(11, Timestamp.valueOf(this.getDateModified()));
 				ps.executeUpdate();
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block

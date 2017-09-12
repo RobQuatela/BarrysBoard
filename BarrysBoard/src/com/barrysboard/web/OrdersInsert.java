@@ -44,7 +44,7 @@ public class OrdersInsert extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String fileName = request.getParameter("filePath");
+/*		String fileName = request.getParameter("filePath");
 		File file = new File(fileName);
 		ArrayList<Orders> orders = PhoneActivityService.getOrdersList(file);
 		ArrayList<BackLog> backLogs = PhoneActivityService.getBackLogList(file);
@@ -57,7 +57,7 @@ public class OrdersInsert extends HttpServlet {
 			order.authenticate();
 		
 		for(BackLog backLog : backLogs)
-			backLog.authenticate();
+			backLog.authenticate();*/
 	}
 
 }

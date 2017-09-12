@@ -12,23 +12,24 @@ import com.opencsv.CSVReader;
 
 public class CustomerServiceRepresentativeService {
 
-	public static ArrayList<CustomerServiceRepresentative> getCSRList() throws IOException {
+	public static ArrayList<CustomerServiceRepresentative> getCSRList(File file) throws IOException {
 		
 		ArrayList<CustomerServiceRepresentative> csrs = new ArrayList<>();
 		
-		//FileChooser fileChooser = new FileChooser();
-		//File file = fileChooser.showOpenDialog(null);
-		File newFile = new File("C:/Users/rquatela/Desktop/phoneactivity.csv");
-		//InputStream is = CustomerServiceRepresentativeService.class.getClassLoader().getResourceAsStream("C:/Users/rquatela/Desktop/phoneactivity.csv");
-		
-		try(CSVReader reader = new CSVReader(new FileReader(newFile))) {
+		try(CSVReader reader = new CSVReader(new FileReader(file))) {
 			
 			String[] nextLine;
 			reader.readNext();
 			
 			while((nextLine = reader.readNext()) != null) {
+				String csrID;
+				try {
+					csrID = nextLine[0].substring(nextLine[0].length() - 4);
+				} catch(StringIndexOutOfBoundsException e) {
+					csrID = nextLine[0];
+				}
 				CustomerServiceRepresentative newCSR = new CustomerServiceRepresentative(
-						nextLine[1], nextLine[2] + ", " + nextLine[3]);
+						csrID, nextLine[1]);
 				csrs.add(newCSR);
 			}
 		}

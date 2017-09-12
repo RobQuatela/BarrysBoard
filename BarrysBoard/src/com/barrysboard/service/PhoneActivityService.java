@@ -43,7 +43,7 @@ public class PhoneActivityService {
 		return csrs;
 	}
 	
-	public static ArrayList<Orders> getOrdersList(File file) throws IOException {
+/*	public static ArrayList<Orders> getOrdersList(File file) throws IOException {
 		ArrayList<Orders> orders = new ArrayList<>();
 		
 		try(CSVReader reader = new CSVReader(new FileReader(file))) {
@@ -53,19 +53,21 @@ public class PhoneActivityService {
 			while((nextLine = reader.readNext()) != null) {
 				String csrID;
 				try {
-					csrID = nextLine[1].substring(nextLine[1].length() - 4);
+					csrID = nextLine[0].substring(nextLine[1].length() - 4);
 				} catch(StringIndexOutOfBoundsException e) {
-					csrID = nextLine[1];
+					csrID = nextLine[0];
 				}
 				orders.add(new Orders(
 						1, csrID, nextLine[2] + ", " + nextLine[3], nextLine[0], LocalDate.parse(nextLine[6], format),
 						Integer.parseInt(nextLine[8]), Integer.parseInt(nextLine[11]), Integer.parseInt(nextLine[9]),
 						Integer.parseInt(nextLine[10]), Integer.parseInt(nextLine[15]), LocalDateTime.now(), LocalDateTime.now()));
+				orders.add(new Orders(
+						nextLine[1], csrID, 
 			}
 		}
 		
 		return orders;
-	}
+	}*/
 	
 	public static ArrayList<BackLog> getBackLogList(File file) throws IOException {
 		ArrayList<BackLog> backLog = new ArrayList<>();
@@ -77,6 +79,7 @@ public class PhoneActivityService {
 			while((nextLine = reader.readNext()) != null) {
 				int actual, prior;
 				String csrID;
+				LocalDate date = DateTimeConversion.convertToDate(nextLine[5]);
 				
 				try {
 					actual = Integer.parseInt(nextLine[13]);
@@ -96,7 +99,7 @@ public class PhoneActivityService {
 				}
 				
 				backLog.add(new BackLog(
-						csrID, nextLine[0], LocalDate.parse(nextLine[5], format), 
+						csrID, nextLine[0], date, 
 						actual, prior, LocalDateTime.now(), LocalDateTime.now()));
 			}
 		}

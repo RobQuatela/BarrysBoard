@@ -39,11 +39,11 @@ public class CustomerServiceRepresentativeInsert extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		ArrayList<CustomerServiceRepresentative> csrs = CustomerServiceRepresentativeService.getCSRList();
+/*		ArrayList<CustomerServiceRepresentative> csrs = CustomerServiceRepresentativeService.getCSRList();
 
 		for(CustomerServiceRepresentative csr : csrs) {
 			csr.authenticate();
-		};
+		};*/
 	}
 
 }

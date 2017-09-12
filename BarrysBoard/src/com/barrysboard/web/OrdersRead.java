@@ -40,8 +40,8 @@ public class OrdersRead extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.setContentType("text/html");
 		
-		ArrayList<Orders> csrs = OrdersService.getOrdersList();
-		ArrayList<BackLog> logs = BackLogService.getBackLogList();
+		//ArrayList<Orders> csrs = OrdersService.getOrdersList();
+		//ArrayList<BackLog> logs = BackLogService.getBackLogList();
 		/*request.setAttribute("csrs", csrs);
 		
 		RequestDispatcher dispatcher = request.getRequestDispatcher("CustomerServiceRepresentativeList.jsp");

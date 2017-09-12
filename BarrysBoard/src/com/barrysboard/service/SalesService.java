@@ -24,19 +24,20 @@ public class SalesService {
 			reader.readNext();
 			
 			while((nextLine = reader.readNext()) != null) {
-				DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+				String[] dateTimeObjs = DateTimeConversion.convertToStringArray(nextLine[10]);
+				LocalDate saleDate = DateTimeConversion.convertToDate(dateTimeObjs[0]);
 				String company = nextLine[9].substring(0, 3);
+				
 				String csrID;
 				try {
 					csrID = nextLine[0].substring(nextLine[0].length() - 4);
 				} catch(StringIndexOutOfBoundsException e) {
 					csrID = nextLine[0];
 				}
-				if (nextLine[17].equalsIgnoreCase("H")) {
-					sales.add(new Sales(nextLine[1], csrID, company, LocalDate.parse(nextLine[10], format),
-							nextLine[19], nextLine[21], Double.parseDouble(nextLine[5]),
-							Double.parseDouble(nextLine[4]), LocalDateTime.now(), LocalDateTime.now()));
-				}
+				
+				sales.add(new Sales(nextLine[1], csrID, company, saleDate,
+					nextLine[19], nextLine[21], nextLine[17], Double.parseDouble(nextLine[5]),
+					Double.parseDouble(nextLine[4]), LocalDateTime.now(), LocalDateTime.now()));
 			}
 		}
 		

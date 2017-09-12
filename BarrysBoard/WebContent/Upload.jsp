@@ -20,8 +20,11 @@
 	<h3>Which report type would you like to upload?</h3>
 	<p>Report Type: 
 		<select name="reportType">
-			<option value="phone activity">Phone Activity Report</option>
-			<option value="scheduled jobs">Scheduled Jobs by Date</option>
+			<option value="booked">Jobs by Booked Date</option>
+			<option value="scheduled">Jobs by Scheduled Date</option>
+			<option value="loss">Lost Calls</option>
+			<option value="backlog">Phone Activity</option>
+			<option value="employee">Employee Master List</option>
 		</select>
 	</p>
 	<input type="file" id="myFile" name="phoneFile" multiple size="50" onchange="myFunction()">
