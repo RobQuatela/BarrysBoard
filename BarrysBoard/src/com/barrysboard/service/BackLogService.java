@@ -20,19 +20,14 @@ public class BackLogService {
 			reader.readNext();
 			
 			while((nextLine = reader.readNext()) != null) {
-				int actual, prior;
+				int amount;
 				String csrID;
-				LocalDate date = DateTimeConversion.convertToDate(nextLine[6]);
+				LocalDate date = DateTimeConversion.convertToDate(nextLine[5]);
 				
 				try {
-					actual = Integer.parseInt(nextLine[13]);
+					amount = Integer.parseInt(nextLine[14]);
 				} catch(NumberFormatException e) {
-					actual = 0;
-				}
-				try {
-					prior = Integer.parseInt(nextLine[14]);
-				} catch(NumberFormatException e) {
-					prior = 0;
+					amount = 0;
 				}
 				
 				try {
@@ -43,7 +38,7 @@ public class BackLogService {
 				
 				backLog.add(new BackLog(
 						csrID, nextLine[0], date, 
-						actual, prior, LocalDateTime.now(), LocalDateTime.now()));
+						amount, LocalDateTime.now(), LocalDateTime.now()));
 			}
 		}
 		

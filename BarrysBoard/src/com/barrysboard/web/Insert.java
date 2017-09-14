@@ -57,28 +57,28 @@ public class Insert extends HttpServlet {
 		if(reportType.equalsIgnoreCase("booked")) {
 			ArrayList<Orders> orders = OrdersService.getOrdersList(file);
 			for (Orders order : orders) {
-				CustomerServiceRepresentative csr = new CustomerServiceRepresentative(order.getCsrID(), "Empty");
+				CustomerServiceRepresentative csr = new CustomerServiceRepresentative(order.getCsrID(), "Empty", "E");
 				csr.authenticate();
 				order.authenticate();
 			}
 		} else if(reportType.equalsIgnoreCase("scheduled")) {
 			ArrayList<Sales> sales = SalesService.getSalesList(file);
 			for(Sales sale : sales) {
-				CustomerServiceRepresentative csr = new CustomerServiceRepresentative(sale.getCsrID(), "Empty");
+				CustomerServiceRepresentative csr = new CustomerServiceRepresentative(sale.getCsrID(), "Empty", "E");
 				csr.authenticate();
 				sale.authenticate();
 			}
 		} else if(reportType.equalsIgnoreCase("loss")) {
 			ArrayList<Loss> losses = LossService.getLossList(file);
 			for(Loss loss : losses) {
-				CustomerServiceRepresentative csr = new CustomerServiceRepresentative(loss.getCsrID(), "Empty");
+				CustomerServiceRepresentative csr = new CustomerServiceRepresentative(loss.getCsrID(), "Empty", "E");
 				csr.authenticate();
 				loss.authenticate();
 			}
 		} else if(reportType.equalsIgnoreCase("backlog")) {
 			ArrayList<BackLog> backlogs = BackLogService.getBackLogList(file);
 			for(BackLog backlog : backlogs) {
-				CustomerServiceRepresentative csr = new CustomerServiceRepresentative(backlog.getCsrID(), "Empty");
+				CustomerServiceRepresentative csr = new CustomerServiceRepresentative(backlog.getCsrID(), "Empty", "E");
 				csr.authenticate();
 				backlog.authenticate();
 			}

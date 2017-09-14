@@ -15,34 +15,30 @@ public class BackLog {
 	private String csrID;
 	private String companyID;
 	private LocalDate date;
-	private int actualBackLog;
-	private int priorBackLog;
+	private int backlogAmount;
 	private LocalDateTime dateCreated;
 	private LocalDateTime dateModified;
 
-	public BackLog(int logId, String csrID, String companyID, LocalDate date, int actualBackLog, int priorBackLog) {
+	public BackLog(int logId, String csrID, String companyID, LocalDate date, int backlogAmount) {
 		this.logId = logId;
 		this.csrID = csrID;
 		this.companyID = companyID;
 		this.date = date;
-		this.actualBackLog = actualBackLog;
-		this.priorBackLog = priorBackLog;
+		this.backlogAmount = backlogAmount;
 	}
 	
-	public BackLog(String csrID, String companyID, LocalDate date, int actualBackLog, int priorBackLog) {
+	public BackLog(String csrID, String companyID, LocalDate date, int backlogAmount) {
 		this.csrID = csrID;
 		this.companyID = companyID;
 		this.date = date;
-		this.actualBackLog = actualBackLog;
-		this.priorBackLog = priorBackLog;
+		this.backlogAmount = backlogAmount;
 	}
 	
-	public BackLog(String csrID, String companyID, LocalDate date, int actualBackLog, int priorBackLog, LocalDateTime dateCreated, LocalDateTime dateModified) {
+	public BackLog(String csrID, String companyID, LocalDate date, int backlogAmount, LocalDateTime dateCreated, LocalDateTime dateModified) {
 		this.csrID = csrID;
 		this.companyID = companyID;
 		this.date = date;
-		this.actualBackLog = actualBackLog;
-		this.priorBackLog = priorBackLog;
+		this.backlogAmount = backlogAmount;
 		this.dateCreated = dateCreated;
 		this.dateModified = dateModified;
 	}
@@ -80,20 +76,12 @@ public class BackLog {
 		this.date = date;
 	}
 
-	public int getActualBackLog() {
-		return actualBackLog;
+	public int getBackLogAmount() {
+		return backlogAmount;
 	}
 
-	public void setActualBackLog(int actualBackLog) {
-		this.actualBackLog = actualBackLog;
-	}
-
-	public int getPriorBackLog() {
-		return priorBackLog;
-	}
-
-	public void setPriorBackLog(int priorBackLog) {
-		this.priorBackLog = priorBackLog;
+	public void setBackLogAmount(int backlogAmount) {
+		this.backlogAmount = backlogAmount;
 	}
 	
 	public LocalDateTime getDateCreated() {
@@ -118,14 +106,13 @@ public class BackLog {
 		
 		try {
 			con = DBConnect.connect();
-			ps = con.prepareStatement("INSERT INTO tbbacklog (csr_id, co_id, date_id, backlog_actual, backlog_prior, backlog_date_created, backlog_date_modified) VALUES (?, ?, ?, ?, ?, ?, ?)");
+			ps = con.prepareStatement("INSERT INTO tbbacklog (csr_id, co_id, date_id, backlog_amount, backlog_date_created, backlog_date_modified) VALUES (?, ?, ?, ?, ?, ?)");
 			ps.setString(1, this.getCsrID());
 			ps.setString(2, this.getCompanyID());
 			ps.setDate(3, Date.valueOf(this.getDate()));
-			ps.setInt(4, this.getActualBackLog());
-			ps.setInt(5, this.getPriorBackLog());
-			ps.setTimestamp(6, Timestamp.valueOf(this.getDateCreated()));
-			ps.setTimestamp(7, Timestamp.valueOf(this.getDateModified()));
+			ps.setInt(4, this.getBackLogAmount());
+			ps.setTimestamp(5, Timestamp.valueOf(this.getDateCreated()));
+			ps.setTimestamp(6, Timestamp.valueOf(this.getDateModified()));
 			ps.executeUpdate();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -146,13 +133,12 @@ public class BackLog {
 		
 		try {
 			con = DBConnect.connect();
-			ps = con.prepareStatement("UPDATE tbbacklog SET backlog_actual = ?, backlog_prior = ?, backlog_date_modified = ? WHERE date_id = ? AND csr_id = ? AND co_id = ?");
-			ps.setInt(1, this.getActualBackLog());
-			ps.setInt(2, this.getPriorBackLog());
-			ps.setTimestamp(3, Timestamp.valueOf(this.getDateModified()));
-			ps.setDate(4, Date.valueOf(this.getDate()));
-			ps.setString(5, this.getCsrID());
-			ps.setString(6, this.getCompanyID());
+			ps = con.prepareStatement("UPDATE tbbacklog SET backlog_amount = ?, backlog_date_modified = ? WHERE date_id = ? AND csr_id = ? AND co_id = ?");
+			ps.setInt(1, this.getBackLogAmount());
+			ps.setTimestamp(2, Timestamp.valueOf(this.getDateModified()));
+			ps.setDate(3, Date.valueOf(this.getDate()));
+			ps.setString(4, this.getCsrID());
+			ps.setString(5, this.getCompanyID());
 			ps.executeUpdate();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -175,12 +161,11 @@ public class BackLog {
 		
 		try {
 			con = DBConnect.connect();
-			ps = con.prepareStatement("SELECT * FROM tbbacklog WHERE date_id = ? AND csr_id = ? AND co_id = ? AND backlog_actual = ? AND backlog_prior = ?");
+			ps = con.prepareStatement("SELECT * FROM tbbacklog WHERE date_id = ? AND csr_id = ? AND co_id = ? AND backlog_amount = ?");
 			ps.setDate(1, Date.valueOf(this.getDate()));
 			ps.setString(2, this.getCsrID());
 			ps.setString(3, this.getCompanyID());
-			ps.setInt(4, this.getActualBackLog());
-			ps.setInt(5, this.getPriorBackLog());
+			ps.setInt(4, this.getBackLogAmount());
 			rs = ps.executeQuery();
 			if(rs.next())
 				isDup = true;
@@ -207,12 +192,11 @@ public class BackLog {
 		
 		try {
 			con = DBConnect.connect();
-			ps = con.prepareStatement("SELECT * FROM tbbacklog WHERE date_id = ? AND csr_id = ? AND co_id = ? AND backlog_actual != ? AND backlog_prior != ?");
+			ps = con.prepareStatement("SELECT * FROM tbbacklog WHERE date_id = ? AND csr_id = ? AND co_id = ? AND backlog_amount != ?");
 			ps.setDate(1, Date.valueOf(this.getDate()));
 			ps.setString(2, this.getCsrID());
 			ps.setString(3, this.getCompanyID());
-			ps.setInt(4, this.getActualBackLog());
-			ps.setInt(5, this.getPriorBackLog());
+			ps.setInt(4, this.getBackLogAmount());
 			rs = ps.executeQuery();
 			if(rs.next())
 				isUpdate = true;

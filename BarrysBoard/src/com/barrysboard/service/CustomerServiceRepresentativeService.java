@@ -29,7 +29,7 @@ public class CustomerServiceRepresentativeService {
 					csrID = nextLine[0];
 				}
 				CustomerServiceRepresentative newCSR = new CustomerServiceRepresentative(
-						csrID, nextLine[1]);
+						csrID, nextLine[1] + ", " + nextLine[2], nextLine[13]);
 				csrs.add(newCSR);
 			}
 		}

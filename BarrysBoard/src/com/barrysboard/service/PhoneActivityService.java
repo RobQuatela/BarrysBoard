@@ -34,9 +34,9 @@ public class PhoneActivityService {
 				} catch(StringIndexOutOfBoundsException e) {
 					csrID = nextLine[1];
 				}
-				CustomerServiceRepresentative newCSR = new CustomerServiceRepresentative(
+/*				CustomerServiceRepresentative newCSR = new CustomerServiceRepresentative(
 						csrID, nextLine[2] + ", " + nextLine[3]);
-				csrs.add(newCSR);
+				csrs.add(newCSR);*/
 			}
 		}
 		
@@ -98,9 +98,9 @@ public class PhoneActivityService {
 					csrID = nextLine[1];
 				}
 				
-				backLog.add(new BackLog(
+/*				backLog.add(new BackLog(
 						csrID, nextLine[0], date, 
-						actual, prior, LocalDateTime.now(), LocalDateTime.now()));
+						actual, prior, LocalDateTime.now(), LocalDateTime.now()));*/
 			}
 		}
 		
