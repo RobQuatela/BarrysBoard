@@ -24,8 +24,7 @@ public class SalesService {
 			reader.readNext();
 			
 			while((nextLine = reader.readNext()) != null) {
-				String[] dateTimeObjs = DateTimeConversion.convertToStringArray(nextLine[10]);
-				LocalDate saleDate = DateTimeConversion.convertToDate(dateTimeObjs[0]);
+				LocalDate saleDate = DateTimeConversion.convertToDate(nextLine[10]);
 				String company = nextLine[9].substring(0, 3);
 				
 				String csrID;
