@@ -2,14 +2,18 @@ package com.barrysboard.web;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintWriter;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.Part;
 
 import com.barrysboard.model.BackLog;
 import com.barrysboard.model.CustomerServiceRepresentative;
@@ -27,6 +31,7 @@ import com.barrysboard.service.SalesService;
  * Servlet implementation class Insert
  */
 @WebServlet("/Insert")
+@MultipartConfig
 public class Insert extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
@@ -49,41 +54,45 @@ public class Insert extends HttpServlet {
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
+	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String fileName = request.getParameter("filePath");
 		String reportType = request.getParameter("reportType");
-		File file = new File(fileName);
+		
+		//String description = request.getParameter("filPath");
+		Part filePart = request.getPart("uploadFile");
+		//String fileNombre = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
+		InputStream fileContent = filePart.getInputStream();
 		
 		if(reportType.equalsIgnoreCase("booked")) {
-			ArrayList<Orders> orders = OrdersService.getOrdersList(file);
+			ArrayList<Orders> orders = OrdersService.getOrdersList(fileContent);
 			for (Orders order : orders) {
 				CustomerServiceRepresentative csr = new CustomerServiceRepresentative(order.getCsrID(), "Empty", "E");
 				csr.authenticate();
 				order.authenticate();
 			}
 		} else if(reportType.equalsIgnoreCase("scheduled")) {
-			ArrayList<Sales> sales = SalesService.getSalesList(file);
+			ArrayList<Sales> sales = SalesService.getSalesList(fileContent);
 			for(Sales sale : sales) {
 				CustomerServiceRepresentative csr = new CustomerServiceRepresentative(sale.getCsrID(), "Empty", "E");
 				csr.authenticate();
 				sale.authenticate();
 			}
 		} else if(reportType.equalsIgnoreCase("loss")) {
-			ArrayList<Loss> losses = LossService.getLossList(file);
+			ArrayList<Loss> losses = LossService.getLossList(fileContent);
 			for(Loss loss : losses) {
 				CustomerServiceRepresentative csr = new CustomerServiceRepresentative(loss.getCsrID(), "Empty", "E");
 				csr.authenticate();
 				loss.authenticate();
 			}
 		} else if(reportType.equalsIgnoreCase("backlog")) {
-			ArrayList<BackLog> backlogs = BackLogService.getBackLogList(file);
+			ArrayList<BackLog> backlogs = BackLogService.getBackLogList(fileContent);
 			for(BackLog backlog : backlogs) {
 				CustomerServiceRepresentative csr = new CustomerServiceRepresentative(backlog.getCsrID(), "Empty", "E");
 				csr.authenticate();
 				backlog.authenticate();
 			}
 		} else if(reportType.equalsIgnoreCase("employee")) {
-			ArrayList<CustomerServiceRepresentative> csrs = CustomerServiceRepresentativeService.getCSRList(file);
+			ArrayList<CustomerServiceRepresentative> csrs = CustomerServiceRepresentativeService.getCSRList(fileContent);
 			for(CustomerServiceRepresentative csr : csrs) {
 				csr.authenticate();
 			}

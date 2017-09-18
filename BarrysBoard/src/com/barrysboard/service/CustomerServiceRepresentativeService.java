@@ -12,11 +12,11 @@ import com.opencsv.CSVReader;
 
 public class CustomerServiceRepresentativeService {
 
-	public static ArrayList<CustomerServiceRepresentative> getCSRList(File file) throws IOException {
+	public static ArrayList<CustomerServiceRepresentative> getCSRList(InputStream file) throws IOException {
 		
 		ArrayList<CustomerServiceRepresentative> csrs = new ArrayList<>();
 		
-		try(CSVReader reader = new CSVReader(new FileReader(file))) {
+		try(CSVReader reader = new CSVReader(new InputStreamReader(file))) {
 			
 			String[] nextLine;
 			reader.readNext();

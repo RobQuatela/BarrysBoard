@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -17,7 +18,7 @@ public class SalesServiceTest {
 
 	@Test
 	public void testGetSalesList() {
-		File file = new File("C:/Users/rquatela/Desktop/jobs 8-25.csv");
+		InputStream file = null;
 		ArrayList<Sales> sales = new ArrayList<>();
 		ArrayList<Sales> salesTest = null;
 		sales.add(new Sales("961684", "9996", "SSB", LocalDate.of(2017, 8, 25), "REG", "R", "H", 156.50, 156.50));

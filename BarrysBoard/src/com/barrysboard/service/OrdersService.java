@@ -3,6 +3,8 @@ package com.barrysboard.service;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -14,9 +16,9 @@ import com.opencsv.CSVReader;
 
 public class OrdersService {
 
-		public static ArrayList<Orders> getOrdersList(File file) throws IOException {
+		public static ArrayList<Orders> getOrdersList(InputStream file) throws IOException {
 		ArrayList<Orders> orders = new ArrayList<>();
-		try(CSVReader reader = new CSVReader(new FileReader(file))) {
+		try(CSVReader reader = new CSVReader(new InputStreamReader(file))) {
 			String[] nextLine;
 			reader.readNext();
 			

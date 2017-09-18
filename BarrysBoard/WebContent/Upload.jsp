@@ -16,7 +16,7 @@
 			<li><a class="active" href="Upload.jsp">Upload Files</a></li>
 		</ul>
 	</div>
-	<form name="insertOrders" method="POST" action="Insert">
+	<form name="insertOrders" method="POST" action="Insert" enctype="multipart/form-data">
 	<h3>Which report type would you like to upload?</h3>
 	<p>Report Type: 
 		<select name="reportType">
@@ -27,7 +27,7 @@
 			<option value="employee">Employee Master List</option>
 		</select>
 	</p>
-	<input type="file" id="myFile" name="phoneFile" multiple size="50" onchange="myFunction()">
+	<input type="file" id="myFile" name="uploadFile" multiple="true" onchange="myFunction()" >
 	<p id="demo"></p>
 	<script>
 		function myFunction() {
@@ -39,12 +39,10 @@
 					txt = "Select a file.";
 				} else {
 					for (var i = 0; i < x.files.length; i++) {
-						//txt += "<br><strong>" + file.name + "</strong><br>";
 						var file = x.files[i];
 						if('name' in file) {
 							txt += "<br><strong>" + file.name + "</strong><br>";
-							//path += "W:/management/barrysboarduploads/" + file.name;
-							path += "C:/Users/rquatela/Desktop/" + file.name;
+							path += file.name;
 						}				
 					}
 				}
@@ -60,7 +58,7 @@
 			document.getElementById("filePath").value = path;
 		}
 	</script>
-	<p>File Path: <input type="text" name="filePath" id="filePath" style="width:400px;"></p>
+	<p>File: <input type="text" name="filePath" id="filePath" style="width:400px;"></p>
 	<input type="submit" name="btnSubmit" value="Submit">
 	</form>
 </body>

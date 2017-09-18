@@ -3,6 +3,8 @@ package com.barrysboard.service;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -16,10 +18,10 @@ import com.opencsv.CSVReader;
 
 public class SalesService {
 
-	public static ArrayList<Sales> getSalesList(File file) throws IOException {
+	public static ArrayList<Sales> getSalesList(InputStream file) throws IOException {
 		ArrayList<Sales> sales = new ArrayList<>();
 		
-		try(CSVReader reader = new CSVReader(new FileReader(file))) {
+		try(CSVReader reader = new CSVReader(new InputStreamReader(file))) {
 			String[] nextLine;
 			reader.readNext();
 			

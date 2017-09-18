@@ -3,6 +3,8 @@ package com.barrysboard.service;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -12,10 +14,10 @@ import com.opencsv.CSVReader;
 
 public class BackLogService {
 
-	public static ArrayList<BackLog> getBackLogList(File file) throws IOException {
+	public static ArrayList<BackLog> getBackLogList(InputStream file) throws IOException {
 		ArrayList<BackLog> backLog = new ArrayList<>();
 		
-		try(CSVReader reader = new CSVReader(new FileReader(file))) {
+		try(CSVReader reader = new CSVReader(new InputStreamReader(file))) {
 			String[] nextLine;
 			reader.readNext();
 			
