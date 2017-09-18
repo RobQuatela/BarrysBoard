@@ -30,8 +30,14 @@ public class LossService {
 				} catch(StringIndexOutOfBoundsException e) {
 					csr = nextLine[2];
 				}
+				double amount;
+				try {
+					amount = Double.parseDouble(nextLine[8]);
+				} catch(NumberFormatException e) {
+					amount = 0;
+				}
 				
-				losses.add(new Loss(nextLine[5], csr, nextLine[7], lossDate, Double.parseDouble(nextLine[8]), nextLine[9],
+				losses.add(new Loss(nextLine[5], csr, nextLine[7], lossDate, amount, nextLine[9],
 						LocalDateTime.now(), LocalDateTime.now()));
 			}
 		}

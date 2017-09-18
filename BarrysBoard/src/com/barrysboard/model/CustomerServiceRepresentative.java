@@ -101,10 +101,10 @@ public class CustomerServiceRepresentative {
 		
 		try {
 			con = DBConnect.connect();
-			ps = con.prepareStatement("SELECT * FROM tbcsr WHERE csr_id = ? AND csr_name = ? AND csr_active = ?");
+			ps = con.prepareStatement("SELECT * FROM tbcsr WHERE csr_id = ?");
 			ps.setString(1, this.getCsrID());
-			ps.setString(2, this.getCsrName());
-			ps.setString(3, this.getCsrActive());
+			//ps.setString(2, this.getCsrName());
+			//ps.setString(3, this.getCsrActive());
 			rs = ps.executeQuery();
 			if(rs.next()) {
 				check = true;
@@ -157,13 +157,13 @@ public class CustomerServiceRepresentative {
 	
 	public void authenticate() {
 		boolean isDup = this.checkForDup();
-		boolean isUpdate = this.checkForUpdate();
+		//boolean isUpdate = this.checkForUpdate();
 		
 		if(!isDup) {
-			if(isUpdate && !this.getCsrName().equalsIgnoreCase("Empty"))
-				this.update();
-			else
-				this.insert();
+			//if(isUpdate && !this.getCsrName().equalsIgnoreCase("Empty"))
+			//	this.update();
+			//else
+			this.insert();
 		}
 	}
 }

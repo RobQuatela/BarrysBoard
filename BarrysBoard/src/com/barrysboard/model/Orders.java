@@ -331,16 +331,18 @@ public class Orders {
 		
 		try {
 			con = DBConnect.connect();
-			ps = con.prepareStatement("UPDATE tborders SET orders_status = ?, csr_id = ?, orders_amount_scheduled = ?, orders_amount_total = ?, orders_date_modified = ? " +
-					"WHERE orders_id = ? AND co_id = ? AND date_id = ?");
+			ps = con.prepareStatement("UPDATE tborders SET orders_status = ?, csr_id = ?, orders_amount_scheduled = ?, orders_amount_total = ?, orders_date_modified = ?, date_id = ?, " +
+					"orders_jobtype = ?, orders_time = ? WHERE orders_id = ? AND co_id = ?");
 			ps.setString(1, this.getStatus());
 			ps.setString(2, this.getCsrID());
 			ps.setDouble(3, this.getAmountScheduled());
 			ps.setDouble(4, this.getAmountTotal());
 			ps.setTimestamp(5, Timestamp.valueOf(this.getDateModified()));
-			ps.setString(6, this.getOrderID());
-			ps.setString(7, this.getCompanyID());
-			ps.setDate(8, Date.valueOf(this.getDate()));
+			ps.setDate(6, Date.valueOf(this.getDate()));
+			ps.setString(7, this.getJobType());
+			ps.setTime(8, Time.valueOf(this.getTime()));
+			ps.setString(9, this.getOrderID());
+			ps.setString(10, this.getCompanyID());
 			ps.executeUpdate();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -400,18 +402,18 @@ public class Orders {
 		
 		try {
 			con = DBConnect.connect();
-			ps = con.prepareStatement("SELECT * FROM tborders WHERE orders_id = ? AND csr_id = ? AND co_id = ? AND date_id = ? AND " +
+			ps = con.prepareStatement("SELECT * FROM tborders WHERE orders_id = ? AND co_id = ? AND " +
 					"(orders_jobtype != ? OR orders_custtype != ? OR orders_status != ? OR orders_amount_scheduled != ? OR " +
-					"orders_amount_total != ?)");
+					"orders_amount_total != ? OR date_id != ? OR csr_id != ?)");
 			ps.setString(1, this.getOrderID());
-			ps.setString(2, this.getCsrID());
-			ps.setString(3, this.getCompanyID());
-			ps.setDate(4, Date.valueOf(this.getDate()));
-			ps.setString(5, this.getJobType());
-			ps.setString(6, this.getCustType());
-			ps.setString(7, this.getStatus());
-			ps.setDouble(8, this.getAmountScheduled());
-			ps.setDouble(9, this.getAmountTotal());
+			ps.setString(2, this.getCompanyID());
+			ps.setString(3, this.getJobType());
+			ps.setString(4, this.getCustType());
+			ps.setString(5, this.getStatus());
+			ps.setDouble(6, this.getAmountScheduled());
+			ps.setDouble(7, this.getAmountTotal());
+			ps.setDate(8, Date.valueOf(this.getDate()));
+			ps.setString(9, this.getCsrID());
 			rs = ps.executeQuery();
 			if(rs.next())
 				isUpdate = true;
@@ -435,10 +437,10 @@ public class Orders {
 		boolean isUpdate = this.checkForUpdate();
 		
 		if(!isDup)
-			if(!isUpdate)
-				this.insert();
-			else
+			if(isUpdate)
 				this.update();
+			else
+				this.insert();
 	}
 	
 	

@@ -183,14 +183,14 @@ public class Sales {
 		
 		try {
 			con = DBConnect.connect();
-			ps = con.prepareStatement("UPDATE tbsales SET sales_amount_scheduled = ?, sales_amount_total = ?, sales_date_modified = ? WHERE " +
-					"sales_id = ? AND co_id = ? AND date_id = ?");
+			ps = con.prepareStatement("UPDATE tbsales SET sales_amount_scheduled = ?, sales_amount_total = ?, sales_date_modified = ?, date_id = ? WHERE " +
+					"sales_id = ? AND co_id = ?");
 			ps.setDouble(1, this.getScheduledAmount());
 			ps.setDouble(2, this.getTotalAmount());
 			ps.setTimestamp(3, Timestamp.valueOf(this.getDateModified()));
-			ps.setString(4, this.getOrderID());
-			ps.setString(5, this.getCompanyID());
-			ps.setDate(6, Date.valueOf(this.getDate()));
+			ps.setDate(4, Date.valueOf(this.getDate()));
+			ps.setString(5, this.getOrderID());
+			ps.setString(6, this.getCompanyID());
 			
 			ps.executeUpdate();
 		} catch (SQLException e) {
@@ -244,13 +244,13 @@ public class Sales {
 		
 		try {
 			con = DBConnect.connect();
-			ps = con.prepareStatement("SELECT * FROM tbsales WHERE date_id = ? AND co_id = ? AND sales_id = ? " +
-					"AND (sales_amount_scheduled != ? OR sales_amount_total != ?)");
-			ps.setDate(1, Date.valueOf(this.getDate()));
-			ps.setString(2, this.getCompanyID());
-			ps.setString(3, this.getOrderID());
-			ps.setDouble(4, this.getScheduledAmount());
-			ps.setDouble(5, this.getTotalAmount());
+			ps = con.prepareStatement("SELECT * FROM tbsales WHERE co_id = ? AND sales_id = ? " +
+					"AND (sales_amount_scheduled != ? OR sales_amount_total != ? OR date_id != ?)");
+			ps.setString(1, this.getCompanyID());
+			ps.setString(2, this.getOrderID());
+			ps.setDouble(3, this.getScheduledAmount());
+			ps.setDouble(4, this.getTotalAmount());
+			ps.setDate(5, Date.valueOf(this.getDate()));
 			rs = ps.executeQuery();
 			if(rs.next()) 
 				isUpdate = true;
@@ -273,12 +273,14 @@ public class Sales {
 		boolean isDup = this.checkForDup();
 		boolean isUpdate = this.checkForUpdate();
 		
-		if(isDup) {
+		if(!isDup) {
 			if(isUpdate)
 				this.update();
-		} else {
-			this.insert();
-		}
+			else
+				this.insert();
+		} //else {
+		//	this.insert();
+		//}
 	}
 	
 }
