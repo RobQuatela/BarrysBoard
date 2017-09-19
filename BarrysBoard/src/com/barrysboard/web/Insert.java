@@ -6,6 +6,8 @@ import java.io.InputStream;
 import java.io.PrintWriter;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
@@ -59,10 +61,13 @@ public class Insert extends HttpServlet {
 		String reportType = request.getParameter("reportType");
 		
 		//String description = request.getParameter("filPath");
-		Part filePart = request.getPart("uploadFile");
+		//Part file = request.getPart("uploadFile");
 		//String fileNombre = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
-		InputStream fileContent = filePart.getInputStream();
+		//InputStream fileContent = filePart.getInputStream();
+		List<Part> fileParts = request.getParts().stream().filter(parts -> "uploadFile".equals(parts.getName())).collect(Collectors.toList());
 		
+		for(Part filePart : fileParts) {
+			InputStream fileContent = filePart.getInputStream();
 		if(reportType.equalsIgnoreCase("booked")) {
 			ArrayList<Orders> orders = OrdersService.getOrdersList(fileContent);
 			for (Orders order : orders) {
@@ -96,6 +101,7 @@ public class Insert extends HttpServlet {
 			for(CustomerServiceRepresentative csr : csrs) {
 				csr.authenticate();
 			}
+		}
 		}
 		
 		response.setContentType("text/html");
