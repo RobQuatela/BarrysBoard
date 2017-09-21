@@ -5,15 +5,14 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 
+import com.barrysboard.model.CustomerServiceRepresentative;
 import com.barrysboard.model.Loss;
 import com.opencsv.CSVReader;
 
 public class LossService {
 
-	public static ArrayList<Loss> getLossList(InputStream file) throws IOException {
-		ArrayList<Loss> losses = new ArrayList<>();
+	public static void readLoss(InputStream file) throws IOException {
 		
 		try(CSVReader reader = new CSVReader(new InputStreamReader(file))) {
 			String[] nextLine;
@@ -22,11 +21,11 @@ public class LossService {
 			while((nextLine = reader.readNext()) != null) {
 				LocalDate lossDate = DateTimeConversion.convertToDate(nextLine[10]);
 				
-				String csr;
+				String csrID;
 				try {
-					csr = nextLine[2].substring(nextLine[2].length() - 4);
+					csrID = nextLine[2].substring(nextLine[2].length() - 4);
 				} catch(StringIndexOutOfBoundsException e) {
-					csr = nextLine[2];
+					csrID = nextLine[2];
 				}
 				double amount;
 				try {
@@ -35,11 +34,14 @@ public class LossService {
 					amount = 0;
 				}
 				
-				losses.add(new Loss(nextLine[5], csr, nextLine[7], lossDate, amount, nextLine[9],
-						LocalDateTime.now(), LocalDateTime.now()));
+				Loss loss = new Loss(nextLine[5], csrID, nextLine[7], lossDate, amount, nextLine[9],
+						LocalDateTime.now(), LocalDateTime.now());
+				
+				CustomerServiceRepresentative csr = new CustomerServiceRepresentative(loss.getCsrID(), "Empty",
+						"A");
+				csr.authenticate();
+				loss.authenticate();
 			}
 		}
-		
-		return losses;
 	}
 }

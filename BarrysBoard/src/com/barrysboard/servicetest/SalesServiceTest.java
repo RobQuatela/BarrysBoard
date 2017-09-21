@@ -22,7 +22,7 @@ public class SalesServiceTest {
 		//sales.add(new Sales("962488", "9996", "SSB", LocalDate.of(2017, 8, 25), "REG", "R", "H", 218.40, 218.40));
 
 		try {
-			SalesService.getSalesList(file);
+			SalesService.readSales(file);
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();

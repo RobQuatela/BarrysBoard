@@ -4,7 +4,7 @@
 <html>
 <head>
 	<link rel="stylesheet" href="css/Main.css">
-	<link rel="icon" type="image/gif" href="/images/barrysboard.ico">
+	<link rel="icon" type="image/gif" href="images/barrysboard.ico">
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Barry's Board</title>
 </head>
@@ -24,6 +24,7 @@
 			<option value="booked">Jobs by Booked Date</option>
 			<option value="scheduled">Jobs by Scheduled Date</option>
 			<option value="loss">Lost Calls</option>
+			<option value="incomplete">Daily Calls Received</option>
 			<option value="backlog">Phone Activity</option>
 			<option value="employee">Employee Master List</option>
 		</select>

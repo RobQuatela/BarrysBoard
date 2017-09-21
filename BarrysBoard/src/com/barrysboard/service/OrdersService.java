@@ -6,7 +6,6 @@ import java.io.InputStreamReader;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.ArrayList;
 
 import com.barrysboard.model.CustomerServiceRepresentative;
 import com.barrysboard.model.Orders;
@@ -14,8 +13,8 @@ import com.opencsv.CSVReader;
 
 public class OrdersService {
 
-		public static void getOrdersList(InputStream file) throws IOException {
-		ArrayList<Orders> orders = new ArrayList<>();
+	public static void readOrders(InputStream file) throws IOException {
+
 		try(CSVReader reader = new CSVReader(new InputStreamReader(file))) {
 			String[] nextLine;
 			reader.readNext();
@@ -31,24 +30,17 @@ public class OrdersService {
 				String[] dateTimes = DateTimeConversion.convertToStringArray(nextLine[15]);
 				LocalDate date = DateTimeConversion.convertToDate(dateTimes[0]);
 				LocalTime time = DateTimeConversion.convertToTime(dateTimes[1]);
-
-				orders.add(new Orders(
-						nextLine[1], csrID, company, date, time, nextLine[19],
-						nextLine[21], nextLine[17], Double.parseDouble(nextLine[5]),
-						Double.parseDouble(nextLine[4]), LocalDateTime.now(), LocalDateTime.now()));	
 				
 				Orders order = new Orders(
 						nextLine[1], csrID, company, date, time, nextLine[19],
 						nextLine[21], nextLine[17], Double.parseDouble(nextLine[5]),
 						Double.parseDouble(nextLine[4]), LocalDateTime.now(), LocalDateTime.now());
 				CustomerServiceRepresentative csr = new CustomerServiceRepresentative(order.getCsrID(), "Empty",
-						"E");
+						"A");
 				
 				csr.authenticate();
-				order.authenticate();
-				
+				order.authenticate();		
 			}
-		}
-		
+		}	
 	}
 }

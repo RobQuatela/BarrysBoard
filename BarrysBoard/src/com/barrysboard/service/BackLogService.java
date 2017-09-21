@@ -5,15 +5,14 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 
 import com.barrysboard.model.BackLog;
+import com.barrysboard.model.CustomerServiceRepresentative;
 import com.opencsv.CSVReader;
 
 public class BackLogService {
 
-	public static ArrayList<BackLog> getBackLogList(InputStream file) throws IOException {
-		ArrayList<BackLog> backLog = new ArrayList<>();
+	public static void readBackLog(InputStream file) throws IOException {
 		
 		try(CSVReader reader = new CSVReader(new InputStreamReader(file))) {
 			String[] nextLine;
@@ -36,12 +35,15 @@ public class BackLogService {
 					csrID = nextLine[1];
 				}
 				
-				backLog.add(new BackLog(
+				BackLog backlog = new BackLog(
 						csrID, nextLine[0], date, 
-						amount, LocalDateTime.now(), LocalDateTime.now()));
+						amount, LocalDateTime.now(), LocalDateTime.now());
+				
+				CustomerServiceRepresentative csr = new CustomerServiceRepresentative(backlog.getCsrID(), "Empty",
+						"A");
+				csr.authenticate();
+				backlog.authenticate();
 			}
 		}
-		
-		return backLog;
 	}
 }

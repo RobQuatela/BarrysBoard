@@ -5,7 +5,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 
 import com.barrysboard.model.CustomerServiceRepresentative;
 import com.barrysboard.model.Sales;
@@ -13,9 +12,8 @@ import com.opencsv.CSVReader;
 
 public class SalesService {
 
-	public static void getSalesList(InputStream file) throws IOException {
-		ArrayList<Sales> sales = new ArrayList<>();
-		
+	public static void readSales(InputStream file) throws IOException {
+
 		try(CSVReader reader = new CSVReader(new InputStreamReader(file))) {
 			String[] nextLine;
 			reader.readNext();
@@ -39,7 +37,7 @@ public class SalesService {
 						nextLine[19], nextLine[21], nextLine[17], Double.parseDouble(nextLine[5]),
 						Double.parseDouble(nextLine[4]), LocalDateTime.now(), LocalDateTime.now());
 				CustomerServiceRepresentative csr = new CustomerServiceRepresentative(sale.getCsrID(), "Empty",
-						"E");
+						"A");
 				
 				csr.authenticate();
 				sale.authenticate();
