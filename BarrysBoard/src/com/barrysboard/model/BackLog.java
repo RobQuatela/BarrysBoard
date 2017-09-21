@@ -103,26 +103,28 @@ public class BackLog {
 	private void insert() {
 		Connection con = null;
 		PreparedStatement ps = null;
-		
-		try {
-			con = DBConnect.connect();
-			ps = con.prepareStatement("INSERT INTO tbbacklog (csr_id, co_id, date_id, backlog_amount, backlog_date_created, backlog_date_modified) VALUES (?, ?, ?, ?, ?, ?)");
-			ps.setString(1, this.getCsrID());
-			ps.setString(2, this.getCompanyID());
-			ps.setDate(3, Date.valueOf(this.getDate()));
-			ps.setInt(4, this.getBackLogAmount());
-			ps.setTimestamp(5, Timestamp.valueOf(this.getDateCreated()));
-			ps.setTimestamp(6, Timestamp.valueOf(this.getDateModified()));
-			ps.executeUpdate();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} finally {
+		if(!this.getCompanyID().equalsIgnoreCase("SAV")) {
 			try {
-				DBConnect.close();
-			} catch (Exception e) {
+				con = DBConnect.connect();
+				ps = con.prepareStatement(
+						"INSERT INTO tbbacklog (csr_id, co_id, date_id, backlog_amount, backlog_date_created, backlog_date_modified) VALUES (?, ?, ?, ?, ?, ?)");
+				ps.setString(1, this.getCsrID());
+				ps.setString(2, this.getCompanyID());
+				ps.setDate(3, Date.valueOf(this.getDate()));
+				ps.setInt(4, this.getBackLogAmount());
+				ps.setTimestamp(5, Timestamp.valueOf(this.getDateCreated()));
+				ps.setTimestamp(6, Timestamp.valueOf(this.getDateModified()));
+				ps.executeUpdate();
+			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+			} finally {
+				try {
+					DBConnect.close();
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		}
 	}

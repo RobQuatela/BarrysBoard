@@ -1,10 +1,8 @@
 package com.barrysboard.web;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -26,7 +24,6 @@ import com.barrysboard.service.BackLogService;
 import com.barrysboard.service.CustomerServiceRepresentativeService;
 import com.barrysboard.service.LossService;
 import com.barrysboard.service.OrdersService;
-import com.barrysboard.service.PhoneActivityService;
 import com.barrysboard.service.SalesService;
 
 /**
@@ -68,40 +65,47 @@ public class Insert extends HttpServlet {
 		
 		for(Part filePart : fileParts) {
 			InputStream fileContent = filePart.getInputStream();
-		if(reportType.equalsIgnoreCase("booked")) {
-			ArrayList<Orders> orders = OrdersService.getOrdersList(fileContent);
-			for (Orders order : orders) {
-				CustomerServiceRepresentative csr = new CustomerServiceRepresentative(order.getCsrID(), "Empty", "E");
-				csr.authenticate();
-				order.authenticate();
+			if (reportType.equalsIgnoreCase("booked")) {
+				/*ArrayList<Orders> orders = OrdersService.getOrdersList(fileContent);
+				for (Orders order : orders) {
+					CustomerServiceRepresentative csr = new CustomerServiceRepresentative(order.getCsrID(), "Empty",
+							"E");
+					csr.authenticate();
+					order.authenticate();
+				}*/
+				OrdersService.getOrdersList(fileContent);
+			} else if (reportType.equalsIgnoreCase("scheduled")) {
+				//ArrayList<Sales> sales = SalesService.getSalesList(fileContent);
+				/*for (Sales sale : sales) {
+					CustomerServiceRepresentative csr = new CustomerServiceRepresentative(sale.getCsrID(), "Empty",
+							"E");
+					csr.authenticate();
+					sale.authenticate();*/
+				SalesService.getSalesList(fileContent);
+				
+			} else if (reportType.equalsIgnoreCase("loss")) {
+				ArrayList<Loss> losses = LossService.getLossList(fileContent);
+				for (Loss loss : losses) {
+					CustomerServiceRepresentative csr = new CustomerServiceRepresentative(loss.getCsrID(), "Empty",
+							"E");
+					csr.authenticate();
+					loss.authenticate();
+				}
+			} else if (reportType.equalsIgnoreCase("backlog")) {
+				ArrayList<BackLog> backlogs = BackLogService.getBackLogList(fileContent);
+				for (BackLog backlog : backlogs) {
+					CustomerServiceRepresentative csr = new CustomerServiceRepresentative(backlog.getCsrID(), "Empty",
+							"E");
+					csr.authenticate();
+					backlog.authenticate();
+				}
+			} else if (reportType.equalsIgnoreCase("employee")) {
+				ArrayList<CustomerServiceRepresentative> csrs = CustomerServiceRepresentativeService
+						.getCSRList(fileContent);
+				for (CustomerServiceRepresentative csr : csrs) {
+					csr.authenticate();
+				}
 			}
-		} else if(reportType.equalsIgnoreCase("scheduled")) {
-			ArrayList<Sales> sales = SalesService.getSalesList(fileContent);
-			for(Sales sale : sales) {
-				CustomerServiceRepresentative csr = new CustomerServiceRepresentative(sale.getCsrID(), "Empty", "E");
-				csr.authenticate();
-				sale.authenticate();
-			}
-		} else if(reportType.equalsIgnoreCase("loss")) {
-			ArrayList<Loss> losses = LossService.getLossList(fileContent);
-			for(Loss loss : losses) {
-				CustomerServiceRepresentative csr = new CustomerServiceRepresentative(loss.getCsrID(), "Empty", "E");
-				csr.authenticate();
-				loss.authenticate();
-			}
-		} else if(reportType.equalsIgnoreCase("backlog")) {
-			ArrayList<BackLog> backlogs = BackLogService.getBackLogList(fileContent);
-			for(BackLog backlog : backlogs) {
-				CustomerServiceRepresentative csr = new CustomerServiceRepresentative(backlog.getCsrID(), "Empty", "E");
-				csr.authenticate();
-				backlog.authenticate();
-			}
-		} else if(reportType.equalsIgnoreCase("employee")) {
-			ArrayList<CustomerServiceRepresentative> csrs = CustomerServiceRepresentativeService.getCSRList(fileContent);
-			for(CustomerServiceRepresentative csr : csrs) {
-				csr.authenticate();
-			}
-		}
 		}
 		
 		response.setContentType("text/html");
@@ -111,6 +115,7 @@ public class Insert extends HttpServlet {
 		out.println("<head>");
 		out.println("<meta charset='ISO-8859-1'>");
 		out.println("<link rel='stylesheet' href='css/Main.css' />");
+		out.println("<link rel='icon' type='image/gif' href='/images/barrysboard.ico'>");
 		out.println("<title>Barry's Board</title>");
 		out.println("</head>");
 		out.println("<body>");

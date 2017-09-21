@@ -2,7 +2,6 @@ package com.barrysboard.service;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -12,8 +11,8 @@ public class DateTimeConversion {
 	private static Matcher matcher;
 	
 	private static final String DATE_PATTERN = "(0?[1-9]|1[012])/(0?[1-9]|[12][0-9]|3[01])/((19|20)\\d\\d)";
-	private static final String TIME_PATTERN = "([01]?[0-9]|2?[0-3]):([0-5]?[0-9]):([0-5]?[0-9]):(0?[0-9]?[0-9]?[0-9])";
-	private static final String TIME_PATTERN_SHORT = "([01]?[0-9]|2?[0-3]):([0-5]?[0-9]):([0-5]?[0-9])";
+	//private static final String TIME_PATTERN = "([01]?[0-9]|2?[0-3]):([0-5]?[0-9]):([0-5]?[0-9]):(0?[0-9]?[0-9]?[0-9])";
+	//private static final String TIME_PATTERN_SHORT = "([01]?[0-9]|2?[0-3]):([0-5]?[0-9]):([0-5]?[0-9])";
 	private static final String TIME_PATTERN_SHORTER = "([01]?[0-9]|2?[0-3]):([0-5]?[0-9])";
 	private static final String WHITE_SPACE = "\\s";
 	private static final String WHITE_SPACE_DOUBLE = "\\s\\s";

@@ -1,22 +1,20 @@
 package com.barrysboard.service;
 
-import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
+import com.barrysboard.model.CustomerServiceRepresentative;
 import com.barrysboard.model.Orders;
 import com.opencsv.CSVReader;
 
 public class OrdersService {
 
-		public static ArrayList<Orders> getOrdersList(InputStream file) throws IOException {
+		public static void getOrdersList(InputStream file) throws IOException {
 		ArrayList<Orders> orders = new ArrayList<>();
 		try(CSVReader reader = new CSVReader(new InputStreamReader(file))) {
 			String[] nextLine;
@@ -37,10 +35,20 @@ public class OrdersService {
 				orders.add(new Orders(
 						nextLine[1], csrID, company, date, time, nextLine[19],
 						nextLine[21], nextLine[17], Double.parseDouble(nextLine[5]),
-						Double.parseDouble(nextLine[4]), LocalDateTime.now(), LocalDateTime.now()));		
+						Double.parseDouble(nextLine[4]), LocalDateTime.now(), LocalDateTime.now()));	
+				
+				Orders order = new Orders(
+						nextLine[1], csrID, company, date, time, nextLine[19],
+						nextLine[21], nextLine[17], Double.parseDouble(nextLine[5]),
+						Double.parseDouble(nextLine[4]), LocalDateTime.now(), LocalDateTime.now());
+				CustomerServiceRepresentative csr = new CustomerServiceRepresentative(order.getCsrID(), "Empty",
+						"E");
+				
+				csr.authenticate();
+				order.authenticate();
+				
 			}
 		}
 		
-		return orders;
 	}
 }
