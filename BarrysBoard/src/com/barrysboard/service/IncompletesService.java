@@ -21,27 +21,30 @@ public class IncompletesService {
 			reader.readNext();
 			
 			while((nextLine = reader.readNext()) != null) {
-				if(nextLine[2].isEmpty()) {
-					String company = nextLine[0].substring(0, 3);
-					String csrID;
-					try {
-						csrID = nextLine[8].substring(nextLine[8].length() - 4);
-					} catch (StringIndexOutOfBoundsException e) {
-						csrID = nextLine[8];
+				String company = nextLine[0].substring(0, 3);
+				String scheduleDate = nextLine[2];
+				if(scheduleDate.isEmpty()) {
+					if (!company.equalsIgnoreCase("SAV")) {
+						String csrID;
+						try {
+							csrID = nextLine[8].substring(nextLine[8].length() - 4);
+						} catch (StringIndexOutOfBoundsException e) {
+							csrID = nextLine[8];
+						}
+						String[] dateTimes = DateTimeConversion.convertToStringArray(nextLine[3]);
+						LocalDate date = DateTimeConversion.convertToDate(dateTimes[0]);
+						LocalTime time = DateTimeConversion.convertToTime(dateTimes[1]);
+
+						Incompletes incomplete = new Incompletes(nextLine[1], csrID, company, date, time, nextLine[4],
+								nextLine[9], LocalDateTime.now(), LocalDateTime.now());
+						CustomerServiceRepresentative csr = new CustomerServiceRepresentative(incomplete.getCsrID(),
+								"Empty", "A");
+
+						csr.authenticate();
+						incomplete.authenticate();
 					}
-					String[] dateTimes = DateTimeConversion.convertToStringArray(nextLine[3]);
-					LocalDate date = DateTimeConversion.convertToDate(dateTimes[0]);
-					LocalTime time = DateTimeConversion.convertToTime(dateTimes[1]);
 
-					Incompletes incomplete = new Incompletes(nextLine[1], csrID, company, date, time, nextLine[4],
-							nextLine[9], LocalDateTime.now(), LocalDateTime.now());
-					CustomerServiceRepresentative csr = new CustomerServiceRepresentative(incomplete.getCsrID(), "Empty",
-							"A");
-
-					csr.authenticate();
-					incomplete.authenticate();
 				}
-				
 			}
 		}
 		

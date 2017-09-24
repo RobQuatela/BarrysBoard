@@ -28,11 +28,7 @@ public class SalesService {
 				} catch(StringIndexOutOfBoundsException e) {
 					csrID = nextLine[0];
 				}
-				
-				//sales.add(new Sales(nextLine[1], csrID, company, saleDate,
-					//nextLine[19], nextLine[21], nextLine[17], Double.parseDouble(nextLine[5]),
-					//Double.parseDouble(nextLine[4]), LocalDateTime.now(), LocalDateTime.now()));
-				
+
 				Sales sale = new Sales(nextLine[1], csrID, company, saleDate,
 						nextLine[19], nextLine[21], nextLine[17], Double.parseDouble(nextLine[5]),
 						Double.parseDouble(nextLine[4]), LocalDateTime.now(), LocalDateTime.now());
@@ -43,7 +39,5 @@ public class SalesService {
 				sale.authenticate();
 			}
 		}
-		
-		//return sales;
 	}
 }
