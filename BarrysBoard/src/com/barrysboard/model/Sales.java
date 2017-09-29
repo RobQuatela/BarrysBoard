@@ -183,15 +183,18 @@ public class Sales {
 		
 		try {
 			con = DBConnect.connect();
-			ps = con.prepareStatement("UPDATE tbsales SET sales_amount_scheduled = ?, sales_amount_total = ?, sales_date_modified = ?, date_id = ? WHERE " +
-					"sales_id = ? AND co_id = ?");
+			ps = con.prepareStatement("UPDATE tbsales SET sales_amount_scheduled = ?, sales_amount_total = ?, sales_date_modified = ?, date_id = ?, sales_jobtype = ?, " +
+					"sales_custtype = ?, sales_status = ?, csr_id = ? WHERE sales_id = ? AND co_id = ?");
 			ps.setDouble(1, this.getScheduledAmount());
 			ps.setDouble(2, this.getTotalAmount());
 			ps.setTimestamp(3, Timestamp.valueOf(this.getDateModified()));
 			ps.setDate(4, Date.valueOf(this.getDate()));
-			ps.setString(5, this.getOrderID());
-			ps.setString(6, this.getCompanyID());
-			
+			ps.setString(5, this.getJobType());
+			ps.setString(6, this.getCustType());
+			ps.setString(7, this.getStatus());
+			ps.setString(8, this.getCsrID());
+			ps.setString(9, this.getOrderID());
+			ps.setString(10, this.getCompanyID());
 			ps.executeUpdate();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -214,10 +217,17 @@ public class Sales {
 		
 		try {
 			con = DBConnect.connect();
-			ps = con.prepareStatement("SELECT * FROM tbsales WHERE date_id = ? AND co_id = ? AND sales_id = ?");
+			ps = con.prepareStatement("SELECT * FROM tbsales WHERE date_id = ? AND co_id = ? AND sales_id = ? AND sales_amount_scheduled = ? AND sales_amount_total = ? " +
+					"AND sales_status = ? AND sales_jobtype = ? AND sales_custtype = ? AND csr_id = ?");
 			ps.setDate(1, Date.valueOf(this.getDate()));
 			ps.setString(2, this.getCompanyID());
 			ps.setString(3, this.getOrderID());
+			ps.setDouble(4, this.getScheduledAmount());
+			ps.setDouble(5, this.getTotalAmount());
+			ps.setString(6, this.getStatus());
+			ps.setString(7, this.getJobType());
+			ps.setString(8, this.getCustType());
+			ps.setString(9, this.getCsrID());
 			rs = ps.executeQuery();
 			if(rs.next()) 
 				check = true;
@@ -245,12 +255,16 @@ public class Sales {
 		try {
 			con = DBConnect.connect();
 			ps = con.prepareStatement("SELECT * FROM tbsales WHERE co_id = ? AND sales_id = ? " +
-					"AND (sales_amount_scheduled != ? OR sales_amount_total != ? OR date_id != ?)");
+					"AND (sales_amount_scheduled != ? OR sales_amount_total != ? OR date_id != ? OR sales_status != ? OR sales_jobtype != ? OR sales_custtype != ? OR csr_id != ?)");
 			ps.setString(1, this.getCompanyID());
 			ps.setString(2, this.getOrderID());
 			ps.setDouble(3, this.getScheduledAmount());
 			ps.setDouble(4, this.getTotalAmount());
 			ps.setDate(5, Date.valueOf(this.getDate()));
+			ps.setString(6, this.getStatus());
+			ps.setString(7, this.getJobType());
+			ps.setString(8, this.getJobType());
+			ps.setString(9, this.getCsrID());
 			rs = ps.executeQuery();
 			if(rs.next()) 
 				isUpdate = true;
@@ -271,16 +285,15 @@ public class Sales {
 	
 	public void authenticate() {
 		boolean isDup = this.checkForDup();
-		boolean isUpdate = this.checkForUpdate();
+		boolean isUpdate;
 		
 		if(!isDup) {
+			isUpdate = this.checkForUpdate();
 			if(isUpdate)
 				this.update();
 			else
 				this.insert();
-		} //else {
-		//	this.insert();
-		//}
+		}
 	}
 	
 }
