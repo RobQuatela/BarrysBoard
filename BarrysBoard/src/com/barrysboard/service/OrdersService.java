@@ -22,6 +22,8 @@ public class OrdersService {
 			while((nextLine = reader.readNext()) != null) {
 				String company = nextLine[9].substring(0, 3);
 				String csrID;
+				String[] location = DateTimeConversion.convertLocation(nextLine[14]);
+				
 				try {
 					csrID = nextLine[0].substring(nextLine[0].length() - 4);
 				} catch(StringIndexOutOfBoundsException e) {
@@ -34,7 +36,7 @@ public class OrdersService {
 				Orders order = new Orders(
 						nextLine[1], csrID, company, date, time, nextLine[19],
 						nextLine[21], nextLine[17], Double.parseDouble(nextLine[5]),
-						Double.parseDouble(nextLine[4]), LocalDateTime.now(), LocalDateTime.now());
+						Double.parseDouble(nextLine[4]), nextLine[20], location[0], location[1], location[2], LocalDateTime.now(), LocalDateTime.now());
 				CustomerServiceRepresentative csr = new CustomerServiceRepresentative(order.getCsrID(), "Empty",
 						"A");
 				

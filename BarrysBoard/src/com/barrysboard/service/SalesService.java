@@ -21,6 +21,7 @@ public class SalesService {
 			while((nextLine = reader.readNext()) != null) {
 				LocalDate saleDate = DateTimeConversion.convertToDate(nextLine[10]);
 				String company = nextLine[9].substring(0, 3);
+				String[] location = DateTimeConversion.convertLocation(nextLine[14]);
 				
 				String csrID;
 				try {
@@ -31,12 +32,35 @@ public class SalesService {
 
 				Sales sale = new Sales(nextLine[1], csrID, company, saleDate,
 						nextLine[19], nextLine[21], nextLine[17], Double.parseDouble(nextLine[5]),
-						Double.parseDouble(nextLine[4]), LocalDateTime.now(), LocalDateTime.now());
+						Double.parseDouble(nextLine[4]), nextLine[20], location[0], location[1], location[2], LocalDateTime.now(), LocalDateTime.now());
 				CustomerServiceRepresentative csr = new CustomerServiceRepresentative(sale.getCsrID(), "Empty",
 						"A");
 				
 				csr.authenticate();
 				sale.authenticate();
+			}
+		}
+	}
+	
+	public static void readSalesCOMM(InputStream file) throws IOException {
+		
+		try(CSVReader reader = new CSVReader(new InputStreamReader(file))) {
+			String[] nextLine;
+			reader.readNext();
+			
+			while((nextLine = reader.readNext()) != null) {
+				String comm = "";
+				try {
+					comm = nextLine[0].substring(nextLine[0].length() - 4);
+				} catch(NullPointerException | StringIndexOutOfBoundsException e) {
+					comm = "";
+				}
+				
+				Sales commSale = new Sales(nextLine[5], comm);
+				CustomerServiceRepresentative csr = new CustomerServiceRepresentative(comm, "Empty", "A");
+				
+				csr.authenticate();
+				commSale.updateCOMM();
 			}
 		}
 	}

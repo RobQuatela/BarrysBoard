@@ -21,11 +21,16 @@ public class Sales {
 	private String status;
 	private double scheduledAmount;
 	private double totalAmount;
+	private String address;
+	private String city;
+	private String state;
+	private String zip;
+	private String commID;
 	private LocalDateTime dateCreated;
 	private LocalDateTime dateModified;
 	
 	public Sales(String orderID, String csrID, String companyID, LocalDate date, String jobType, String custType, String status,
-			double scheduledAmount, double totalAmount) {
+			double scheduledAmount, double totalAmount, String address, String city, String state, String zip) {
 		this.orderID = orderID;
 		this.csrID = csrID;
 		this.companyID = companyID;
@@ -35,10 +40,12 @@ public class Sales {
 		this.status = status;
 		this.scheduledAmount = scheduledAmount;
 		this.totalAmount = totalAmount;
+		
 	}
 	
 	public Sales(String orderID, String csrID, String companyID, LocalDate date, String jobType, String custType, String status,
-			double scheduledAmount, double totalAmount, LocalDateTime dateCreated, LocalDateTime dateModified) {
+			double scheduledAmount, double totalAmount, String address, String city, String state, String zip, 
+			LocalDateTime dateCreated, LocalDateTime dateModified) {
 		this.orderID = orderID;
 		this.csrID = csrID;
 		this.companyID = companyID;
@@ -48,8 +55,17 @@ public class Sales {
 		this.status = status;
 		this.scheduledAmount = scheduledAmount;
 		this.totalAmount = totalAmount;
+		this.address = address;
+		this.city = city;
+		this.state = state;
+		this.zip = zip;
 		this.dateCreated = dateCreated;
 		this.dateModified = dateModified;
+	}
+	
+	public Sales(String orderID, String commID) {
+		this.orderID = orderID;
+		this.commID = commID;
 	}
 
 	public String getOrderID() {
@@ -124,6 +140,46 @@ public class Sales {
 		this.totalAmount = totalAmount;
 	}
 	
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+	public String getCity() {
+		return city;
+	}
+
+	public void setCity(String city) {
+		this.city = city;
+	}
+
+	public String getState() {
+		return state;
+	}
+
+	public void setState(String state) {
+		this.state = state;
+	}
+
+	public String getZip() {
+		return zip;
+	}
+
+	public void setZip(String zip) {
+		this.zip = zip;
+	}
+
+	public String getCommID() {
+		return commID;
+	}
+
+	public void setCommID(String commID) {
+		this.commID = commID;
+	}
+
 	public LocalDateTime getDateCreated() {
 		return dateCreated;
 	}
@@ -149,8 +205,9 @@ public class Sales {
 			try {
 				con = DBConnect.connect();
 				ps = con.prepareStatement(
-						"INSERT INTO tbsales (sales_id, csr_id, co_id, date_id, sales_jobtype, sales_custtype, sales_status, sales_amount_scheduled, sales_amount_total, sales_date_created, sales_date_modified) "
-								+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+						"INSERT INTO tbsales (sales_id, csr_id, co_id, date_id, sales_jobtype, sales_custtype, sales_status, sales_amount_scheduled, sales_amount_total, " +
+								"sales_address, sales_city, sales_state, sales_zipcode, sales_date_created, sales_date_modified) "
+								+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 				ps.setString(1, this.getOrderID());
 				ps.setString(2, this.getCsrID());
 				ps.setString(3, this.getCompanyID());
@@ -160,8 +217,12 @@ public class Sales {
 				ps.setString(7, this.getStatus());
 				ps.setDouble(8, this.getScheduledAmount());
 				ps.setDouble(9, this.getTotalAmount());
-				ps.setTimestamp(10, Timestamp.valueOf(this.getDateCreated()));
-				ps.setTimestamp(11, Timestamp.valueOf(this.getDateModified()));
+				ps.setString(10, this.getAddress());
+				ps.setString(11, this.getCity());
+				ps.setString(12, this.getState());
+				ps.setString(13, this.getZip());
+				ps.setTimestamp(14, Timestamp.valueOf(this.getDateCreated()));
+				ps.setTimestamp(15, Timestamp.valueOf(this.getDateModified()));
 				ps.executeUpdate();
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
@@ -184,7 +245,7 @@ public class Sales {
 		try {
 			con = DBConnect.connect();
 			ps = con.prepareStatement("UPDATE tbsales SET sales_amount_scheduled = ?, sales_amount_total = ?, sales_date_modified = ?, date_id = ?, sales_jobtype = ?, " +
-					"sales_custtype = ?, sales_status = ?, csr_id = ? WHERE sales_id = ? AND co_id = ?");
+					"sales_custtype = ?, sales_status = ?, csr_id = ?, sales_address = ?, sales_city = ?, sales_state = ?, sales_zipcode = ? WHERE sales_id = ? AND co_id = ?");
 			ps.setDouble(1, this.getScheduledAmount());
 			ps.setDouble(2, this.getTotalAmount());
 			ps.setTimestamp(3, Timestamp.valueOf(this.getDateModified()));
@@ -193,8 +254,12 @@ public class Sales {
 			ps.setString(6, this.getCustType());
 			ps.setString(7, this.getStatus());
 			ps.setString(8, this.getCsrID());
-			ps.setString(9, this.getOrderID());
-			ps.setString(10, this.getCompanyID());
+			ps.setString(9, this.getAddress());
+			ps.setString(10, this.getCity());
+			ps.setString(11, this.getState());
+			ps.setString(12, this.getZip());
+			ps.setString(13, this.getOrderID());
+			ps.setString(14, this.getCompanyID());
 			ps.executeUpdate();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -218,7 +283,8 @@ public class Sales {
 		try {
 			con = DBConnect.connect();
 			ps = con.prepareStatement("SELECT * FROM tbsales WHERE date_id = ? AND co_id = ? AND sales_id = ? AND sales_amount_scheduled = ? AND sales_amount_total = ? " +
-					"AND sales_status = ? AND sales_jobtype = ? AND sales_custtype = ? AND csr_id = ?");
+					"AND sales_status = ? AND sales_jobtype = ? AND sales_custtype = ? AND csr_id = ? AND sales_address = ? AND sales_city = ? AND sales_state = ? AND " +
+					"sales_zipcode = ?");
 			ps.setDate(1, Date.valueOf(this.getDate()));
 			ps.setString(2, this.getCompanyID());
 			ps.setString(3, this.getOrderID());
@@ -228,6 +294,10 @@ public class Sales {
 			ps.setString(7, this.getJobType());
 			ps.setString(8, this.getCustType());
 			ps.setString(9, this.getCsrID());
+			ps.setString(10, this.getAddress());
+			ps.setString(11, this.getCity());
+			ps.setString(12, this.getState());
+			ps.setString(13, this.getZip());
 			rs = ps.executeQuery();
 			if(rs.next()) 
 				check = true;
@@ -255,7 +325,8 @@ public class Sales {
 		try {
 			con = DBConnect.connect();
 			ps = con.prepareStatement("SELECT * FROM tbsales WHERE co_id = ? AND sales_id = ? " +
-					"AND (sales_amount_scheduled != ? OR sales_amount_total != ? OR date_id != ? OR sales_status != ? OR sales_jobtype != ? OR sales_custtype != ? OR csr_id != ?)");
+					"AND (sales_amount_scheduled != ? OR sales_amount_total != ? OR date_id != ? OR sales_status != ? OR sales_jobtype != ? OR sales_custtype != ? OR csr_id != ? OR " +
+					"sales_address != ? OR sales_city != ? OR sales_state != ? OR sales_zipcode != ?)");
 			ps.setString(1, this.getCompanyID());
 			ps.setString(2, this.getOrderID());
 			ps.setDouble(3, this.getScheduledAmount());
@@ -265,6 +336,10 @@ public class Sales {
 			ps.setString(7, this.getJobType());
 			ps.setString(8, this.getJobType());
 			ps.setString(9, this.getCsrID());
+			ps.setString(10, this.getAddress());
+			ps.setString(11, this.getCity());
+			ps.setString(12, this.getState());
+			ps.setString(13, this.getZip());
 			rs = ps.executeQuery();
 			if(rs.next()) 
 				isUpdate = true;
@@ -281,6 +356,29 @@ public class Sales {
 		}
 		
 		return isUpdate;
+	}
+	
+	public void updateCOMM() {
+		Connection con = null;
+		PreparedStatement ps = null;
+		
+		try {
+			con = DBConnect.connect();
+			ps = con.prepareStatement("UPDATE tbsales SET comm_id = ? WHERE sales_id = ?");
+			ps.setString(1, this.getCommID());
+			ps.setString(2, this.getOrderID());
+			ps.executeUpdate();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				DBConnect.close();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 	}
 	
 	public void authenticate() {

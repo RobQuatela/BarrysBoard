@@ -36,5 +36,14 @@ public class DateTimeConversionTest {
 		String file = "8/25/2017";
 		assertEquals(LocalDate.of(2017, 8, 25), DateTimeConversion.convertToDate(file));
 	}
+	
+	@Test
+	public void testConvertLocation() {
+		String file = "Houston, TX 77087";
+		String[] location = DateTimeConversion.convertLocation(file);
+		assertEquals("Houston", location[0]);
+		assertEquals("TX", location[1]);
+		assertEquals("77087", location[2]);
+	}
 
 }

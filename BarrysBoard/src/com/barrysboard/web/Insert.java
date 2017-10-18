@@ -63,8 +63,8 @@ public class Insert extends HttpServlet {
 				IncompletesService.readIncompletes(fileContent);
 			} else if (reportType.equalsIgnoreCase("loss")) {
 				LossService.readLoss(fileContent);
-			} else if (reportType.equalsIgnoreCase("backlog")) {
-				BackLogService.readBackLog(fileContent);
+			} else if (reportType.equalsIgnoreCase("commSale")) {
+				SalesService.readSalesCOMM(fileContent);
 			} else if (reportType.equalsIgnoreCase("employee")) {
 				CustomerServiceRepresentativeService.readCSR(fileContent);
 			}
@@ -77,7 +77,7 @@ public class Insert extends HttpServlet {
 		out.println("<head>");
 		out.println("<meta charset='ISO-8859-1'>");
 		out.println("<link rel='stylesheet' href='css/Main.css' />");
-		out.println("<link rel='icon' type='image/gif' href='/images/barrysboard.ico'>");
+		out.println("<link rel=\"icon\" type=\"image/gif\" href=\"images/barrysboard.ico\">");
 		out.println("<title>Barry's Board</title>");
 		out.println("</head>");
 		out.println("<body>");
