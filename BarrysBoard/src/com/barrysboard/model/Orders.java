@@ -29,6 +29,8 @@ public class Orders {
 	private String city;
 	private String state;
 	private String zip;
+	private String backlog;
+	private LocalDate backlogDate;
 	private LocalDateTime dateCreated;
 	private LocalDateTime dateModified;
 	
@@ -188,6 +190,22 @@ public class Orders {
 		this.zip = zip;
 	}
 
+	public String getBacklog() {
+		return backlog;
+	}
+
+	public void setBacklog(String backlog) {
+		this.backlog = backlog;
+	}
+
+	public LocalDate getBacklogDate() {
+		return backlogDate;
+	}
+
+	public void setBacklogDate(LocalDate backlogDate) {
+		this.backlogDate = backlogDate;
+	}
+
 	public LocalDateTime getDateCreated() {
 		return dateCreated;
 	}
@@ -287,11 +305,13 @@ public class Orders {
 		
 		try {
 			con = DBConnect.connect();
-			ps = con.prepareStatement("SELECT * FROM tborders WHERE orders_id = ? AND csr_id = ? AND co_id = ? AND date_id = ? AND orders_jobtype = ? AND " +
+			/*ps = con.prepareStatement("SELECT * FROM tborders WHERE orders_id = ? AND csr_id = ? AND co_id = ? AND date_id = ? AND orders_jobtype = ? AND " +
 					"orders_custtype = ? AND orders_status = ? AND orders_amount_scheduled = ? AND orders_amount_total = ? AND orders_address = ? AND " +
-					"orders_city = ? AND orders_state = ? AND orders_zipcode = ?");
+					"orders_city = ? AND orders_state = ? AND orders_zipcode = ?");*/
+			ps = con.prepareStatement("SELECT * FROM tborders WHERE orders_id = ? AND co_id = ?");
 			ps.setString(1, this.getOrderID());
-			ps.setString(2, this.getCsrID());
+			ps.setString(2, this.getCompanyID());
+/*			ps.setString(2, this.getCsrID());
 			ps.setString(3, this.getCompanyID());
 			ps.setDate(4, Date.valueOf(this.getDate()));
 			ps.setString(5, this.getJobType());
@@ -302,7 +322,7 @@ public class Orders {
 			ps.setString(10, this.getAddress());
 			ps.setString(11, this.getCity());
 			ps.setString(12, this.getState());
-			ps.setString(13, this.getZip());
+			ps.setString(13, this.getZip());*/
 			rs = ps.executeQuery();
 			if(rs.next())
 				isDup = true;
@@ -363,15 +383,59 @@ public class Orders {
 		return isUpdate;
 	}
 	
+	private void checkBacklog() {
+		Connection con = null;
+		PreparedStatement ps = null;
+		PreparedStatement ps1 = null;
+		ResultSet rs = null;
+		
+		try {
+			con = DBConnect.connect();
+			ps = con.prepareStatement("SELECT sales_id, date_id FROM tbsales WHERE sales_id = ? AND date_id >= ? AND date_id <= ?");
+			ps.setString(1, this.getOrderID());
+			ps.setDate(2, Date.valueOf(this.getDate().minusYears(1)));
+			ps.setDate(3, Date.valueOf(this.getDate().plusYears(1)));
+			rs = ps.executeQuery();
+			if(rs.next()) {
+				ps1 = con.prepareStatement("UPDATE tborders SET orders_backlog = 'C', orders_backlog_date = ? WHERE orders_id = ?");
+				ps1.setDate(1, rs.getDate("date_id"));
+				ps1.setString(2, this.getOrderID());
+				ps1.executeUpdate();
+			} else {
+				ps1 = con.prepareStatement("UPDATE tborders SET orders_backlog = 'O' WHERE orders_id = ?");
+				ps1.setString(1, this.getOrderID());
+				ps1.executeUpdate();
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				DBConnect.close();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
+	
 	public void authenticate() {
 		boolean isDup = this.checkForDup();
-		boolean isUpdate = this.checkForUpdate();
+		//boolean isUpdate = this.checkForUpdate();
 		
-		if(!isDup)
+/*		if(!isDup) {
 			if(isUpdate)
 				this.update();
-			else
+			else 
 				this.insert();
+		}*/
+		if(!isDup) {
+			this.insert();
+		} else {
+			this.update();
+		}
+		
+		this.checkBacklog();
 	}
 	
 	

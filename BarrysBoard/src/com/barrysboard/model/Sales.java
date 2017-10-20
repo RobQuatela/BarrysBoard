@@ -282,10 +282,13 @@ public class Sales {
 		
 		try {
 			con = DBConnect.connect();
-			ps = con.prepareStatement("SELECT * FROM tbsales WHERE date_id = ? AND co_id = ? AND sales_id = ? AND sales_amount_scheduled = ? AND sales_amount_total = ? " +
+			/*ps = con.prepareStatement("SELECT * FROM tbsales WHERE date_id = ? AND co_id = ? AND sales_id = ? AND sales_amount_scheduled = ? AND sales_amount_total = ? " +
 					"AND sales_status = ? AND sales_jobtype = ? AND sales_custtype = ? AND csr_id = ? AND sales_address = ? AND sales_city = ? AND sales_state = ? AND " +
-					"sales_zipcode = ?");
-			ps.setDate(1, Date.valueOf(this.getDate()));
+					"sales_zipcode = ?");*/
+			ps = con.prepareStatement("SELECT * FROM tbsales WHERE sales_id = ? AND co_id = ?");
+			ps.setString(1, this.getOrderID());
+			ps.setString(2, this.getCompanyID());
+/*			ps.setDate(1, Date.valueOf(this.getDate()));
 			ps.setString(2, this.getCompanyID());
 			ps.setString(3, this.getOrderID());
 			ps.setDouble(4, this.getScheduledAmount());
@@ -297,7 +300,7 @@ public class Sales {
 			ps.setString(10, this.getAddress());
 			ps.setString(11, this.getCity());
 			ps.setString(12, this.getState());
-			ps.setString(13, this.getZip());
+			ps.setString(13, this.getZip());*/
 			rs = ps.executeQuery();
 			if(rs.next()) 
 				check = true;
@@ -381,17 +384,60 @@ public class Sales {
 		}
 	}
 	
+	private void checkBacklog() {
+		Connection con = null;
+		PreparedStatement ps = null;
+		PreparedStatement ps1 = null;
+		ResultSet rs = null;
+		
+		try {
+			con = DBConnect.connect();
+			ps = con.prepareStatement("SELECT orders_id FROM tborders WHERE orders_id = ? AND date_id >= ? AND date_id <= ?");
+			ps.setString(1, this.getOrderID());
+			ps.setDate(2, Date.valueOf(this.getDate().minusYears(1)));
+			ps.setDate(3, Date.valueOf(this.getDate().plusYears(1)));
+			rs = ps.executeQuery();
+			if(rs.next()) {
+				ps1 = con.prepareStatement("UPDATE tborders SET orders_backlog = 'C', orders_backlog_date = ? WHERE orders_id = ?");
+				ps1.setDate(1, Date.valueOf(this.getDate()));
+				ps1.setString(2, rs.getString("orders_id"));
+				ps1.executeUpdate();
+			} else {
+				ps1 = con.prepareStatement("UPDATE tborders SET orders_backlog = 'O' WHERE orders_id = ?");
+				ps1.setString(1, this.getOrderID());
+				ps1.executeUpdate();
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				DBConnect.close();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
+	
 	public void authenticate() {
 		boolean isDup = this.checkForDup();
-		boolean isUpdate;
+		//boolean isUpdate;
 		
-		if(!isDup) {
+/*		if(!isDup) {
 			isUpdate = this.checkForUpdate();
 			if(isUpdate)
 				this.update();
 			else
 				this.insert();
-		}
+		}*/
+		
+		if(!isDup)
+			this.insert();
+		else
+			this.update();
+		
+		this.checkBacklog();
 	}
 	
 }
