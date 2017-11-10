@@ -15,6 +15,7 @@
 		<ul>
 			<li><a href="Index.html">Home</a></li>
 			<li><a class="active" href="Upload.jsp">Upload Files</a></li>
+			<li><a href="Teams.jsp">Teams</a></li>
 		</ul>
 	</div>
 	<form name="insertOrders" method="POST" action="Insert" enctype="multipart/form-data">

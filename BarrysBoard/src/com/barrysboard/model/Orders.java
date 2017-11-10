@@ -13,7 +13,6 @@ import java.time.LocalTime;
 
 public class Orders {
 
-	//private int ID;
 	private String orderID;
 	private String csrID;
 	private String csrName;
@@ -31,6 +30,8 @@ public class Orders {
 	private String zip;
 	private String backlog;
 	private LocalDate backlogDate;
+	private String commID;
+	private LocalDate dateScheduled;
 	private LocalDateTime dateCreated;
 	private LocalDateTime dateModified;
 	
@@ -51,7 +52,7 @@ public class Orders {
 	
 	public Orders(String orderID, String csrID, String companyID, LocalDate date, 
 			LocalTime time, String jobType, String custType, String status, double amountScheduled, double amountTotal,
-			String address, String city, String state, String zip, LocalDateTime dateCreated, LocalDateTime dateModified) {
+			String address, String city, String state, String zip, LocalDate dateScheduled, LocalDateTime dateCreated, LocalDateTime dateModified) {
 		this.orderID = orderID;
 		this.csrID = csrID;
 		this.companyID = companyID;
@@ -66,8 +67,41 @@ public class Orders {
 		this.city = city;
 		this.state = state;
 		this.zip = zip;
+		this.dateScheduled = dateScheduled;
 		this.dateCreated = dateCreated;
 		this.dateModified = dateModified;
+	}
+	
+	public Orders(String orderID, String csrID, String companyID, LocalDate date, 
+			LocalTime time, String jobType, String custType, String status, double amountScheduled, double amountTotal,
+			String address, String city, String state, String zip, String commID, LocalDate dateScheduled, LocalDateTime dateCreated, LocalDateTime dateModified) {
+		this.orderID = orderID;
+		this.csrID = csrID;
+		this.companyID = companyID;
+		this.date = date;
+		this.time = time;
+		this.jobType = jobType;
+		this.custType = custType;
+		this.status = status;
+		this.amountScheduled = amountScheduled;
+		this.amountTotal = amountTotal;
+		this.address = address;
+		this.city = city;
+		this.state = state;
+		this.zip = zip;
+		this.commID = commID;
+		this.dateScheduled = dateScheduled;
+		this.dateCreated = dateCreated;
+		this.dateModified = dateModified;
+	}
+	
+	public Orders(String orderID, String csrID, String address, String city, String state, String zip) {
+		this.orderID = orderID;
+		this.csrID = csrID;
+		this.address = address;
+		this.city = city;
+		this.state = state;
+		this.zip = zip;
 	}
 
 	public void setOrderID(String orderID) {
@@ -206,6 +240,22 @@ public class Orders {
 		this.backlogDate = backlogDate;
 	}
 
+	public String getCommID() {
+		return commID;
+	}
+
+	public void setCommID(String commID) {
+		this.commID = commID;
+	}
+
+	public LocalDate getDateScheduled() {
+		return dateScheduled;
+	}
+
+	public void setDateScheduled(LocalDate dateScheduled) {
+		this.dateScheduled = dateScheduled;
+	}
+
 	public LocalDateTime getDateCreated() {
 		return dateCreated;
 	}
@@ -225,12 +275,19 @@ public class Orders {
 	private void insert() {
 		Connection con = null;
 		PreparedStatement ps = null;
+		String commID;
+		try {
+			commID = this.getCommID();
+		} catch(Exception e) {
+			commID = null;
+		}
 		
 		try {
 			con = DBConnect.connect();
 			ps = con.prepareStatement("INSERT INTO tborders (orders_id, csr_id, co_id, date_id, orders_time, orders_jobtype, orders_custtype, " +
-					"orders_status, orders_amount_scheduled, orders_amount_total, orders_address, orders_city, orders_state, orders_zipcode, orders_date_created, orders_date_modified) " +
-					"VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+					"orders_status, orders_amount_scheduled, orders_amount_total, orders_address, orders_city, orders_state, orders_zipcode, " +
+					"comm_id, orders_date_scheduled, orders_date_created, orders_date_modified) " +
+					"VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 			ps.setString(1, this.getOrderID());
 			ps.setString(2, this.getCsrID());
 			ps.setString(3, this.getCompanyID());
@@ -245,8 +302,10 @@ public class Orders {
 			ps.setString(12, this.getCity());
 			ps.setString(13, this.getState());
 			ps.setString(14, this.getZip());
-			ps.setTimestamp(15, Timestamp.valueOf(this.getDateCreated()));
-			ps.setTimestamp(16, Timestamp.valueOf(this.getDateModified()));
+			ps.setString(15, commID);
+			ps.setDate(16,Date.valueOf(this.getDateScheduled()));
+			ps.setTimestamp(17, Timestamp.valueOf(this.getDateCreated()));
+			ps.setTimestamp(18, Timestamp.valueOf(this.getDateModified()));
 			ps.executeUpdate();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -268,7 +327,8 @@ public class Orders {
 		try {
 			con = DBConnect.connect();
 			ps = con.prepareStatement("UPDATE tborders SET orders_status = ?, csr_id = ?, orders_amount_scheduled = ?, orders_amount_total = ?, orders_date_modified = ?, date_id = ?, " +
-					"orders_address = ?, orders_city = ?, orders_state = ?, orders_zipcode = ?, orders_jobtype = ?, orders_time = ? WHERE orders_id = ? AND co_id = ?");
+					"orders_address = ?, orders_city = ?, orders_state = ?, orders_zipcode = ?, orders_jobtype = ?, orders_time = ?, orders_date_scheduled = ?, comm_id = ? " +
+					"WHERE orders_id = ? AND co_id = ?");
 			ps.setString(1, this.getStatus());
 			ps.setString(2, this.getCsrID());
 			ps.setDouble(3, this.getAmountScheduled());
@@ -281,8 +341,10 @@ public class Orders {
 			ps.setString(10, this.getZip());
 			ps.setString(11, this.getJobType());
 			ps.setTime(12, Time.valueOf(this.getTime()));
-			ps.setString(13, this.getOrderID());
-			ps.setString(14, this.getCompanyID());
+			ps.setDate(13, Date.valueOf(this.getDateScheduled()));
+			ps.setString(14, this.getCommID());
+			ps.setString(15, this.getOrderID());
+			ps.setString(16, this.getCompanyID());
 			ps.executeUpdate();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -305,24 +367,9 @@ public class Orders {
 		
 		try {
 			con = DBConnect.connect();
-			/*ps = con.prepareStatement("SELECT * FROM tborders WHERE orders_id = ? AND csr_id = ? AND co_id = ? AND date_id = ? AND orders_jobtype = ? AND " +
-					"orders_custtype = ? AND orders_status = ? AND orders_amount_scheduled = ? AND orders_amount_total = ? AND orders_address = ? AND " +
-					"orders_city = ? AND orders_state = ? AND orders_zipcode = ?");*/
 			ps = con.prepareStatement("SELECT * FROM tborders WHERE orders_id = ? AND co_id = ?");
 			ps.setString(1, this.getOrderID());
 			ps.setString(2, this.getCompanyID());
-/*			ps.setString(2, this.getCsrID());
-			ps.setString(3, this.getCompanyID());
-			ps.setDate(4, Date.valueOf(this.getDate()));
-			ps.setString(5, this.getJobType());
-			ps.setString(6, this.getCustType());
-			ps.setString(7, this.getStatus());
-			ps.setDouble(8, this.getAmountScheduled());
-			ps.setDouble(9, this.getAmountTotal());
-			ps.setString(10, this.getAddress());
-			ps.setString(11, this.getCity());
-			ps.setString(12, this.getState());
-			ps.setString(13, this.getZip());*/
 			rs = ps.executeQuery();
 			if(rs.next())
 				isDup = true;
@@ -339,6 +386,43 @@ public class Orders {
 		}
 		
 		return isDup;
+	}
+	
+	public Orders checkAddress() {
+		Connection con = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		Orders match = null;
+		
+		try {
+			con = DBConnect.connect();
+			ps = con.prepareStatement("SELECT * FROM tborders WHERE co_id = ? AND orders_address = ? AND orders_city = ? AND orders_state = ? AND orders_zipcode = ? " +
+					"AND orders_id != ? AND date_id >= ?");
+			ps.setString(1, this.getCompanyID());
+			ps.setString(2, this.getAddress());
+			ps.setString(3, this.getCity());
+			ps.setString(4, this.getState());
+			ps.setString(5, this.getZip());
+			ps.setString(6, this.getOrderID());
+			ps.setDate(7, Date.valueOf(this.getDate().minusDays(30)));
+			rs = ps.executeQuery();
+			if(rs.next()) {
+				match = new Orders(rs.getString("orders_id"), rs.getString("csr_id"), rs.getString("orders_address"), 
+						rs.getString("orders_city"), rs.getString("orders_state"), rs.getString("orders_zipcode"));
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				DBConnect.close();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		return match;
 	}
 	
 	private boolean checkForUpdate() {
@@ -421,14 +505,7 @@ public class Orders {
 	
 	public void authenticate() {
 		boolean isDup = this.checkForDup();
-		//boolean isUpdate = this.checkForUpdate();
-		
-/*		if(!isDup) {
-			if(isUpdate)
-				this.update();
-			else 
-				this.insert();
-		}*/
+
 		if(!isDup) {
 			this.insert();
 		} else {

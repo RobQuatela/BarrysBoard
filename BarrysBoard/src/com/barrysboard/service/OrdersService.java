@@ -29,14 +29,26 @@ public class OrdersService {
 				} catch(StringIndexOutOfBoundsException e) {
 					csrID = nextLine[0];
 				}
+				
 				String[] dateTimes = DateTimeConversion.convertToStringArray(nextLine[15]);
 				LocalDate date = DateTimeConversion.convertToDate(dateTimes[0]);
 				LocalTime time = DateTimeConversion.convertToTime(dateTimes[1]);
+				LocalDate dateScheduled = DateTimeConversion.convertToDate(nextLine[10]);
 				
 				Orders order = new Orders(
 						nextLine[1], csrID, company, date, time, nextLine[19],
 						nextLine[21], nextLine[17], Double.parseDouble(nextLine[5]),
-						Double.parseDouble(nextLine[4]), nextLine[20], location[0], location[1], location[2], LocalDateTime.now(), LocalDateTime.now());
+						Double.parseDouble(nextLine[4]), nextLine[20], location[0], location[1], location[2], 
+						dateScheduled, LocalDateTime.now(), LocalDateTime.now());
+				
+				Orders addressUpdate = order.checkAddress();
+				
+				//check for address already listed in system within 30 days, if so, replace with old csr name and put new csr name in comm id
+				if(addressUpdate != null) {
+					order.setCommID(order.getCsrID());
+					order.setCsrID(addressUpdate.getCsrID());
+				}
+				
 				CustomerServiceRepresentative csr = new CustomerServiceRepresentative(order.getCsrID(), "Empty",
 						"A");
 				
