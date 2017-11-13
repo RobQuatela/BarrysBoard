@@ -23,13 +23,23 @@
 		</ul>
 	</div>
 	<div id="homepage">
+	<br />
+	<h2>Teams</h2>
 	<form name="update" method="POST" action="Update">
 		<select name="teams" multiple="multiple" size="10">
 			<% 
-				ArrayList<Team> teams = Team.getTeams(); 
+				ArrayList<Team> teams = Team.getTeams(1); 
 			%>
 			<% for(Team team : teams) {%>
 				<option value=<%= team.getTeamID() %> ><%= team.getTeamName() %></option>
+			<% } %>
+		</select>
+		<select name="csrteam" multiple="multiple" size="10">
+			<%
+				ArrayList<CustomerServiceRepresentative> csrs = CustomerServiceRepresentative.getCSRByTeam(1);
+			%>
+			<% for(CustomerServiceRepresentative csr : csrs) { %>
+				<option value=<%=csr.getCsrID() %> ><%=csr.getCsrName() %></option>
 			<% } %>
 		</select>
 	</form>

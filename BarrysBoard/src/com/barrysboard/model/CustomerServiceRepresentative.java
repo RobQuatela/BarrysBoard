@@ -4,17 +4,31 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 public class CustomerServiceRepresentative {
 
 	private String csrID;
 	private String csrName;
 	private String csrActive;
+	private String empType;
 	
 	public CustomerServiceRepresentative(String id, String name, String active) {
 		csrID = id;
 		csrName = name;
 		csrActive = active;
+	}
+	
+	public CustomerServiceRepresentative(String id, String name) {
+		csrID = id;
+		csrName = name;
+	}
+	
+	public CustomerServiceRepresentative(String id, String name, String active, String empType) {
+		csrID = id;
+		csrName = name;
+		csrActive = active;
+		this.empType = empType;
 	}
 	
 	public CustomerServiceRepresentative(String id) {
@@ -43,6 +57,44 @@ public class CustomerServiceRepresentative {
 
 	public void setCsrActive(String csrActive) {
 		this.csrActive = csrActive;
+	}
+
+	public String getEmpType() {
+		return empType;
+	}
+
+	public void setEmpType(String empType) {
+		this.empType = empType;
+	}
+	
+	public static ArrayList<CustomerServiceRepresentative> getCSRByTeam(int teamID) {
+		Connection con = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		ArrayList<CustomerServiceRepresentative> csrs = new ArrayList<>();
+		
+		try {
+			con = DBConnect.connect();
+			ps = con.prepareStatement("SELECT tbcsr.csr_id, tbcsr.csr_name FROM tbcsr INNER JOIN tbteamtran ON tbcsr.csr_id = tbteamtran.csr_id " +
+					"WHERE tbteamtran.team_id = ?");
+			ps.setInt(1, teamID);
+			rs = ps.executeQuery();
+			while(rs.next()) {
+				csrs.add(new CustomerServiceRepresentative(rs.getString(1), rs.getString(2)));
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				DBConnect.close();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		return csrs;
 	}
 
 	private void insert() {

@@ -10,14 +10,16 @@ public class Team {
 
 	private int teamID;
 	private String teamName;
+	private int teamActive;
 	
 	public Team(String teamName) {
 		this.teamName = teamName;
 	}
 	
-	public Team(int teamID, String teamName) {
+	public Team(int teamID, String teamName, int teamActive) {
 		this.teamID = teamID;
 		this.teamName = teamName;
+		this.teamActive = teamActive;
 	}
 
 	public String getTeamName() {
@@ -32,7 +34,15 @@ public class Team {
 		return teamID;
 	}
 	
-	public static ArrayList<Team> getTeams() {
+	public int getTeamActive() {
+		return teamActive;
+	}
+
+	public void setTeamActive(int teamActive) {
+		this.teamActive = teamActive;
+	}
+
+	public static ArrayList<Team> getTeams(int active) {
 		Connection con = null;
 		PreparedStatement ps = null;
 		ResultSet rs = null;
@@ -40,10 +50,11 @@ public class Team {
 		
 		try {
 			con = DBConnect.connect();
-			ps = con.prepareStatement("SELECT * FROM tbteam");
+			ps = con.prepareStatement("SELECT * FROM tbteam WHERE team_active = ?");
+			ps.setInt(1, active);
 			rs = ps.executeQuery();
 			while(rs.next()) {
-				teams.add(new Team(rs.getInt("team_id"), rs.getString("team_name")));
+				teams.add(new Team(rs.getInt("team_id"), rs.getString("team_name"), rs.getInt("team_active")));
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
