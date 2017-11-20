@@ -3,6 +3,7 @@ package com.barrysboard.web;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -14,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 
+import com.barrysboard.model.Orders;
 import com.barrysboard.service.BackLogService;
 import com.barrysboard.service.CustomerServiceRepresentativeService;
 import com.barrysboard.service.IncompletesService;
@@ -52,11 +54,12 @@ public class Insert extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String reportType = request.getParameter("reportType");
 		List<Part> fileParts = request.getParts().stream().filter(parts -> "uploadFile".equals(parts.getName())).collect(Collectors.toList());
+		ArrayList<Orders> matchedOrders = null;
 		
 		for(Part filePart : fileParts) {
 			InputStream fileContent = filePart.getInputStream();
 			if (reportType.equalsIgnoreCase("booked")) {
-				OrdersService.readOrders(fileContent);
+				matchedOrders = OrdersService.readOrders(fileContent);
 			} else if (reportType.equalsIgnoreCase("scheduled")) {
 				SalesService.readSales(fileContent);	
 			} else if(reportType.equalsIgnoreCase("incomplete")) {
@@ -90,6 +93,23 @@ public class Insert extends HttpServlet {
 		out.println("</ul>");
 		out.println("</div>");
 		out.println("<p>Thank you for submitting your file! It will be available shortly. Please use the menu links to navigate.");
+		if(!matchedOrders.isEmpty()) {
+			out.println("<p>This is a list of orders with address matching:");
+			out.println("<table>");
+			out.println("<tr>");
+			out.println("<td>csr</td>");
+			out.println("<td>order ID</td>");
+			out.println("<td>comm ID</td>");
+			out.println("</tr>");
+			for (Orders order : matchedOrders) {
+				out.println("<tr>");
+				out.println("<td>" + order.getCsrID() + "</td>");
+				out.println("<td>" + order.getOrderID() + "</td>");
+				out.println("<td>" + order.getCommID() + "</td>");
+				out.println("</tr>");
+			}
+			out.println("</table>");
+		}
 		out.println("</body>");
 		out.println("</html>");
 	}

@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
 
 import com.barrysboard.model.CustomerServiceRepresentative;
 import com.barrysboard.model.Orders;
@@ -13,11 +14,12 @@ import com.opencsv.CSVReader;
 
 public class OrdersService {
 
-	public static void readOrders(InputStream file) throws IOException {
+	public static ArrayList<Orders> readOrders(InputStream file) throws IOException {
 
 		try(CSVReader reader = new CSVReader(new InputStreamReader(file))) {
 			String[] nextLine;
 			reader.readNext();
+			ArrayList<Orders> addressMatch = new ArrayList<>();
 			
 			while((nextLine = reader.readNext()) != null) {
 				String company = nextLine[9].substring(0, 3);
@@ -47,14 +49,20 @@ public class OrdersService {
 				if(addressUpdate != null) {
 					order.setCommID(order.getCsrID());
 					order.setCsrID(addressUpdate.getCsrID());
+					addressMatch.add(order);
+				} else {
+					CustomerServiceRepresentative csr = new CustomerServiceRepresentative(order.getCsrID(), "Empty",
+							"A");
+
+					csr.authenticate();
+					order.authenticate();	
 				}
-				
-				CustomerServiceRepresentative csr = new CustomerServiceRepresentative(order.getCsrID(), "Empty",
-						"A");
-				
-				csr.authenticate();
-				order.authenticate();		
 			}
+			
+			if(addressMatch.isEmpty())
+				return null;
+			else
+				return addressMatch;
 		}	
 	}
 }
