@@ -53,7 +53,7 @@ public class SalesService {
 				try {
 					comm = nextLine[0].substring(nextLine[0].length() - 4);
 				} catch(NullPointerException | StringIndexOutOfBoundsException e) {
-					comm = "";
+					comm = nextLine[0];
 				}
 				
 				Sales commSale = new Sales(nextLine[5], comm);
