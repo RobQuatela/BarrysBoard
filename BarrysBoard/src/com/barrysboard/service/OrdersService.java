@@ -35,7 +35,12 @@ public class OrdersService {
 				String[] dateTimes = DateTimeConversion.convertToStringArray(nextLine[15]);
 				LocalDate date = DateTimeConversion.convertToDate(dateTimes[0]);
 				LocalTime time = DateTimeConversion.convertToTime(dateTimes[1]);
-				LocalDate dateScheduled = DateTimeConversion.convertToDate(nextLine[10]);
+				LocalDate dateScheduled;
+				if(nextLine[10].equalsIgnoreCase(""))
+					dateScheduled = date;
+				else
+					dateScheduled = DateTimeConversion.convertToDate(nextLine[10]);
+				
 				
 				Orders order = new Orders(
 						nextLine[1], csrID, company, date, time, nextLine[19],
@@ -43,12 +48,16 @@ public class OrdersService {
 						Double.parseDouble(nextLine[4]), nextLine[20], location[0], location[1], location[2], 
 						dateScheduled, LocalDateTime.now(), LocalDateTime.now());
 				
-				Orders addressUpdate = order.checkAddress();
+				
+				Orders prevOrder = null;
+				
+				if(CustomerServiceRepresentative.isEstimator(order.getCsrID())) 
+						prevOrder = order.checkAddress();
 				
 				//check for address already listed in system within 30 days, if so, replace with old csr name and put new csr name in comm id
-				if(addressUpdate != null) {
+				if(prevOrder != null && !prevOrder.getCsrID().equalsIgnoreCase(order.getCsrID())) {
 					order.setCommID(order.getCsrID());
-					order.setCsrID(addressUpdate.getCsrID());
+					order.setCsrID(prevOrder.getCsrID());
 					addressMatch.add(order);
 				} else {
 					CustomerServiceRepresentative csr = new CustomerServiceRepresentative(order.getCsrID(), "Empty",
@@ -64,5 +73,16 @@ public class OrdersService {
 			else
 				return addressMatch;
 		}	
+	}
+	
+	public static void readMatchedOrdersOrders(ArrayList<Orders> orders) throws IOException {
+
+		for(Orders order : orders) {
+			CustomerServiceRepresentative csr = new CustomerServiceRepresentative(order.getCsrID(), "Empty",
+					"A");
+			csr.authenticate();
+			order.authenticate();
+		}
+			
 	}
 }

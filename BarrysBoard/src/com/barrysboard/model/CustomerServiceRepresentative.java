@@ -155,8 +155,6 @@ public class CustomerServiceRepresentative {
 			con = DBConnect.connect();
 			ps = con.prepareStatement("SELECT * FROM tbcsr WHERE csr_id = ?");
 			ps.setString(1, this.getCsrID());
-			//ps.setString(2, this.getCsrName());
-			//ps.setString(3, this.getCsrActive());
 			rs = ps.executeQuery();
 			if(rs.next()) {
 				check = true;
@@ -174,6 +172,34 @@ public class CustomerServiceRepresentative {
 		}
 		
 		return check;
+	}
+	
+	public static boolean isEstimator(String csrID) {
+		Connection con = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		boolean isEstimator = false;
+		
+		try {
+			con = DBConnect.connect();
+			ps = con.prepareStatement("SELECT emptype_id FROM tbcsr WHERE csr_id = ? AND emptype_id = 'ESR'");
+			ps.setString(1, csrID);
+			rs = ps.executeQuery();
+			if(rs.next())
+				isEstimator = true;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				DBConnect.close();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		return isEstimator;
 	}
 	
 	private boolean checkForUpdate() {
@@ -209,12 +235,8 @@ public class CustomerServiceRepresentative {
 	
 	public void authenticate() {
 		boolean isDup = this.checkForDup();
-		//boolean isUpdate = this.checkForUpdate();
 		
 		if(!isDup) {
-			//if(isUpdate && !this.getCsrName().equalsIgnoreCase("Empty"))
-			//	this.update();
-			//else
 			this.insert();
 		}
 	}

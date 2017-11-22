@@ -78,6 +78,11 @@ public class Insert extends HttpServlet {
 		out.println("<!DOCTYPE html>");
 		out.println("<html>");
 		out.println("<head>");
+		out.println("<style>");
+		out.println("table { font-family: arial, sans-serif; border-collapse: collapse; width: 100%; }");
+		out.println("td, th { border: 1px solid #dddddd); text-align: left; padding: 8px; }");
+		out.println("tr:nth-child(even) { background-color: #dddddd; }");
+		out.println("</style>");
 		out.println("<meta charset='ISO-8859-1'>");
 		out.println("<link rel='stylesheet' href='css/Main.css' />");
 		out.println("<link rel=\"icon\" type=\"image/gif\" href=\"images/barrysboard.ico\">");
@@ -90,25 +95,39 @@ public class Insert extends HttpServlet {
 		out.println("<ul>");
 		out.println("<li><a class=\"active\" href=\"Index.html\">Home</a></li>");
 		out.println("<li><a href=\"Upload.jsp\">Upload Files</a></li>");
+		out.println("<li><a href=\"Teams.jsp\">Teams</a></li>");
 		out.println("</ul>");
 		out.println("</div>");
 		out.println("<p>Thank you for submitting your file! It will be available shortly. Please use the menu links to navigate.");
 		if(!matchedOrders.isEmpty()) {
-			out.println("<p>This is a list of orders with address matching:");
+			out.println("<form name='matchedOrders' method='POST' action='InsertMatched'>");
+			out.println("<h3>There are <b>" + matchedOrders.size() + "</b> orders listed below have been matched to previous orders " +
+			"in the last 30 days. Do you want to accept these changes?</h3><br />");
+			out.println("<input type='submit' name='btnSubmit' value='Insert Selected'>");
 			out.println("<table>");
 			out.println("<tr>");
-			out.println("<td>csr</td>");
-			out.println("<td>order ID</td>");
-			out.println("<td>comm ID</td>");
+			out.println("<th>Company</th>");
+			out.println("<th>Date Booked</th>");
+			out.println("<th>CSR No.</th>");
+			out.println("<th>Order No.</th>");
+			out.println("<th>Estimator No.</th>");
+			out.println("<th>Address</th>");
+			out.println("<th>Insert?</th>");
 			out.println("</tr>");
 			for (Orders order : matchedOrders) {
 				out.println("<tr>");
+				out.println("<td>" + order.getCompanyID() + "</td>");
+				out.println("<td>" + order.getDate().getMonthValue() + "/" + order.getDate().getDayOfMonth() + "/" + order.getDate().getYear() + "</td>");
 				out.println("<td>" + order.getCsrID() + "</td>");
 				out.println("<td>" + order.getOrderID() + "</td>");
 				out.println("<td>" + order.getCommID() + "</td>");
+				out.println("<td>" + order.getAddress() + ", " + order.getState() + " " + order.getZip() + "</td>");
+				out.println("<td><input type='checkbox' name='ckInsert' value='ckYes" + order.getOrderID() + "'></td>");
 				out.println("</tr>");
 			}
-			out.println("</table>");
+			out.println("</table><br />");
+			request.getSession().setAttribute("matchedOrders", matchedOrders);
+			out.println("</form>");
 		}
 		out.println("</body>");
 		out.println("</html>");

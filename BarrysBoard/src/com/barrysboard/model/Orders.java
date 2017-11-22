@@ -396,8 +396,9 @@ public class Orders {
 		
 		try {
 			con = DBConnect.connect();
-			ps = con.prepareStatement("SELECT * FROM tborders WHERE co_id = ? AND orders_address = ? AND orders_city = ? AND orders_state = ? AND orders_zipcode = ? " +
-					"AND orders_id != ? AND date_id >= ?");
+			ps = con.prepareStatement("SELECT * FROM tborders INNER JOIN tbcsr ON tborders.csr_id = tbcsr.csr_id " +
+					"WHERE tborders.co_id = ? AND tborders.orders_address = ? AND tborders.orders_city = ? AND tborders.orders_state = ? AND tborders.orders_zipcode = ? " +
+					"AND tborders.orders_id != ? AND tborders.date_id >= ? AND tborders.date_id <= ?");
 			ps.setString(1, this.getCompanyID());
 			ps.setString(2, this.getAddress());
 			ps.setString(3, this.getCity());
@@ -405,6 +406,7 @@ public class Orders {
 			ps.setString(5, this.getZip());
 			ps.setString(6, this.getOrderID());
 			ps.setDate(7, Date.valueOf(this.getDate().minusDays(30)));
+			ps.setDate(8, Date.valueOf(this.getDate()));
 			rs = ps.executeQuery();
 			if(rs.next()) {
 				match = new Orders(rs.getString("orders_id"), rs.getString("csr_id"), rs.getString("orders_address"), 
