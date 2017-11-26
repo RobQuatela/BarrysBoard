@@ -12,6 +12,7 @@ public class CustomerServiceRepresentative {
 	private String csrName;
 	private String csrActive;
 	private String empType;
+	private String teamName;
 	
 	public CustomerServiceRepresentative(String id, String name, String active) {
 		csrID = id;
@@ -67,30 +68,70 @@ public class CustomerServiceRepresentative {
 		this.empType = empType;
 	}
 	
+	public String getTeamName() {
+		return teamName;
+	}
+
+	public void setTeamName(String teamName) {
+		this.teamName = teamName;
+	}
+
 	public static ArrayList<CustomerServiceRepresentative> getCSRByTeam(int teamID) {
 		Connection con = null;
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 		ArrayList<CustomerServiceRepresentative> csrs = new ArrayList<>();
-		
-		try {
-			con = DBConnect.connect();
-			ps = con.prepareStatement("SELECT tbcsr.csr_id, tbcsr.csr_name FROM tbcsr INNER JOIN tbteamtran ON tbcsr.csr_id = tbteamtran.csr_id " +
-					"WHERE tbteamtran.team_id = ?");
-			ps.setInt(1, teamID);
-			rs = ps.executeQuery();
-			while(rs.next()) {
-				csrs.add(new CustomerServiceRepresentative(rs.getString(1), rs.getString(2)));
-			}
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} finally {
+		if(teamID != 0) {
 			try {
-				DBConnect.close();
-			} catch (Exception e) {
+				con = DBConnect.connect();
+				ps = con.prepareStatement(
+						"SELECT tbcsr.csr_id, tbcsr.csr_name, tbteam.team_name FROM tbcsr INNER JOIN tbteamtran ON tbcsr.csr_id = tbteamtran.csr_id "
+								+ "INNER JOIN tbteam ON tbteamtran.team_id = tbteam.team_id WHERE tbteamtran.team_id = ?");
+				ps.setInt(1, teamID);
+				rs = ps.executeQuery();
+				while (rs.next()) {
+					CustomerServiceRepresentative csr = new CustomerServiceRepresentative(rs.getString(1),
+							rs.getString(2));
+					csr.setTeamName(rs.getString(3));
+					csrs.add(csr);
+				}
+			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+			} finally {
+				try {
+					DBConnect.close();
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		} else {
+			try {
+				con = DBConnect.connect();
+				ps = con.prepareStatement(
+						"SELECT tbcsr.csr_id, tbcsr.csr_name, tbteam.team_name FROM tbcsr INNER JOIN tbteamtran ON tbcsr.csr_id = tbteamtran.csr_id "
+								+ "INNER JOIN tbteam ON tbteamtran.team_id = tbteam.team_id WHERE tbcsr.emptype_id = 'CSR'");
+				rs = ps.executeQuery();
+				while (rs.next()) {
+					CustomerServiceRepresentative csr = new CustomerServiceRepresentative(rs.getString(1),
+							rs.getString(2));
+					if(rs.getString(3) == null)
+						csr.setTeamName("No Current Team");
+					else
+						csr.setTeamName(rs.getString(3));
+					csrs.add(csr);
+				}
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} finally {
+				try {
+					DBConnect.close();
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		}
 		
