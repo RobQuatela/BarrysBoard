@@ -215,6 +215,34 @@ public class CustomerServiceRepresentative {
 		return check;
 	}
 	
+	public static String getName(String csrID) {
+		Connection con = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		String name = "";
+		
+		try {
+			con = DBConnect.connect();
+			ps = con.prepareStatement("SELECT csr_name FROM tbcsr WHERE csr_id = ?");
+			ps.setString(1, csrID);
+			rs = ps.executeQuery();
+			if(rs.next())
+				name = rs.getString(1);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				DBConnect.close();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		return name;
+	}
+	
 	public static boolean isEstimator(String csrID) {
 		Connection con = null;
 		PreparedStatement ps = null;
@@ -223,7 +251,7 @@ public class CustomerServiceRepresentative {
 		
 		try {
 			con = DBConnect.connect();
-			ps = con.prepareStatement("SELECT emptype_id FROM tbcsr WHERE csr_id = ? AND emptype_id = 'ESR'");
+			ps = con.prepareStatement("SELECT emptype_id FROM tbcsr WHERE csr_id = ? AND (emptype_id != 'CSR' OR emptype_id IS NULL)");
 			ps.setString(1, csrID);
 			rs = ps.executeQuery();
 			if(rs.next())

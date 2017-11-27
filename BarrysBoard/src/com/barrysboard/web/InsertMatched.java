@@ -3,6 +3,7 @@ package com.barrysboard.web;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -42,9 +43,10 @@ public class InsertMatched extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		@SuppressWarnings("unchecked")
-		ArrayList<Orders> matchedOrders = (ArrayList<Orders>)request.getSession().getAttribute("matchedOrders");
+		//ArrayList<Orders> matchedOrders = (ArrayList<Orders>)request.getSession().getAttribute("matchedOrders");
+		HashMap<String, Orders> matchedOrders = (HashMap<String, Orders>)request.getSession().getAttribute("matchedOrders");
 		
-		OrdersService.readMatchedOrdersOrders(matchedOrders);
+		OrdersService.readMatchedOrders(matchedOrders);
 		
 		response.setContentType("text/html");
 		PrintWriter out = response.getWriter();

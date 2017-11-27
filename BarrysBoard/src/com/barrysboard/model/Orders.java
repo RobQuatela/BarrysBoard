@@ -10,6 +10,7 @@ import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
 
 public class Orders {
 
@@ -392,13 +393,14 @@ public class Orders {
 		Connection con = null;
 		PreparedStatement ps = null;
 		ResultSet rs = null;
-		Orders match = null;
+		ArrayList<Orders> match = new ArrayList<>();
 		
 		try {
 			con = DBConnect.connect();
 			ps = con.prepareStatement("SELECT * FROM tborders INNER JOIN tbcsr ON tborders.csr_id = tbcsr.csr_id " +
 					"WHERE tborders.co_id = ? AND tborders.orders_address = ? AND tborders.orders_city = ? AND tborders.orders_state = ? AND tborders.orders_zipcode = ? " +
-					"AND tborders.orders_id != ? AND tborders.date_id >= ? AND tborders.date_id <= ?");
+					"AND tborders.orders_id != ? AND tborders.date_id >= ? AND tborders.date_id <= ? AND tbcsr.emptype_id = 'CSR' AND (tborders.orders_jobtype = 'EST' OR " +
+					"tborders.orders_jobtype = 'DE' OR tborders.orders_jobtype = 'DC')");
 			ps.setString(1, this.getCompanyID());
 			ps.setString(2, this.getAddress());
 			ps.setString(3, this.getCity());
@@ -408,9 +410,9 @@ public class Orders {
 			ps.setDate(7, Date.valueOf(this.getDate().minusDays(30)));
 			ps.setDate(8, Date.valueOf(this.getDate()));
 			rs = ps.executeQuery();
-			if(rs.next()) {
-				match = new Orders(rs.getString("orders_id"), rs.getString("csr_id"), rs.getString("orders_address"), 
-						rs.getString("orders_city"), rs.getString("orders_state"), rs.getString("orders_zipcode"));
+			while(rs.next()) {
+				match.add(new Orders(rs.getString("orders_id"), rs.getString("csr_id"), rs.getString("orders_address"), 
+						rs.getString("orders_city"), rs.getString("orders_state"), rs.getString("orders_zipcode")));
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -424,7 +426,10 @@ public class Orders {
 			}
 		}
 		
-		return match;
+		if(match.size() >= 1)
+			return match.get(match.size() - 1);
+		else
+			return null;
 	}
 	
 	private boolean checkForUpdate() {

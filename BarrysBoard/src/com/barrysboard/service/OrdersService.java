@@ -7,6 +7,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.barrysboard.model.CustomerServiceRepresentative;
 import com.barrysboard.model.Orders;
@@ -14,12 +16,13 @@ import com.opencsv.CSVReader;
 
 public class OrdersService {
 
-	public static ArrayList<Orders> readOrders(InputStream file) throws IOException {
+	public static HashMap<String, Orders> readOrders(InputStream file) throws IOException {
 
 		try(CSVReader reader = new CSVReader(new InputStreamReader(file))) {
 			String[] nextLine;
 			reader.readNext();
 			ArrayList<Orders> addressMatch = new ArrayList<>();
+			HashMap<String, Orders> orderMatch = new HashMap<>();
 			
 			while((nextLine = reader.readNext()) != null) {
 				String company = nextLine[9].substring(0, 3);
@@ -59,6 +62,7 @@ public class OrdersService {
 					order.setCommID(order.getCsrID());
 					order.setCsrID(prevOrder.getCsrID());
 					addressMatch.add(order);
+					orderMatch.put(prevOrder.getOrderID(), order);
 				} else {
 					CustomerServiceRepresentative csr = new CustomerServiceRepresentative(order.getCsrID(), "Empty",
 							"A");
@@ -71,17 +75,18 @@ public class OrdersService {
 			if(addressMatch.isEmpty())
 				return null;
 			else
-				return addressMatch;
+				//return addressMatch;
+				return orderMatch;
 		}	
 	}
 	
-	public static void readMatchedOrdersOrders(ArrayList<Orders> orders) throws IOException {
+	public static void readMatchedOrders(HashMap<String, Orders> orders) throws IOException {
 
-		for(Orders order : orders) {
-			CustomerServiceRepresentative csr = new CustomerServiceRepresentative(order.getCsrID(), "Empty",
+		for(Map.Entry<String, Orders> order : orders.entrySet()) {
+			CustomerServiceRepresentative csr = new CustomerServiceRepresentative(order.getValue().getCsrID(), "Empty",
 					"A");
 			csr.authenticate();
-			order.authenticate();
+			order.getValue().authenticate();
 		}
 			
 	}

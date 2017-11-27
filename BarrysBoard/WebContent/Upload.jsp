@@ -30,10 +30,10 @@
 			<option value="employee">Employee Master List</option>
 		</select>
 	</p>
-	<input type="file" id="myFile" name="uploadFile" multiple="true" onchange="myFunction()" >
+	<input type="file" id="myFile" name="uploadFile" multiple="true" onchange="uploadFile()" >
 	<p id="demo"></p>
 	<script>
-		function myFunction() {
+		function uploadFile() {
 			var x = document.getElementById("myFile");
 			var txt = "";
 			var path = "";

@@ -4,7 +4,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import javax.servlet.ServletException;
@@ -15,6 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 
+import com.barrysboard.model.CustomerServiceRepresentative;
 import com.barrysboard.model.Orders;
 import com.barrysboard.service.BackLogService;
 import com.barrysboard.service.CustomerServiceRepresentativeService;
@@ -54,7 +58,8 @@ public class Insert extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String reportType = request.getParameter("reportType");
 		List<Part> fileParts = request.getParts().stream().filter(parts -> "uploadFile".equals(parts.getName())).collect(Collectors.toList());
-		ArrayList<Orders> matchedOrders = null;
+		//ArrayList<Orders> matchedOrders = null;
+		HashMap<String, Orders> matchedOrders = new HashMap<>();
 		
 		for(Part filePart : fileParts) {
 			InputStream fileContent = filePart.getInputStream();
@@ -108,21 +113,38 @@ public class Insert extends HttpServlet {
 			out.println("<tr>");
 			out.println("<th>Company</th>");
 			out.println("<th>Date Booked</th>");
-			out.println("<th>CSR No.</th>");
-			out.println("<th>Order No.</th>");
-			out.println("<th>Estimator No.</th>");
+			out.println("<th>CSR</th>");
+			out.println("<th>Current Order No.</th>");
+			out.println("<th>Matched Order No. </th>");
+			out.println("<th>Estimator</th>");
+			out.println("<th>Job Type</th>");
 			out.println("<th>Address</th>");
 			out.println("<th>Insert?</th>");
 			out.println("</tr>");
-			for (Orders order : matchedOrders) {
+			Iterator it = matchedOrders.entrySet().iterator();
+/*			for (Orders order : matchedOrders) {
 				out.println("<tr>");
 				out.println("<td>" + order.getCompanyID() + "</td>");
 				out.println("<td>" + order.getDate().getMonthValue() + "/" + order.getDate().getDayOfMonth() + "/" + order.getDate().getYear() + "</td>");
-				out.println("<td>" + order.getCsrID() + "</td>");
+				out.println("<td>" + CustomerServiceRepresentative.getName(order.getCsrID()) + "</td>");
 				out.println("<td>" + order.getOrderID() + "</td>");
-				out.println("<td>" + order.getCommID() + "</td>");
+				out.println("<td>" + CustomerServiceRepresentative.getName(order.getCommID()) + "</td>");
+				out.println("<td>" + order.getJobType() + "</td>");
 				out.println("<td>" + order.getAddress() + ", " + order.getState() + " " + order.getZip() + "</td>");
 				out.println("<td><input type='checkbox' name='ckInsert' value='ckYes" + order.getOrderID() + "'></td>");
+				out.println("</tr>");
+			}*/
+			for(Map.Entry<String, Orders> order : matchedOrders.entrySet()) {
+				out.println("<tr>");
+				out.println("<td>" + order.getValue().getCompanyID() + "</td>");
+				out.println("<td>" + order.getValue().getDate().getMonthValue() + "/" + order.getValue().getDate().getDayOfMonth() + "/" + order.getValue().getDate().getYear() + "</td>");
+				out.println("<td>" + CustomerServiceRepresentative.getName(order.getValue().getCsrID()) + "</td>");
+				out.println("<td>" + order.getValue().getOrderID() + "</td>");
+				out.println("<td>" + order.getKey() + "</td>");
+				out.println("<td>" + CustomerServiceRepresentative.getName(order.getValue().getCommID()) + "</td>");
+				out.println("<td>" + order.getValue().getJobType() + "</td>");
+				out.println("<td>" + order.getValue().getAddress() + ", " + order.getValue().getState() + " " + order.getValue().getZip() + "</td>");
+				out.println("<td><input type='checkbox' name='ckInsert' value='ckYes" + order.getValue().getOrderID() + "'></td>");
 				out.println("</tr>");
 			}
 			out.println("</table><br />");
