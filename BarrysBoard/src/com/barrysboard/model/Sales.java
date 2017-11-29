@@ -26,6 +26,7 @@ public class Sales {
 	private String state;
 	private String zip;
 	private String commID;
+	private String advertising;
 	private LocalDateTime dateCreated;
 	private LocalDateTime dateModified;
 	
@@ -44,7 +45,7 @@ public class Sales {
 	}
 	
 	public Sales(String orderID, String csrID, String companyID, LocalDate date, String jobType, String custType, String status,
-			double scheduledAmount, double totalAmount, String address, String city, String state, String zip, 
+			double scheduledAmount, double totalAmount, String address, String city, String state, String zip, String advertising,
 			LocalDateTime dateCreated, LocalDateTime dateModified) {
 		this.orderID = orderID;
 		this.csrID = csrID;
@@ -59,6 +60,7 @@ public class Sales {
 		this.city = city;
 		this.state = state;
 		this.zip = zip;
+		this.advertising = advertising;
 		this.dateCreated = dateCreated;
 		this.dateModified = dateModified;
 	}
@@ -180,6 +182,14 @@ public class Sales {
 		this.commID = commID;
 	}
 
+	public String getAdvertising() {
+		return advertising;
+	}
+
+	public void setAdvertising(String advertising) {
+		this.advertising = advertising;
+	}
+
 	public LocalDateTime getDateCreated() {
 		return dateCreated;
 	}
@@ -199,43 +209,50 @@ public class Sales {
 	private void insert() {
 		Connection con = null;
 		PreparedStatement ps = null;
-		boolean check = this.checkForDup();
+		String commID;
 		
-		if(!check) {
+		try {
+			commID = this.getCommID();
+		} catch(Exception e) {
+			commID = null;
+		}
+		
+		try {
+			con = DBConnect.connect();
+			ps = con.prepareStatement(
+					"INSERT INTO tbsales (sales_id, csr_id, co_id, date_id, sales_jobtype, sales_custtype, sales_status, sales_amount_scheduled, sales_amount_total, "
+							+ "sales_address, sales_city, sales_state, sales_zipcode, comm_id, sales_advertising, sales_date_created, sales_date_modified) "
+							+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+			ps.setString(1, this.getOrderID());
+			ps.setString(2, this.getCsrID());
+			ps.setString(3, this.getCompanyID());
+			ps.setDate(4, Date.valueOf(this.getDate()));
+			ps.setString(5, this.getJobType());
+			ps.setString(6, this.getCustType());
+			ps.setString(7, this.getStatus());
+			ps.setDouble(8, this.getScheduledAmount());
+			ps.setDouble(9, this.getTotalAmount());
+			ps.setString(10, this.getAddress());
+			ps.setString(11, this.getCity());
+			ps.setString(12, this.getState());
+			ps.setString(13, this.getZip());
+			ps.setString(14, commID);
+			ps.setString(15, this.getAdvertising());
+			ps.setTimestamp(16, Timestamp.valueOf(this.getDateCreated()));
+			ps.setTimestamp(17, Timestamp.valueOf(this.getDateModified()));
+			ps.executeUpdate();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
 			try {
-				con = DBConnect.connect();
-				ps = con.prepareStatement(
-						"INSERT INTO tbsales (sales_id, csr_id, co_id, date_id, sales_jobtype, sales_custtype, sales_status, sales_amount_scheduled, sales_amount_total, " +
-								"sales_address, sales_city, sales_state, sales_zipcode, sales_date_created, sales_date_modified) "
-								+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-				ps.setString(1, this.getOrderID());
-				ps.setString(2, this.getCsrID());
-				ps.setString(3, this.getCompanyID());
-				ps.setDate(4, Date.valueOf(this.getDate()));
-				ps.setString(5, this.getJobType());
-				ps.setString(6, this.getCustType());
-				ps.setString(7, this.getStatus());
-				ps.setDouble(8, this.getScheduledAmount());
-				ps.setDouble(9, this.getTotalAmount());
-				ps.setString(10, this.getAddress());
-				ps.setString(11, this.getCity());
-				ps.setString(12, this.getState());
-				ps.setString(13, this.getZip());
-				ps.setTimestamp(14, Timestamp.valueOf(this.getDateCreated()));
-				ps.setTimestamp(15, Timestamp.valueOf(this.getDateModified()));
-				ps.executeUpdate();
-			} catch (SQLException e) {
+				DBConnect.close();
+			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			} finally {
-				try {
-					DBConnect.close();
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
 			}
 		}
+		
 	}
 	
 	private void update() {
@@ -245,7 +262,8 @@ public class Sales {
 		try {
 			con = DBConnect.connect();
 			ps = con.prepareStatement("UPDATE tbsales SET sales_amount_scheduled = ?, sales_amount_total = ?, sales_date_modified = ?, date_id = ?, sales_jobtype = ?, " +
-					"sales_custtype = ?, sales_status = ?, csr_id = ?, sales_address = ?, sales_city = ?, sales_state = ?, sales_zipcode = ? WHERE sales_id = ? AND co_id = ?");
+					"sales_custtype = ?, sales_status = ?, csr_id = ?, sales_address = ?, sales_city = ?, sales_state = ?, sales_zipcode = ?, comm_id = ?, sales_advertising = ? " +
+					"WHERE sales_id = ? AND co_id = ?");
 			ps.setDouble(1, this.getScheduledAmount());
 			ps.setDouble(2, this.getTotalAmount());
 			ps.setTimestamp(3, Timestamp.valueOf(this.getDateModified()));
@@ -258,8 +276,10 @@ public class Sales {
 			ps.setString(10, this.getCity());
 			ps.setString(11, this.getState());
 			ps.setString(12, this.getZip());
-			ps.setString(13, this.getOrderID());
-			ps.setString(14, this.getCompanyID());
+			ps.setString(13, this.getCommID());
+			ps.setString(14, this.getAdvertising());
+			ps.setString(15, this.getOrderID());
+			ps.setString(16, this.getCompanyID());
 			ps.executeUpdate();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -282,25 +302,9 @@ public class Sales {
 		
 		try {
 			con = DBConnect.connect();
-			/*ps = con.prepareStatement("SELECT * FROM tbsales WHERE date_id = ? AND co_id = ? AND sales_id = ? AND sales_amount_scheduled = ? AND sales_amount_total = ? " +
-					"AND sales_status = ? AND sales_jobtype = ? AND sales_custtype = ? AND csr_id = ? AND sales_address = ? AND sales_city = ? AND sales_state = ? AND " +
-					"sales_zipcode = ?");*/
 			ps = con.prepareStatement("SELECT * FROM tbsales WHERE sales_id = ? AND co_id = ?");
 			ps.setString(1, this.getOrderID());
 			ps.setString(2, this.getCompanyID());
-/*			ps.setDate(1, Date.valueOf(this.getDate()));
-			ps.setString(2, this.getCompanyID());
-			ps.setString(3, this.getOrderID());
-			ps.setDouble(4, this.getScheduledAmount());
-			ps.setDouble(5, this.getTotalAmount());
-			ps.setString(6, this.getStatus());
-			ps.setString(7, this.getJobType());
-			ps.setString(8, this.getCustType());
-			ps.setString(9, this.getCsrID());
-			ps.setString(10, this.getAddress());
-			ps.setString(11, this.getCity());
-			ps.setString(12, this.getState());
-			ps.setString(13, this.getZip());*/
 			rs = ps.executeQuery();
 			if(rs.next()) 
 				check = true;
@@ -420,18 +424,38 @@ public class Sales {
 		}
 	}
 	
+	public Sales updateOriginCSR() {
+		Connection con = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		
+		try {
+			con = DBConnect.connect();
+			ps = con.prepareStatement("SELECT csr_id, comm_id FROM tborders WHERE orders_id = ?");
+			ps.setString(1, this.getOrderID());
+			rs = ps.executeQuery();
+			if(rs.next()) {
+				this.setCsrID(rs.getString(1));
+				this.setCommID(rs.getString(2));
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				DBConnect.close();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		return this;
+	}
+	
 	public void authenticate() {
 		boolean isDup = this.checkForDup();
-		//boolean isUpdate;
-		
-/*		if(!isDup) {
-			isUpdate = this.checkForUpdate();
-			if(isUpdate)
-				this.update();
-			else
-				this.insert();
-		}*/
-		
+
 		if(!isDup)
 			this.insert();
 		else

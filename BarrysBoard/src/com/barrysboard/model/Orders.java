@@ -32,6 +32,7 @@ public class Orders {
 	private String backlog;
 	private LocalDate backlogDate;
 	private String commID;
+	private String advertising;
 	private LocalDate dateScheduled;
 	private LocalDateTime dateCreated;
 	private LocalDateTime dateModified;
@@ -53,7 +54,8 @@ public class Orders {
 	
 	public Orders(String orderID, String csrID, String companyID, LocalDate date, 
 			LocalTime time, String jobType, String custType, String status, double amountScheduled, double amountTotal,
-			String address, String city, String state, String zip, LocalDate dateScheduled, LocalDateTime dateCreated, LocalDateTime dateModified) {
+			String address, String city, String state, String zip, LocalDate dateScheduled, String advertising, LocalDateTime dateCreated,
+			LocalDateTime dateModified) {
 		this.orderID = orderID;
 		this.csrID = csrID;
 		this.companyID = companyID;
@@ -69,6 +71,7 @@ public class Orders {
 		this.state = state;
 		this.zip = zip;
 		this.dateScheduled = dateScheduled;
+		this.advertising = advertising;
 		this.dateCreated = dateCreated;
 		this.dateModified = dateModified;
 	}
@@ -257,6 +260,14 @@ public class Orders {
 		this.dateScheduled = dateScheduled;
 	}
 
+	public String getAdvertising() {
+		return advertising;
+	}
+
+	public void setAdvertising(String advertising) {
+		this.advertising = advertising;
+	}
+
 	public LocalDateTime getDateCreated() {
 		return dateCreated;
 	}
@@ -287,8 +298,8 @@ public class Orders {
 			con = DBConnect.connect();
 			ps = con.prepareStatement("INSERT INTO tborders (orders_id, csr_id, co_id, date_id, orders_time, orders_jobtype, orders_custtype, " +
 					"orders_status, orders_amount_scheduled, orders_amount_total, orders_address, orders_city, orders_state, orders_zipcode, " +
-					"comm_id, orders_date_scheduled, orders_date_created, orders_date_modified) " +
-					"VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+					"comm_id, orders_date_scheduled, orders_advertising, orders_date_created, orders_date_modified) " +
+					"VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 			ps.setString(1, this.getOrderID());
 			ps.setString(2, this.getCsrID());
 			ps.setString(3, this.getCompanyID());
@@ -305,8 +316,9 @@ public class Orders {
 			ps.setString(14, this.getZip());
 			ps.setString(15, commID);
 			ps.setDate(16,Date.valueOf(this.getDateScheduled()));
-			ps.setTimestamp(17, Timestamp.valueOf(this.getDateCreated()));
-			ps.setTimestamp(18, Timestamp.valueOf(this.getDateModified()));
+			ps.setString(17, this.getAdvertising());
+			ps.setTimestamp(18, Timestamp.valueOf(this.getDateCreated()));
+			ps.setTimestamp(19, Timestamp.valueOf(this.getDateModified()));
 			ps.executeUpdate();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -328,8 +340,8 @@ public class Orders {
 		try {
 			con = DBConnect.connect();
 			ps = con.prepareStatement("UPDATE tborders SET orders_status = ?, csr_id = ?, orders_amount_scheduled = ?, orders_amount_total = ?, orders_date_modified = ?, date_id = ?, " +
-					"orders_address = ?, orders_city = ?, orders_state = ?, orders_zipcode = ?, orders_jobtype = ?, orders_time = ?, orders_date_scheduled = ?, comm_id = ? " +
-					"WHERE orders_id = ? AND co_id = ?");
+					"orders_address = ?, orders_city = ?, orders_state = ?, orders_zipcode = ?, orders_jobtype = ?, orders_time = ?, orders_date_scheduled = ?, comm_id = ?, " +
+					"orders_advertising = ? WHERE orders_id = ? AND co_id = ?");
 			ps.setString(1, this.getStatus());
 			ps.setString(2, this.getCsrID());
 			ps.setDouble(3, this.getAmountScheduled());
@@ -344,8 +356,9 @@ public class Orders {
 			ps.setTime(12, Time.valueOf(this.getTime()));
 			ps.setDate(13, Date.valueOf(this.getDateScheduled()));
 			ps.setString(14, this.getCommID());
-			ps.setString(15, this.getOrderID());
-			ps.setString(16, this.getCompanyID());
+			ps.setString(15, this.getAdvertising());
+			ps.setString(16, this.getOrderID());
+			ps.setString(17, this.getCompanyID());
 			ps.executeUpdate();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -389,7 +402,7 @@ public class Orders {
 		return isDup;
 	}
 	
-	public Orders checkAddress() {
+	public Orders matchOrder() {
 		Connection con = null;
 		PreparedStatement ps = null;
 		ResultSet rs = null;

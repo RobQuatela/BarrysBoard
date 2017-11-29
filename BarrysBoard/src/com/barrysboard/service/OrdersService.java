@@ -21,7 +21,7 @@ public class OrdersService {
 		try(CSVReader reader = new CSVReader(new InputStreamReader(file))) {
 			String[] nextLine;
 			reader.readNext();
-			ArrayList<Orders> addressMatch = new ArrayList<>();
+			//ArrayList<Orders> addressMatch = new ArrayList<>();
 			HashMap<String, Orders> orderMatch = new HashMap<>();
 			
 			while((nextLine = reader.readNext()) != null) {
@@ -49,19 +49,19 @@ public class OrdersService {
 						nextLine[1], csrID, company, date, time, nextLine[19],
 						nextLine[21], nextLine[17], Double.parseDouble(nextLine[5]),
 						Double.parseDouble(nextLine[4]), nextLine[20], location[0], location[1], location[2], 
-						dateScheduled, LocalDateTime.now(), LocalDateTime.now());
+						dateScheduled, nextLine[18], LocalDateTime.now(), LocalDateTime.now());
 				
 				
 				Orders prevOrder = null;
 				
 				if(CustomerServiceRepresentative.isEstimator(order.getCsrID())) 
-						prevOrder = order.checkAddress();
+						prevOrder = order.matchOrder();
 				
 				//check for address already listed in system within 30 days, if so, replace with old csr name and put new csr name in comm id
 				if(prevOrder != null && !prevOrder.getCsrID().equalsIgnoreCase(order.getCsrID())) {
 					order.setCommID(order.getCsrID());
 					order.setCsrID(prevOrder.getCsrID());
-					addressMatch.add(order);
+					//addressMatch.add(order);
 					orderMatch.put(prevOrder.getOrderID(), order);
 				} else {
 					CustomerServiceRepresentative csr = new CustomerServiceRepresentative(order.getCsrID(), "Empty",
@@ -72,7 +72,8 @@ public class OrdersService {
 				}
 			}
 			
-			if(addressMatch.isEmpty())
+			//if(addressMatch.isEmpty())
+			if(orderMatch.isEmpty())
 				return null;
 			else
 				//return addressMatch;

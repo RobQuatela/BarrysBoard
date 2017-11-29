@@ -32,9 +32,12 @@ public class SalesService {
 
 				Sales sale = new Sales(nextLine[1], csrID, company, saleDate,
 						nextLine[19], nextLine[21], nextLine[17], Double.parseDouble(nextLine[5]),
-						Double.parseDouble(nextLine[4]), nextLine[20], location[0], location[1], location[2], LocalDateTime.now(), LocalDateTime.now());
+						Double.parseDouble(nextLine[4]), nextLine[20], location[0], location[1], location[2], nextLine[18], 
+						LocalDateTime.now(), LocalDateTime.now());
 				CustomerServiceRepresentative csr = new CustomerServiceRepresentative(sale.getCsrID(), "Empty",
 						"A");
+				
+				sale = sale.updateOriginCSR();
 				
 				csr.authenticate();
 				sale.authenticate();
