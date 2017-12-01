@@ -17,11 +17,14 @@ public class SalesService {
 		try(CSVReader reader = new CSVReader(new InputStreamReader(file))) {
 			String[] nextLine;
 			reader.readNext();
+			int counter = 1;
 			
 			while((nextLine = reader.readNext()) != null) {
 				LocalDate saleDate = DateTimeConversion.convertToDate(nextLine[10]);
 				String company = nextLine[9].substring(0, 3);
 				String[] location = DateTimeConversion.convertLocation(nextLine[14]);
+				long startTime = System.currentTimeMillis();
+				double elapsedTime;
 				
 				String csrID;
 				try {
@@ -38,6 +41,10 @@ public class SalesService {
 						"A");
 				
 				sale = sale.updateOriginCSR();
+				
+				elapsedTime = System.currentTimeMillis() - startTime;
+				System.out.println("" + counter + ": Sales: " + sale.getOrderID() + " Time: " + elapsedTime + "");
+				counter++;
 				
 				csr.authenticate();
 				sale.authenticate();

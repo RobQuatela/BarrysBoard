@@ -23,11 +23,14 @@ public class OrdersService {
 			reader.readNext();
 			//ArrayList<Orders> addressMatch = new ArrayList<>();
 			HashMap<String, Orders> orderMatch = new HashMap<>();
+			int counter = 1;
 			
 			while((nextLine = reader.readNext()) != null) {
 				String company = nextLine[9].substring(0, 3);
 				String csrID;
 				String[] location = DateTimeConversion.convertLocation(nextLine[14]);
+				long startTime = System.currentTimeMillis();
+				double elapsedTime;
 				
 				try {
 					csrID = nextLine[0].substring(nextLine[0].length() - 4);
@@ -51,7 +54,6 @@ public class OrdersService {
 						Double.parseDouble(nextLine[4]), nextLine[20], location[0], location[1], location[2], 
 						dateScheduled, nextLine[18], LocalDateTime.now(), LocalDateTime.now());
 				
-				
 				Orders prevOrder = null;
 				
 				if(CustomerServiceRepresentative.isEstimator(order.getCsrID())) 
@@ -70,6 +72,10 @@ public class OrdersService {
 					csr.authenticate();
 					order.authenticate();	
 				}
+				
+				elapsedTime = System.currentTimeMillis() - startTime;
+				System.out.println("" + counter + ": Order: " + order.getOrderID() + " Time: " + elapsedTime + "");
+				counter++;
 			}
 			
 			//if(addressMatch.isEmpty())

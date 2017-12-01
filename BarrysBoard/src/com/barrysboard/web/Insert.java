@@ -77,7 +77,7 @@ public class Insert extends HttpServlet {
 				CustomerServiceRepresentativeService.readCSR(fileContent);
 			}
 		}
-		
+		request.getSession().setAttribute("matchedOrders", matchedOrders);
 		response.setContentType("text/html");
 		PrintWriter out = response.getWriter();
 		out.println("<!DOCTYPE html>");
@@ -105,7 +105,7 @@ public class Insert extends HttpServlet {
 		out.println("</div>");
 		out.println("<p>Thank you for submitting your file! It will be available shortly. Please use the menu links to navigate.");
 		if(!matchedOrders.isEmpty()) {
-			out.println("<form name='matchedOrders' method='POST' action='InsertMatched'>");
+			out.println("<form name='matchedOrders' method='GET' action='InsertMatched'>");
 			out.println("<h3>There are <b>" + matchedOrders.size() + "</b> orders listed below have been matched to previous orders " +
 			"in the last 30 days. Do you want to accept these changes?</h3><br />");
 			out.println("<input type='submit' name='btnSubmit' value='Insert Selected'>");
@@ -148,7 +148,7 @@ public class Insert extends HttpServlet {
 				out.println("</tr>");
 			}
 			out.println("</table><br />");
-			request.getSession().setAttribute("matchedOrders", matchedOrders);
+			//request.getSession().setAttribute("matchedOrders", matchedOrders);
 			out.println("</form>");
 		}
 		out.println("</body>");

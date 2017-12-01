@@ -110,8 +110,8 @@ public class CustomerServiceRepresentative {
 			try {
 				con = DBConnect.connect();
 				ps = con.prepareStatement(
-						"SELECT tbcsr.csr_id, tbcsr.csr_name, tbteam.team_name FROM tbcsr INNER JOIN tbteamtran ON tbcsr.csr_id = tbteamtran.csr_id "
-								+ "INNER JOIN tbteam ON tbteamtran.team_id = tbteam.team_id WHERE tbcsr.emptype_id = 'CSR'");
+						"SELECT tbcsr.csr_id, tbcsr.csr_name, tbteam.team_name FROM tbcsr INNER JOIN tbcsrteam ON tbcsr.csr_id = tbcsrteam.csr_id "
+								+ "INNER JOIN tbteam ON tbcsrteam.team_id = tbteam.team_id WHERE tbcsr.emptype_id = 'CSR'");
 				rs = ps.executeQuery();
 				while (rs.next()) {
 					CustomerServiceRepresentative csr = new CustomerServiceRepresentative(rs.getString(1),

@@ -222,7 +222,7 @@ public class Sales {
 			ps = con.prepareStatement(
 					"INSERT INTO tbsales (sales_id, csr_id, co_id, date_id, sales_jobtype, sales_custtype, sales_status, sales_amount_scheduled, sales_amount_total, "
 							+ "sales_address, sales_city, sales_state, sales_zipcode, comm_id, sales_advertising, sales_date_created, sales_date_modified) "
-							+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+							+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 			ps.setString(1, this.getOrderID());
 			ps.setString(2, this.getCsrID());
 			ps.setString(3, this.getCompanyID());

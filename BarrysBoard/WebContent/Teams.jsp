@@ -4,7 +4,7 @@
 <%@ page import="java.util.*" %>
 <%@ page import="javax.servlet.http.HttpServletRequest" %>
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html>
 <html>
 <head>
 <link rel="stylesheet" href="css/Main.css" />
@@ -58,6 +58,12 @@
 			<% } %>
 		</select>
 		<br />
+		<input list="teams" />
+			<datalist id="teams">
+				<% for(Team team : teams) { %>
+					<option value=<%= team.getTeamID() %>><%= team.getTeamName() %></option>
+				<% } %>
+			</datalist>
 		<% if(teamNo == 0) { %>
 			<input type="checkbox" name="listView" value="All" checked>All
 		<% } else { %>
