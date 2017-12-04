@@ -60,21 +60,21 @@
 					<span class="icon-bar"></span> <span class="icon-bar"></span> <span
 						class="icon-bar"></span>
 				</button>
-				<a class="navbar-brand" href="#"></a>
+				<a class="navbar-brand" href="#">Barry's Board</a>
 			</div>
 			<div class="collapse navbar-collapse" id="myNavbar">
 				<ul class="nav navbar-nav navbar-right">
-					<li><a href="Index.html">HOME</a></li>
-					<li><a href="Upload.jsp">UPLOAD FILES</a></li>
-					<li><a href="Teams.jsp">TEAMS</a></li>
-					<li><a href="#pricing">EMPLOYEES</a></li>
+					<li><a href="Index.html"><span class="glyphicon glyphicon-home"></span>HOME</a></li>
+					<li><a href="Upload.jsp"><span class="glyphicon glyphicon-cloud-upload"></span>UPLOAD FILES</a></li>
+					<li><a href="Teams.jsp"><span class="glyphicon glyphicon-book"></span>TEAMS</a></li>
+					<li><a href="#pricing"><span class="glyphicon glyphicon-user"></span>EMPLOYEES</a></li>
 				</ul>
 			</div>
 		</div>
 	</nav>
 	<header>
 		<div class="jumbotron">
-			<h1>Barry's Board</h1>
+			<h1><span class="glyphicon glyphicon-cloud-upload"></span>Upload Files</h1>
 		</div>
 	</header>
 	<form name="insertOrders" method="POST" action="Insert" enctype="multipart/form-data">
@@ -88,6 +88,7 @@
 			<option value="commSale">Commercial Paid/Unpaid</option>
 			<option value="employee">Employee Master List</option>
 		</select>
+	<br />
 	<input type="file" id="myFile" name="uploadFile" multiple="true" onchange="uploadFile()" >
 	<p id="demo"></p>
 	<script>
@@ -119,10 +120,11 @@
 			document.getElementById("filePath").value = path;
 		}
 	</script>
-	<p>File: <input type="text" name="filePath" id="filePath" style="width:400px;"></p>
-	<!-- <span class="glyphicon glyphicon-print"><input type="submit" name="btnSubmit" value="Submit"></span>-->
+	<br />
+	<!-- <p>File: <input type="text" name="filePath" id="filePath" style="width:400px;"></p>-->
+	<!-- <span class="glyphicon glyphicon-cloud-upload"><input type="submit" name="btnSubmit" value="Submit"></span>-->
 	<button type="submit" class="btn-default">
-		<span class="glyphicon glyphicon-upload">Upload</span>
+		<span class="glyphicon glyphicon-cloud-upload">Upload</span>
 	</button>
 	</form>
 </body>

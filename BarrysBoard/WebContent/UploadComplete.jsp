@@ -67,10 +67,10 @@
 			</div>
 			<div class="collapse navbar-collapse" id="myNavbar">
 				<ul class="nav navbar-nav navbar-right">
-					<li><a href="Index.html">HOME</a></li>
-					<li><a href="Upload.jsp">UPLOAD FILES</a></li>
-					<li><a href="Teams.jsp">TEAMS</a></li>
-					<li><a href="#pricing">EMPLOYEES</a></li>
+					<li><a href="Index.html"><span class="glyphicon glyphicon-home"></span>HOME</a></li>
+					<li><a href="Upload.jsp"><span class="glyphicon glyphicon-cloud-upload"></span>UPLOAD FILES</a></li>
+					<li><a href="Teams.jsp"><span class="glyphicon glyphicon-book"></span>TEAMS</a></li>
+					<li><a href="#pricing"><span class="glyphicon glyphicon-user"></span>EMPLOYEES</a></li>
 				</ul>
 			</div>
 		</div>
