@@ -24,6 +24,7 @@ public class OrdersService {
 			//ArrayList<Orders> addressMatch = new ArrayList<>();
 			HashMap<String, Orders> orderMatch = new HashMap<>();
 			int counter = 1;
+			double timer = 0;
 			
 			while((nextLine = reader.readNext()) != null) {
 				String company = nextLine[9].substring(0, 3);
@@ -74,7 +75,8 @@ public class OrdersService {
 				}
 				
 				elapsedTime = System.currentTimeMillis() - startTime;
-				System.out.println("" + counter + ": Order: " + order.getOrderID() + " Time: " + elapsedTime + "");
+				timer += elapsedTime;
+				System.out.println("" + counter + ": Order: " + order.getOrderID() + " Time: " + elapsedTime + " Total Time: " + timer + "");
 				counter++;
 			}
 			

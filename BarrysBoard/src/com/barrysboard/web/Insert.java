@@ -78,7 +78,11 @@ public class Insert extends HttpServlet {
 			}
 		}
 		request.getSession().setAttribute("matchedOrders", matchedOrders);
-		response.setContentType("text/html");
+		request.setAttribute("matchingOrders", matchedOrders);
+		if(!matchedOrders.isEmpty())
+			request.getRequestDispatcher("MatchedOrders.jsp").forward(request, response);
+		else {
+		/*response.setContentType("text/html");
 		PrintWriter out = response.getWriter();
 		out.println("<!DOCTYPE html>");
 		out.println("<html>");
@@ -133,7 +137,7 @@ public class Insert extends HttpServlet {
 				out.println("<td>" + order.getAddress() + ", " + order.getState() + " " + order.getZip() + "</td>");
 				out.println("<td><input type='checkbox' name='ckInsert' value='ckYes" + order.getOrderID() + "'></td>");
 				out.println("</tr>");
-			}*/
+			}
 			for(Map.Entry<String, Orders> order : matchedOrders.entrySet()) {
 				out.println("<tr>");
 				out.println("<td>" + order.getValue().getCompanyID() + "</td>");
@@ -153,6 +157,7 @@ public class Insert extends HttpServlet {
 		}
 		out.println("</body>");
 		out.println("</html>");
+		}*/
+		}
 	}
-
 }

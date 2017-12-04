@@ -8,6 +8,9 @@
 <html>
 <head>
 <link rel="stylesheet" href="css/Main.css" />
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <link rel="icon" type="image/gif" href="images/barrysboard.ico">
 <style>
 	table {
@@ -23,20 +26,28 @@
 	tr:nth-child(even) {
 		background-color: #dddddd;
 	}
+	
+	.jumbotron {
+		background-color: #333;
+		color: white;
+	}
 </style>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Barry's Board</title>
 </head>
 <body>
-	<div align="center">
+	<div class="jumbotron text-center">
 		<h1>Barry's Board</h1>
-		<a href="Index.html"><img src="images/dry-erase-eraser-cartoon-clipart-1.jpg" align="middle" alt="Barry's Board"/></a>
+	</div>
+	<nav>
+	<div align="center">
 		<ul>
 			<li><a href="Index.html">Home</a></li>
 			<li><a href="Upload.jsp">Upload Files</a></li>
 			<li><a class="active" href="Teams.jsp">Teams</a></li>
 		</ul>
 	</div>
+	</nav>
 	<div id="homepage">
 	<br />
 	<h2>Teams</h2>

@@ -1,6 +1,6 @@
 @charset "ISO-8859-1";
 
-ul {
+/*ul {
     list-style-type: none;
     margin: 0;
     padding: 0;
@@ -21,14 +21,44 @@ li a {
 }
 
 li a:hover {
-    background-color: #111;
-}
+    background-color: #fce94f;
+} 
 
 .active {
-	background-color: #FFFF00;
+	background-color: #fff;
 	color: #000;
 }
 
-#homepage {
+section {
 	width: 800px;
+} */
+
+.navbar {
+    margin-bottom: 0;
+    background-color: #000;
+    z-index: 9999;
+    border: 0;
+    font-size: 12px !important;
+    line-height: 1.42857143 !important;
+    letter-spacing: 4px;
+    border-radius: 0;
+}
+
+.navbar li a, .navbar .navbar-brand {
+    color: #000 !important;
+}
+
+.navbar-nav li a:hover, .navbar-nav li.active a {
+    color: #f4511e !important;
+    background-color: #fff !important;
+}
+
+.navbar-default .navbar-toggle {
+    border-color: transparent;
+    color: #fff !important;
+}
+
+.logo {
+	color: #333;
+	font-size: 200px;
 }
