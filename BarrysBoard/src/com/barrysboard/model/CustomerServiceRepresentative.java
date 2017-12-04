@@ -137,6 +137,35 @@ public class CustomerServiceRepresentative {
 		
 		return csrs;
 	}
+	
+	public static ArrayList<CustomerServiceRepresentative> getCSRs() {
+		Connection con = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		ArrayList<CustomerServiceRepresentative> csrs = new ArrayList<>();
+		
+		try {
+			con = DBConnect.connect();
+			ps = con.prepareStatement("SELECT * FROM tbcsr");
+			rs = ps.executeQuery();
+			while(rs.next()) {
+				csrs.add(new CustomerServiceRepresentative(rs.getString("csr_id"), rs.getString("csr_name"), 
+						rs.getString("csr_active"), rs.getString("emptype_id")));
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				DBConnect.close();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		return csrs;
+	}
 
 	private void insert() {
 		Connection con = null;

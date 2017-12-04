@@ -1,5 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
+<%@ page import="java.util.*" %>
+<%@ page import="com.barrysboard.model.*" %>
+<%@ page import="javax.servlet.http.HttpServletRequest" %>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -14,7 +18,7 @@
   <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
 <![endif]-->
 <style>
-.jumbotron {
+	.jumbotron {
 	background-color: #333;
 	color: white;
 }
@@ -48,10 +52,30 @@
 	color: #333;
 	font-size: 150px;
 }
+
+tr {
+	width: 100%;
+	display: inline-table;
+	table-layout: fixed;
+}
+table {
+	height: 800px;
+}
+
+tbody {
+	overflow-y: scroll;
+	height: 500px;
+	width: 100%;
+	position: absolute;
+}
+
 </style>
-<title>Barry's Board</title>
+<title>Barry's Board - Employees</title>
 </head>
-<body onload="myFunction()" style="background-color: #f2f2f2;">
+<body style="background-color: #f2f2f2;">
+	<%
+		ArrayList<CustomerServiceRepresentative> csrs = CustomerServiceRepresentative.getCSRs();
+	%>
 	<nav class="navbar navbar-default navbar-fixed-top">
 		<div class="container">
 			<div class="navbar-header">
@@ -74,58 +98,57 @@
 	</nav>
 	<header>
 		<div class="jumbotron">
-			<h1><span class="glyphicon glyphicon-cloud-upload"></span>Upload Files</h1>
+			<h1><span class="glyphicon glyphicon-user"></span>Employees</h1>
 		</div>
 	</header>
-	<form name="insertOrders" method="POST" action="Insert" enctype="multipart/form-data">
-	<h3>Which report type would you like to upload?</h3>
-	<label for="reports">Report Type:</label>
-		<select class="form-control" id="reports" name="reportType">
-			<option value="booked">Jobs by Booked Date</option>
-			<option value="scheduled">Jobs by Scheduled Date</option>
-			<option value="loss">Lost Calls</option>
-			<option value="incomplete">Daily Calls Received</option>
-			<option value="commSale">Commercial Paid/Unpaid</option>
-			<option value="employee">Employee Master List</option>
-		</select>
-	<br />
-	<input type="file" id="myFile" name="uploadFile" multiple="true" onchange="uploadFile()" >
-	<p id="demo"></p>
-	<script>
-		function uploadFile() {
-			var x = document.getElementById("myFile");
-			var txt = "";
-			var path = "";
-			if('files' in x) {
-				if(x.files.length == 0) {
-					txt = "Select a file.";
-				} else {
-					for (var i = 0; i < x.files.length; i++) {
-						var file = x.files[i];
-						if('name' in file) {
-							txt += "<br><strong>" + file.name + "</strong><br>";
-							path += file.name;
-						}				
-					}
-				}
-			} else {
-				if(x.value == "") {
-					txt += "Select one or more files.";
-				} else {
-					txt += "The files property is not supported by your browser!";
-					txt += "<br>The path of the selected file: " + x.value;
-				}
-			}
-			document.getElementById("demo").innerHTML = txt;
-			document.getElementById("filePath").value = path;
-		}
-	</script>
-	<br />
-	<!-- <p>File: <input type="text" name="filePath" id="filePath" style="width:400px;"></p>-->
-	<!-- <span class="glyphicon glyphicon-cloud-upload"><input type="submit" name="btnSubmit" value="Submit"></span>-->
-	<button type="submit" class="btn-default">
-		<span class="glyphicon glyphicon-cloud-upload">Upload</span>
-	</button>
-	</form>
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-lg-2">
+				<div class="row">
+					<div class="col-lg-12">
+						<h3>Search Employees:</h3>
+						<div class="form-group">
+							<input type="text" class="form-control" placeholder="Search">
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-lg-12" style="background-color: #333;">
+						<h3 style="color: #fff">Create Employee</h3>
+						<input type="text" class="form-control"
+							placeholder="Last 4 Digits of Employee No."><br /> <input
+							type="text" class="form-control" placeholder="Employee Name"><br />
+						<button type="submit" name="btnSubmit">
+							<span class="glyphicon glyphicon-print"></span>Add Employee
+						</button>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-10">
+				<table class="table">
+					<thead>
+						<tr>
+							<th>Employee No.</th>
+							<th>Name</th>
+							<th>Role</th>
+						</tr>
+					</thead>
+					<tbody>
+						<%
+							for (CustomerServiceRepresentative csr : csrs) {
+						%>
+						<tr>
+							<td><%=csr.getCsrID()%></td>
+							<td><%=csr.getCsrName()%></td>
+							<td><%=csr.getEmpType()%></td>
+						</tr>
+						<%
+							}
+						%>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
 </body>
 </html>
