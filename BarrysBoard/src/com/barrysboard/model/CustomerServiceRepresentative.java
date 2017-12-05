@@ -166,6 +166,46 @@ public class CustomerServiceRepresentative {
 		
 		return csrs;
 	}
+	
+	public static ArrayList<CustomerServiceRepresentative> getCSRs(String nameNo, String status, String role) {
+		Connection con = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		String sql;
+		ArrayList<CustomerServiceRepresentative> csrs = new ArrayList<>();
+		if(role.equalsIgnoreCase("other")) {
+			sql = "emptype_id IS NULL";
+			role = null;
+		}
+		else
+			sql = "emptype_id = ?";
+		
+		try {
+			con = DBConnect.connect();
+			ps = con.prepareStatement("SELECT * FROM tbcsr WHERE (csr_id LIKE ? OR csr_name LIKE ?) AND csr_active = ? AND " + sql + "");
+			ps.setString(1, "%" + nameNo + "%");
+			ps.setString(2, "%" + nameNo + "%");
+			ps.setString(3, status);
+			if(role != null)
+				ps.setString(4, role);
+			rs = ps.executeQuery();
+			while(rs.next())
+				csrs.add(new CustomerServiceRepresentative(rs.getString("csr_id"), rs.getString("csr_name"),
+						rs.getString("csr_active"), rs.getString("emptype_id")));
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				DBConnect.close();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		return csrs;
+	}
 
 	private void insert() {
 		Connection con = null;
@@ -198,16 +238,17 @@ public class CustomerServiceRepresentative {
 		}
 	}
 	
-	private void update() {
+	public void update() {
 		Connection con = null;
 		PreparedStatement ps = null;
 		
 		try {
 			con = DBConnect.connect();
-			ps = con.prepareStatement("UPDATE tbcsr SET csr_name = ?, csr_active = ? WHERE csr_id = ?");
+			ps = con.prepareStatement("UPDATE tbcsr SET csr_name = ?, csr_active = ?, emptype_id = ? WHERE csr_id = ?");
 			ps.setString(1, this.getCsrName());
 			ps.setString(2, this.getCsrActive());
-			ps.setString(3, this.getCsrID());
+			ps.setString(3, this.getEmpType());
+			ps.setString(4, this.getCsrID());
 			ps.executeUpdate();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block

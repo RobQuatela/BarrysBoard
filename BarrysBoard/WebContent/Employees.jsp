@@ -59,22 +59,34 @@ tr {
 	table-layout: fixed;
 }
 table {
-	height: 800px;
+	height: 600px;
 }
 
 tbody {
 	overflow-y: scroll;
-	height: 500px;
+	height: 550px;
 	width: 100%;
 	position: absolute;
 }
 
 </style>
+<script>
+	function ifChecked() {
+		if (document.getElementById("ckID").checked === true) {
+			alert("Im checked!");
+		}
+	}
+</script>
 <title>Barry's Board - Employees</title>
 </head>
 <body style="background-color: #f2f2f2;">
 	<%
-		ArrayList<CustomerServiceRepresentative> csrs = CustomerServiceRepresentative.getCSRs();
+		ArrayList<CustomerServiceRepresentative> csrs = new ArrayList<>();
+		if(request.getAttribute("csrs") == null)
+			csrs = CustomerServiceRepresentative.getCSRs();
+		else
+			csrs = (ArrayList<CustomerServiceRepresentative>) session.getAttribute("csrs");
+
 	%>
 	<nav class="navbar navbar-default navbar-fixed-top">
 		<div class="container">
@@ -105,56 +117,93 @@ tbody {
 		<div class="row">
 			<div class="col-lg-3">
 				<div class="row">
-					<div class="col-lg-12">
-						<h3>Search Employees:</h3>
-						<div class="form-group">
-							<input type="text" class="form-control" placeholder="Search">
+					<form name="frmEmployeeSearch" method="get" action="EmployeeInsert">
+						<div class="col-lg-12">
+							<h3>Search Employees</h3>
+							<div class="form-group">
+								<label for="search">Name/Employee No:</label>
+								<input type="text" class="form-control" name="empNameNo" id="search" placeholder="Search"><br />
+								<label for="status">Status:</label>
+								<select name="empStatus" id="status" class="form-control">
+									<option value="A">A</option>
+									<option value="I">I</option>
+									<option value="L">L</option>
+								</select><br />
+								<label for="role">Role:</label>
+								<select name="empRole" id="role" class="form-control">
+									<option value="csr">CSR</option>
+									<option value="esr">Estimator</option>
+									<option value="other">Other</option>
+								</select><br />
+								<button type="submit" name="btnSearchEmp">
+									<span class="glyphicon glyphicon-search"></span>Search
+								</button>
+							</div>
 						</div>
-					</div>
+					</form>
 				</div>
 				<div class="row">
 					<form name="frmEmployeeInsert" method="post"
 						action="EmployeeInsert">
 						<div class="col-lg-12" style="background-color: #333;">
 							<h3 style="color: #fff">Create Employee</h3>
-							<input type="text" class="form-control" name="empID"
-								placeholder="Last 4 Digits of Employee No."><br /> <input
-								type="text" class="form-control" name="empName" placeholder="Employee Name"><br />
-							<label for="role" style="color:#fff">Role:</label>
-							<select id="role" name="empRole" class="form-control">
-								<option value="CSR">CSR</option>
-								<option value="ESR">Estimator</option>
-							</select><br />
-							<button type="submit" name="btnSubmit">
-								<span class="glyphicon glyphicon-plus"></span>Add Employee
-							</button>
+							<div class="form-group">
+								<input type="text" class="form-control" name="empID"
+									placeholder="Last 4 Digits of Employee No."><br /> <input
+									type="text" class="form-control" name="empName"
+									placeholder="Employee Name"><br /> <label for="role"
+									style="color: #fff">Role:</label> <select id="role"
+									name="empRole" class="form-control">
+									<option value="CSR">CSR</option>
+									<option value="ESR">Estimator</option>
+								</select><br />
+								<button type="submit" name="btnInsertEmp">
+									<span class="glyphicon glyphicon-plus"></span>Add Employee
+								</button>
+							</div>
 						</div>
 					</form>
 				</div>
 			</div>
-			<div class="col-lg-9">
-				<table class="table">
-					<thead>
-						<tr>
-							<th>Employee No.</th>
-							<th>Name</th>
-							<th>Role</th>
-						</tr>
-					</thead>
-					<tbody>
-						<%
-							for (CustomerServiceRepresentative csr : csrs) {
-						%>
-						<tr>
-							<td><input type="checkbox" name=<%=csr.getCsrID()%> value=<%=csr.getCsrID()%>><%=csr.getCsrID()%></td>
-							<td><input type="text" name=<%=csr.getCsrName()%> value=<%=csr.getCsrName()%>></td>
-							<td><input type="text" name=<%=csr.getEmpType()%> value=<%=csr.getEmpType()%>></td>
-						</tr>
-						<%
+			<form name="frmUpdateEmployee" method="post" action="EmployeeInsert">
+				<div class="col-lg-9">
+					<button type="submit" name="btnUpdateEmp">
+						<span class="glyphicon glyphicon-save"></span>Update
+					</button>
+					<table class="table table-bordered" id="searchTable">
+						<thead>
+							<tr>
+								<th>Employee No.</th>
+								<th>Name</th>
+								<th>Role</th>
+								<th>Status</th>
+							</tr>
+						</thead>
+						<tbody>
+							<%
+								for (CustomerServiceRepresentative csr : csrs) {
+							%>
+							<tr>
+								<td><input type="checkbox" name="ckID" id="ckID" onchange=ifChecked()
+									value=<%=csr.getCsrID()%>><%=csr.getCsrID()%></td>
+								<td><input type="text" name=<%="txtName" + csr.getCsrID()%>
+									value=<%=csr.getCsrName()%>></td>
+								<td><input type="text" name=<%="txtRole" + csr.getCsrID()%>
+									value=<%=csr.getEmpType()%>></td>
+								<td><input type="text" name=<%="txtStatus" + csr.getCsrID()%>
+									value=<%=csr.getCsrActive()%>></td>
+							</tr>
+							<%
 							}
 						%>
-					</tbody>
-				</table>
+						</tbody>
+					</table>
+				</div>
+			</form>
+		</div>
+		<div class="row">
+			<div class="col-lg-3">
+				<label>Employee No</label><label id="lblID"></label>
 			</div>
 		</div>
 	</div>
