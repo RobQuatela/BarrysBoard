@@ -170,13 +170,20 @@ public class CustomerServiceRepresentative {
 	private void insert() {
 		Connection con = null;
 		PreparedStatement ps = null;
+		String empType;
+		try {
+			empType = this.getEmpType();
+		} catch(Exception e) {
+			empType = null;
+		}
 
 		try {
 			con = DBConnect.connect();
-			ps = con.prepareStatement("INSERT INTO tbcsr (csr_id, csr_name, csr_active) VALUES (?, ?, ?)");
+			ps = con.prepareStatement("INSERT INTO tbcsr (csr_id, csr_name, csr_active, emptype_id) VALUES (?, ?, ?, ?)");
 			ps.setString(1, this.getCsrID());
 			ps.setString(2, this.getCsrName());
 			ps.setString(3, this.getCsrActive());
+			ps.setString(4, empType);
 			ps.executeUpdate();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block

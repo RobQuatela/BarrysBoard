@@ -103,7 +103,7 @@ tbody {
 	</header>
 	<div class="container-fluid">
 		<div class="row">
-			<div class="col-lg-2">
+			<div class="col-lg-3">
 				<div class="row">
 					<div class="col-lg-12">
 						<h3>Search Employees:</h3>
@@ -113,18 +113,26 @@ tbody {
 					</div>
 				</div>
 				<div class="row">
-					<div class="col-lg-12" style="background-color: #333;">
-						<h3 style="color: #fff">Create Employee</h3>
-						<input type="text" class="form-control"
-							placeholder="Last 4 Digits of Employee No."><br /> <input
-							type="text" class="form-control" placeholder="Employee Name"><br />
-						<button type="submit" name="btnSubmit">
-							<span class="glyphicon glyphicon-print"></span>Add Employee
-						</button>
-					</div>
+					<form name="frmEmployeeInsert" method="post"
+						action="EmployeeInsert">
+						<div class="col-lg-12" style="background-color: #333;">
+							<h3 style="color: #fff">Create Employee</h3>
+							<input type="text" class="form-control" name="empID"
+								placeholder="Last 4 Digits of Employee No."><br /> <input
+								type="text" class="form-control" name="empName" placeholder="Employee Name"><br />
+							<label for="role" style="color:#fff">Role:</label>
+							<select id="role" name="empRole" class="form-control">
+								<option value="CSR">CSR</option>
+								<option value="ESR">Estimator</option>
+							</select><br />
+							<button type="submit" name="btnSubmit">
+								<span class="glyphicon glyphicon-plus"></span>Add Employee
+							</button>
+						</div>
+					</form>
 				</div>
 			</div>
-			<div class="col-lg-10">
+			<div class="col-lg-9">
 				<table class="table">
 					<thead>
 						<tr>
@@ -138,9 +146,9 @@ tbody {
 							for (CustomerServiceRepresentative csr : csrs) {
 						%>
 						<tr>
-							<td><%=csr.getCsrID()%></td>
-							<td><%=csr.getCsrName()%></td>
-							<td><%=csr.getEmpType()%></td>
+							<td><input type="checkbox" name=<%=csr.getCsrID()%> value=<%=csr.getCsrID()%>><%=csr.getCsrID()%></td>
+							<td><input type="text" name=<%=csr.getCsrName()%> value=<%=csr.getCsrName()%>></td>
+							<td><input type="text" name=<%=csr.getEmpType()%> value=<%=csr.getEmpType()%>></td>
 						</tr>
 						<%
 							}
