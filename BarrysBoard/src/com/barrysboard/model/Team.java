@@ -1,9 +1,11 @@
 package com.barrysboard.model;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class Team {
@@ -12,6 +14,8 @@ public class Team {
 	private String teamName;
 	private int teamActive;
 	private String teamLead;
+	private LocalDate teamStart;
+	private LocalDate teamStop;
 	
 	public Team(String teamName) {
 		this.teamName = teamName;
@@ -28,6 +32,15 @@ public class Team {
 		this.teamName = teamName;
 		this.teamActive = teamActive;
 		this.teamLead = teamLead;
+	}
+	
+	public Team(int teamID, String teamName, int teamActive, String teamLead, LocalDate teamStart, LocalDate teamStop) {
+		this.teamID = teamID;
+		this.teamName = teamName;
+		this.teamActive = teamActive;
+		this.teamLead = teamLead;
+		this.teamStart = teamStart;
+		this.teamStop = teamStop;
 	}
 
 	public String getTeamName() {
@@ -56,6 +69,22 @@ public class Team {
 
 	public void setTeamLead(String teamLead) {
 		this.teamLead = teamLead;
+	}
+
+	public LocalDate getTeamStart() {
+		return teamStart;
+	}
+
+	public void setTeamStart(LocalDate teamStart) {
+		this.teamStart = teamStart;
+	}
+
+	public LocalDate getTeamStop() {
+		return teamStop;
+	}
+
+	public void setTeamStop(LocalDate teamStop) {
+		this.teamStop = teamStop;
 	}
 
 	public static ArrayList<Team> getTeams(int active) {
@@ -144,11 +173,13 @@ public class Team {
 		
 		try {
 			con = DBConnect.connect();
-			ps = con.prepareStatement("INSERT INTO tbteam (team_name, team_active, team_lead) " +
-					"VALUES (?, ?, ?)");
+			ps = con.prepareStatement("INSERT INTO tbteam (team_name, team_active, team_lead, team_start, team_stop) " +
+					"VALUES (?, ?, ?, ?, ?)");
 			ps.setString(1, this.getTeamName());
 			ps.setInt(2, this.getTeamActive());
 			ps.setString(3, this.getTeamLead());
+			ps.setDate(4, Date.valueOf(this.getTeamStart()));
+			ps.setDate(5, Date.valueOf(this.getTeamStop()));
 			ps.executeUpdate();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block

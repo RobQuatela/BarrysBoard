@@ -146,6 +146,14 @@ tbody {
 							<% } %>
 						</select>
 					</div>
+					<div class="form-group">
+						<label for="teamStart">Start:</label>
+						<input type="date" name="teamStart" id="teamStart">
+					</div>
+					<div class="form-group">
+						<label for="teamStop">Stop:</label>
+						<input type="date" name="teamStop" id="teamStop">
+					</div>
 					<button type="submit" name="btnAddTeam" class="btn btn-default">
 						<span class="glyphicon glyphicon-plus"></span> Add Team
 					</button>
