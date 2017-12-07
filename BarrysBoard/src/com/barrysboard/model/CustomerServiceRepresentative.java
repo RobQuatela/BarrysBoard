@@ -85,8 +85,8 @@ public class CustomerServiceRepresentative {
 			try {
 				con = DBConnect.connect();
 				ps = con.prepareStatement(
-						"SELECT tbcsr.csr_id, tbcsr.csr_name, tbteam.team_name FROM tbcsr INNER JOIN tbteamtran ON tbcsr.csr_id = tbteamtran.csr_id "
-								+ "INNER JOIN tbteam ON tbteamtran.team_id = tbteam.team_id WHERE tbteamtran.team_id = ?");
+						"SELECT tbcsr.csr_id, tbcsr.csr_name, tbteam.team_name FROM tbcsr INNER JOIN tbcsrteam ON tbcsr.csr_id = tbcsrteam.csr_id "
+								+ "INNER JOIN tbteam ON tbcsrteam.team_id = tbteam.team_id WHERE tbcsrteam.team_id = ?");
 				ps.setInt(1, teamID);
 				rs = ps.executeQuery();
 				while (rs.next()) {
@@ -132,6 +132,35 @@ public class CustomerServiceRepresentative {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
+			}
+		}
+		
+		return csrs;
+	}
+	
+	public static ArrayList<CustomerServiceRepresentative> getCSRsElligble() {
+		Connection con = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		ArrayList<CustomerServiceRepresentative> csrs = new ArrayList<>();
+		
+		try {
+			con = DBConnect.connect();
+			ps = con.prepareStatement("SELECT * FROM tbcsr WHERE csr_active = 'L'");
+			rs = ps.executeQuery();
+			while(rs.next()) {
+				csrs.add(new CustomerServiceRepresentative(rs.getString("csr_id"), rs.getString("csr_name"),
+						rs.getString("csr_active"), rs.getString("emptype_id")));
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				DBConnect.close();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 		}
 		
@@ -205,6 +234,89 @@ public class CustomerServiceRepresentative {
 		}
 		
 		return csrs;
+	}
+	
+	public String addToTeam(int teamId) {
+		Connection con = null;
+		PreparedStatement ps = null;
+		boolean isDup = this.checkForTeamDup(teamId);
+		String result = "";
+		
+		if(!isDup) {
+			try {
+				con = DBConnect.connect();
+				ps = con.prepareStatement("INSERT INTO tbcsrteam (csr_id, team_id) VALUES (?, ?)");
+				ps.setString(1, this.getCsrID());
+				ps.setInt(2, teamId);
+				ps.executeUpdate();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} finally {
+				try {
+					DBConnect.close();
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			result = "You've successfully added " + this.getCsrName() + " to the team!";
+		} else
+			result = this.getCsrName() + " is already added to this team!";
+		
+		return result;
+	}
+	
+	private boolean checkForTeamDup(int teamId) {
+		Connection con = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		boolean isDup = false;
+		
+		try {
+			con = DBConnect.connect();
+			ps = con.prepareStatement("SELECT * FROM tbcsrteam WHERE csr_id = ? AND team_id = ?");
+			ps.setString(1, this.getCsrID());
+			ps.setInt(2, teamId);
+			rs = ps.executeQuery();
+			if(rs.next())
+				isDup = true;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				DBConnect.close();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		return isDup;
+	}
+	
+	public void removeFromTeam(int teamNo) {
+		Connection con = null;
+		PreparedStatement ps = null;
+		
+		try {
+			con = DBConnect.connect();
+			ps = con.prepareStatement("DELETE FROM tbcsrteam WHERE csr_id = ? AND team_id = ?");
+			ps.setString(1, this.getCsrID());
+			ps.setInt(2, teamNo);
+			ps.executeUpdate();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				DBConnect.close();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 	}
 
 	private void insert() {

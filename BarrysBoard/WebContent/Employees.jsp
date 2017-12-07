@@ -76,6 +76,12 @@ tbody {
 			alert("Im checked!");
 		}
 	}
+	
+	function toggleEdit() {
+		if(document.getElementById("ckID").checked == true) {
+			
+		}
+	}
 </script>
 <title>Barry's Board - Employees</title>
 </head>
@@ -110,7 +116,7 @@ tbody {
 	</nav>
 	<header>
 		<div class="jumbotron">
-			<h1><span class="glyphicon glyphicon-user"></span>Employees</h1>
+			<h1><span class="glyphicon glyphicon-user"></span> Employee Management</h1>
 		</div>
 	</header>
 	<div class="container-fluid">
@@ -118,7 +124,7 @@ tbody {
 			<div class="col-lg-3">
 				<div class="row">
 					<form name="frmEmployeeSearch" method="get" action="EmployeeInsert">
-						<div class="col-lg-12">
+						<div class="col-lg-12 well">
 							<h3>Search Employees</h3>
 							<div class="form-group">
 								<label for="search">Name/Employee No:</label>
@@ -135,8 +141,8 @@ tbody {
 									<option value="esr">Estimator</option>
 									<option value="other">Other</option>
 								</select><br />
-								<button type="submit" name="btnSearchEmp">
-									<span class="glyphicon glyphicon-search"></span>Search
+								<button type="submit" class="btn btn-default" name="btnSearchEmp">
+									<span class="glyphicon glyphicon-search"></span> Search
 								</button>
 							</div>
 						</div>
@@ -145,7 +151,7 @@ tbody {
 				<div class="row">
 					<form name="frmEmployeeInsert" method="post"
 						action="EmployeeInsert">
-						<div class="col-lg-12" style="background-color: #333;">
+						<div class="col-lg-12 well" style="background-color: #333;">
 							<h3 style="color: #fff">Create Employee</h3>
 							<div class="form-group">
 								<input type="text" class="form-control" name="empID"
@@ -156,20 +162,21 @@ tbody {
 									name="empRole" class="form-control">
 									<option value="CSR">CSR</option>
 									<option value="ESR">Estimator</option>
+									<option value="neither">Neither</option>
 								</select><br />
-								<button type="submit" name="btnInsertEmp">
-									<span class="glyphicon glyphicon-plus"></span>Add Employee
+								<button type="submit" class="btn btn-default" name="btnInsertEmp">
+									<span class="glyphicon glyphicon-plus"></span> Add Employee
 								</button>
 							</div>
 						</div>
 					</form>
 				</div>
 			</div>
-			<form name="frmUpdateEmployee" method="post" action="EmployeeInsert">
+			<form name="frmUpdateEmployee" method="post" action="EmployeeInsert" class="form-group">
 				<div class="col-lg-9">
-					<button type="submit" name="btnUpdateEmp">
-						<span class="glyphicon glyphicon-save"></span>Update
-					</button>
+					<button type="submit" class="btn btn-default" name="btnUpdateEmp">
+						<span class="glyphicon glyphicon-floppy-saved"></span> Update Selected
+					</button><br />
 					<table class="table table-bordered" id="searchTable">
 						<thead>
 							<tr>
@@ -186,8 +193,8 @@ tbody {
 							<tr>
 								<td><input type="checkbox" name="ckID" id="ckID" onchange=ifChecked()
 									value=<%=csr.getCsrID()%>><%=csr.getCsrID()%></td>
-								<td><input type="text" name=<%="txtName" + csr.getCsrID()%>
-									value=<%=csr.getCsrName()%>></td>
+								<td><input type="text" contentEditable="false" name=<%="txtName" + csr.getCsrID()%>
+									value="<%=csr.getCsrName()%>"></td>
 								<td><input type="text" name=<%="txtRole" + csr.getCsrID()%>
 									value=<%=csr.getEmpType()%>></td>
 								<td><input type="text" name=<%="txtStatus" + csr.getCsrID()%>
@@ -200,11 +207,6 @@ tbody {
 					</table>
 				</div>
 			</form>
-		</div>
-		<div class="row">
-			<div class="col-lg-3">
-				<label>Employee No</label><label id="lblID"></label>
-			</div>
 		</div>
 	</div>
 </body>
