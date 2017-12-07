@@ -38,6 +38,8 @@ public class TeamController extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
+		int teamNo = Integer.parseInt(request.getParameter("teamId"));
+		
 		if(request.getParameter("btnAddTeam") != null) {
 			Team team = new Team(
 					request.getParameter("teamName").toString(), 1,
@@ -54,18 +56,28 @@ public class TeamController extends HttpServlet {
 		if(request.getParameter("btnAddToTeam") != null) {
 			CustomerServiceRepresentative csr = new CustomerServiceRepresentative(
 					request.getParameter("lstCsrElligble"));
-			int teamNo = Integer.parseInt(request.getParameter("teamId").toString());
 			String result = csr.addToTeam(teamNo);
 			System.out.println(result);
 			response.sendRedirect("Teams.jsp");
 		}
 		
-		String[] ids = request.getParameterValues("btnDel");
+		String[] ids;
+		try {
+			ids = request.getParameterValues("btnDel");
+		} catch (NullPointerException e) {
+			ids = new String[0];
+		}
+		
+		if(ids != null) {
 		for(String id : ids) {
 			if(id != null) {
-				//CustomerServiceRepresentative csr = new CustomerServiceRepresentative(
-				//		request.getParameter("lst)
+				CustomerServiceRepresentative csr = new CustomerServiceRepresentative(
+						id.substring(6));
+				csr.removeFromTeam(teamNo);
+				
+				response.sendRedirect("Teams.jsp");
 			}
+		}
 		}
 	}
 

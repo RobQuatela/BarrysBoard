@@ -53,6 +53,22 @@
 	font-size: 150px;
 }
 
+tr {
+	width: 100%;
+	display: inline-table;
+	table-layout: fixed;
+}
+table {
+	height: 400px;
+}
+
+tbody {
+	overflow-y: scroll;
+	height: 350px;
+	width: 100%;
+	position: absolute;
+}
+
 .formbox {
 	background-color: #f2f2f2;
 	color: #333;
@@ -60,7 +76,7 @@
 
 .formbox-invert {
 	background-color: #333;
-	color: #fff;
+	color: #f2f2f2;
 }
 
 .formbox-invert option {
@@ -114,7 +130,7 @@
 		</div>
 	</header>
 	<div class="row">
-			<div class="col-lg-12 formbox">
+			<div class="col-lg-12">
 				<form name="frmAddTeam" method="post" action="TeamController"
 					class="form-inline">
 					<div class="form-group">
@@ -125,7 +141,7 @@
 					<div class="form-group">
 						<label for="teamLead">Team Lead:</label> <select name="ddlTeamLead"
 							id="teamLead" class="form-control">
-							<% for (CustomerServiceRepresentative lead : teamLeads) { %>
+							<% for (CustomerServiceRepresentative lead : csrsElligble) { %>
 								<option value=<%=lead.getCsrID() %>><%=lead.getCsrName() %></option>
 							<% } %>
 						</select>
@@ -135,10 +151,10 @@
 					</button>
 			</form>
 		</div>
-	</div><br />
+	</div>
+	<br />
 	<div class="row">
-	
-	<form name="frmAssignCSR" method="post" action="TeamController" class="form-control">
+	<form name="frmAssignCSR" method="post" action="TeamController">
 			<div class="col-lg-4 formbox-invert well">
 				<div class="col-lg-6">
 				<h3>Teams</h3>
@@ -184,7 +200,7 @@
 			<button type="submit" class="btn btn-default" name="btnRefresh">
 				<span class="glyphicon glyphicon-refresh"></span>
 			</button>
-			<label for="teamTable"><%=teamDisplay.getTeamName() %></label>
+			<label for="teamTable"><strong>TEAM:</strong> <%=teamDisplay.getTeamName() %></label>
 		</div>
 		<table class="table">
 		<thead>
@@ -193,7 +209,7 @@
 				<th>ID</th>
 				<th>Name</th>
 				<th>Team</th>
-				<ht></ht>
+				<th></th>
 			</tr>
 		</thead>
 			<tbody>
@@ -202,7 +218,7 @@
 					<td><%=csr.getCsrID() %></td>
 					<td><%=csr.getCsrName() %></td>
 					<td><%=csr.getTeamName() %></td>
-					<td><button type="submit" class="btn" name=<%="btnDel" + csr.getCsrID() %>>
+					<td><button type="submit" class="btn" name="btnDel" value=<%="btnDel" + csr.getCsrID() %>>
 						<span class="glyphicon glyphicon-remove"></span>
 					</button></td>
 				</tr>

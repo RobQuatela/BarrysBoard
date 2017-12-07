@@ -73,7 +73,7 @@ tbody {
 <script>
 	function ifChecked() {
 		if (document.getElementById("ckID").checked === true) {
-			alert("Im checked!");
+			//alert("Im checked!");
 		}
 	}
 	

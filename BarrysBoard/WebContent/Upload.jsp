@@ -74,9 +74,11 @@
 	</nav>
 	<header>
 		<div class="jumbotron">
-			<h1><span class="glyphicon glyphicon-cloud-upload"></span>Upload Files</h1>
+			<h1><span class="glyphicon glyphicon-cloud-upload"></span> File Management</h1>
 		</div>
 	</header>
+	<div class="row">
+	<div class="col-lg-6">
 	<form name="insertOrders" method="POST" action="Insert" enctype="multipart/form-data">
 	<h3>Which report type would you like to upload?</h3>
 	<label for="reports">Report Type:</label>
@@ -124,8 +126,10 @@
 	<!-- <p>File: <input type="text" name="filePath" id="filePath" style="width:400px;"></p>-->
 	<!-- <span class="glyphicon glyphicon-cloud-upload"><input type="submit" name="btnSubmit" value="Submit"></span>-->
 	<button type="submit" class="btn-default">
-		<span class="glyphicon glyphicon-cloud-upload">Upload</span>
+		<span class="glyphicon glyphicon-cloud-upload"></span> Upload
 	</button>
 	</form>
+	</div>
+	</div>
 </body>
 </html>
