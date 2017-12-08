@@ -80,6 +80,8 @@ public class OrdersService {
 				counter++;
 			}
 			
+			System.out.println("Total time for upload: " + timer);
+			System.out.println("Total time for upload (seconds): " + timer / 1000);
 			//if(addressMatch.isEmpty())
 			if(orderMatch.isEmpty())
 				return null;
