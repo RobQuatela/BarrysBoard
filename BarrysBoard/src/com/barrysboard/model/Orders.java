@@ -321,8 +321,13 @@ public class Orders {
 			ps.setTimestamp(19, Timestamp.valueOf(this.getDateModified()));
 			ps.executeUpdate();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			try {
+				con.close();
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			this.update();
 		} finally {
 			try {
 				DBConnect.close();
@@ -524,13 +529,13 @@ public class Orders {
 	}
 	
 	public void authenticate() {
-		boolean isDup = this.checkForDup();
+		//boolean isDup = this.checkForDup();
 
-		if(!isDup) {
+		//if(!isDup) {
 			this.insert();
-		} else {
-			this.update();
-		}
+		//} else {
+		//	this.update();
+		//}
 		
 		this.checkBacklog();
 	}

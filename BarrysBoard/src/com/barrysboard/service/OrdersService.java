@@ -9,6 +9,9 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.LogManager;
+import java.util.logging.Logger;
 
 import com.barrysboard.model.CustomerServiceRepresentative;
 import com.barrysboard.model.Orders;
@@ -25,6 +28,8 @@ public class OrdersService {
 			HashMap<String, Orders> orderMatch = new HashMap<>();
 			int counter = 1;
 			double timer = 0;
+			Logger logger = LogManager.getLogManager().getLogger(Logger.GLOBAL_LOGGER_NAME);
+			logger.log(Level.INFO, "Orders Service Processing...");
 			
 			while((nextLine = reader.readNext()) != null) {
 				String company = nextLine[9].substring(0, 3);
@@ -80,8 +85,8 @@ public class OrdersService {
 				counter++;
 			}
 			
-			System.out.println("Total time for upload: " + timer);
 			System.out.println("Total time for upload (seconds): " + timer / 1000);
+			System.out.println("Total records / second: " + (counter / (timer / 1000)));
 			//if(addressMatch.isEmpty())
 			if(orderMatch.isEmpty())
 				return null;

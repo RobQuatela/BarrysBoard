@@ -132,7 +132,7 @@ tbody {
 	<div class="row">
 			<div class="col-lg-12">
 				<form name="frmAddTeam" method="post" action="TeamController"
-					class="form-inline">
+					class="form-inline well">
 					<div class="form-group">
 						<label for="teamName">Team Name:</label>
 						<input type="text" class="form-control" name="teamName" id="teamName"
