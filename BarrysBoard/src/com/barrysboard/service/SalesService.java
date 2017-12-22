@@ -18,6 +18,7 @@ public class SalesService {
 			String[] nextLine;
 			reader.readNext();
 			int counter = 1;
+			double timer = 0;
 			
 			while((nextLine = reader.readNext()) != null) {
 				LocalDate saleDate = DateTimeConversion.convertToDate(nextLine[10]);
@@ -42,13 +43,18 @@ public class SalesService {
 				
 				sale = sale.updateOriginCSR();
 				
-				elapsedTime = System.currentTimeMillis() - startTime;
-				System.out.println("" + counter + ": Sales: " + sale.getOrderID() + " Time: " + elapsedTime + "");
-				counter++;
-				
 				csr.authenticate();
 				sale.authenticate();
+				
+				elapsedTime = System.currentTimeMillis() - startTime;
+				timer += elapsedTime;
+				System.out.println("" + counter + ": Sale: " + sale.getOrderID() + " Time: " + elapsedTime + " Total Time: " + timer + "");
+				counter++;
 			}
+			
+			System.out.println("Total time for upload (seconds): " + timer / 1000);
+			System.out.println("Total records / second: " + (counter / (timer / 1000)));
+			
 		}
 	}
 	

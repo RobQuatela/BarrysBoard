@@ -24,7 +24,7 @@ public class IncompletesService {
 				String company = nextLine[0].substring(0, 3);
 				String scheduleDate = nextLine[2];
 				if(scheduleDate.isEmpty()) {
-					if (!company.equalsIgnoreCase("SAV")) {
+					//if (!company.equalsIgnoreCase("SAV")) {
 						String csrID;
 						try {
 							csrID = nextLine[8].substring(nextLine[8].length() - 4);
@@ -42,7 +42,7 @@ public class IncompletesService {
 
 						csr.authenticate();
 						incomplete.authenticate();
-					}
+					//}
 
 				}
 			}

@@ -425,7 +425,7 @@ public class Orders {
 			ps.setString(4, this.getState());
 			ps.setString(5, this.getZip());
 			ps.setString(6, this.getOrderID());
-			ps.setDate(7, Date.valueOf(this.getDate().minusDays(30)));
+			ps.setDate(7, Date.valueOf(this.getDate().minusDays(90)));
 			ps.setDate(8, Date.valueOf(this.getDate()));
 			rs = ps.executeQuery();
 			while(rs.next()) {
